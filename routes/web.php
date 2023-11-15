@@ -37,10 +37,13 @@ Route::get('/', function () {
 })->name('home');
 
 Route::prefix('data-master')->group(function () {
+
     // Category
     Route::prefix('/category')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('category.index');
-        Route::post('/', [CategoryController::class, 'store'])->name('category.store');
+        Route::post('/store', [CategoryController::class, 'store'])->name('category.store');
+        Route::post('/edit', [CategoryController::class, 'edit'])->name('category.edit');
+        Route::delete('/delete', [CategoryController::class, 'destroy'])->name('category.destroy');
     });
 
     // Sub Categoru
@@ -48,8 +51,6 @@ Route::prefix('data-master')->group(function () {
         Route::get('/', [SubCategoryController::class, 'index'])->name('sub-category.index');
         Route::post('/', [SubCategoryController::class, 'store'])->name('sub-category.store');
     });
-
-    // Route::get('/get-sub-category/{category_id}', [SubCategoryController::class, 'getAllSubCategories'])->name('sub-category.getAllSubCategories');
 
     // Location
     Route::prefix('location')->group(function () {
