@@ -14,7 +14,7 @@ class LocationController extends Controller
     {
         if (request()->ajax()) {
             return datatables()->of(Location::select('*'))
-                ->addColumn('action', 'components.actions.locationAction')
+                ->addColumn('action', 'pages.data-master.location._action.locationAction')
                 ->rawColumns(['action'])
                 ->addIndexColumn()
                 ->make(true);
