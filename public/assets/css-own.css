@@ -1,0 +1,49 @@
+/* .menu-item .active {
+    background-color: red;
+} */
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+body {
+    font-family: "Roboto", sans-serif;
+}
+.tes {
+    border: 1px solid red;
+}
+
+.tes2 img {
+    /* background-image: url("./img/avatars/unila.png"); */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-size: 50%;
+}
+
+/* .card {
+    background-color: #437144;
+    color: white !important;
+} */
+.content-body {
+    background-image: url("./img/illustrations/unila-tik.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    max-width: 100%;
+    /* max-height: 100%; */
+}
+
+.border-image {
+    border: 1px solid #fff;
+    border-radius: 40px;
+    object-fit: cover;
+    /* background: transparent; */
+    opacity: 0.9;
+}
+
+.border-image .content .left-content .fill-content img {
+    border-radius: 20px 0 0 20px;
+}
+
+@media only screen and (max-width: 600px) {
+    .border-image .content .left-content .fill-content img {
+        border-radius: 20px 20px 0 0;
+    }
+}
