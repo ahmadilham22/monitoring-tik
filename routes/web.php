@@ -74,10 +74,9 @@ Route::prefix('data-master')->group(function () {
     // Location
     Route::prefix('division')->group(function () {
         Route::get('/', [DivisionController::class, 'index'])->name('division.index');
-        Route::post('/', [DivisionController::class, 'store'])->name('division.store');
+        Route::post('/store', [DivisionController::class, 'store'])->name('division.store');
         Route::post('/edit', [DivisionController::class, 'edit'])->name('division.edit');
-        Route::post('/update', [DivisionController::class, 'update'])->name('division.update');
-        Route::post('/delete', [DivisionController::class, 'destroy'])->name('division.destroy');
+        Route::delete('/delete', [DivisionController::class, 'destroy'])->name('division.destroy');
     });
 
     Route::prefix('procurement')->group(function () {
