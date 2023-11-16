@@ -23,37 +23,52 @@ class SubCategoryController extends Controller
         $this->categoryRepository = app(CategoryRepository::class);
     }
 
-    public function category()
-    {
-        $data = Category::where('nama_kategori', 'LIKE', '%' . request('q') . '%')->paginate(10);
-
-        return response()->json($data);
-    }
-
     public function index()
     {
         if (request()->ajax()) {
             $data = $this->subCategoryRepository->getAll();
-            return datatables()->of($data)
-                ->addColumn('action', 'components.actions.goodsSubCategoryAction')
-                ->rawColumns(['action'])
-                ->addIndexColumn()
-                ->make(true);
+            return DataTables::of($data)
+                ->addColumn('action', function ($data) {
+                    return view('pages.data-master.sub-category._action.subCategoryAction', compact('data'));
+                })->addIndexColumn()->make(true);
         }
 
         $data = $this->categoryRepository->getAll();
         return view('pages.data-master.sub-category.index', compact('data'));
     }
 
-    public function create()
+    public function store(Request $request)
     {
-        return view('pages.data-master.sub-category.create');
+        try {
+            $subCategoryId = $request->id;
+            $subCategory = SubCategory::updateOrCreate(
+                [
+                    'id' => $subCategoryId
+                ],
+                [
+                    'categories_id' => $request->categories_id,
+                    'kode_sub_kategori' => $request->kode_sub_kategori,
+                    'nama_sub_kategori' => $request->nama_sub_kategori,
+                ]
+            );
+
+            return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $subCategory]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
+        }
     }
 
-    public function store(SubCategoryRequest $request)
+    public function edit(Request $request)
     {
-        $data = $request->validated();
-        $this->subCategoryRepository->create($data);
-        return redirect()->route('sub-category.index');
+        $id = array('id' => $request->id);
+        $subCategory  = SubCategory::where($id)->first();
+        return response()->json($subCategory);
+    }
+
+    public function destroy(Request $request)
+    {
+        $subCategory = SubCategory::where('id', $request->id);
+        $subCategory->delete();
+        return Response()->json($subCategory);
     }
 }

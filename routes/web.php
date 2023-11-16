@@ -49,7 +49,9 @@ Route::prefix('data-master')->group(function () {
     // Sub Categoru
     Route::prefix('/sub-category')->group(function () {
         Route::get('/', [SubCategoryController::class, 'index'])->name('sub-category.index');
-        Route::post('/', [SubCategoryController::class, 'store'])->name('sub-category.store');
+        Route::post('/store', [SubCategoryController::class, 'store'])->name('sub-category.store');
+        Route::post('/edit', [SubCategoryController::class, 'edit'])->name('sub-category.edit');
+        Route::delete('/delete', [SubCategoryController::class, 'destroy'])->name('sub-category.destroy');
     });
 
     // Location
