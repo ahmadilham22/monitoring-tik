@@ -81,10 +81,9 @@ Route::prefix('data-master')->group(function () {
 
     Route::prefix('procurement')->group(function () {
         Route::get('/', [ProcurementController::class, 'index'])->name('procurement.index');
-        Route::post('/', [ProcurementController::class, 'store'])->name('procurement.store');
+        Route::post('/store', [ProcurementController::class, 'store'])->name('procurement.store');
         Route::post('/edit', [ProcurementController::class, 'edit'])->name('procurement.edit');
-        Route::post('/update', [ProcurementController::class, 'update'])->name('procurement.update');
-        Route::post('/delete', [ProcurementController::class, 'destroy'])->name('procurement.destroy');
+        Route::delete('/delete', [ProcurementController::class, 'destroy'])->name('procurement.destroy');
     });
 
     // User

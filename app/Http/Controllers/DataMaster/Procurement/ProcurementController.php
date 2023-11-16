@@ -2,39 +2,40 @@
 
 namespace App\Http\Controllers\DataMaster\Procurement;
 
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Models\DataMaster\Procurement;
-use Illuminate\Http\Request;
 
 class ProcurementController extends Controller
 {
     public function index()
     {
         if (request()->ajax()) {
-            return datatables()->of(Procurement::select('*'))
-                ->addColumn('action', 'components.actions.procurementsAction')
-                ->rawColumns(['action'])
-                ->addIndexColumn()
-                ->make(true);
+            $data = Procurement::all();
+            return DataTables::of($data)
+                ->addColumn('action', function ($data) {
+                    return view('pages.data-master.procurement._action.procurementsAction', compact('data'));
+                })->addIndexColumn()->make(true);
         }
         $data = Procurement::all();
         return view('pages.data-master.procurement.index', compact('data'));
     }
 
+    // public function store(Request $request)
+    // {
+    //     $pengadaan = $request->all();
+
+    //     if (Division::where('nama_divisi', $pengadaan)->exists()) {
+    //         return redirect()->route('division.index')->with('error', 'Divisi sudah ada.');
+    //     } else {
+    //     }
+    //     Procurement::create($pengadaan);
+
+    //     return redirect()->route('procurement.index')->with('success', 'Divisi berhasil ditambahkan.');
+    // }
+
     public function store(Request $request)
-    {
-        $pengadaan = $request->all();
-
-        // if (Division::where('nama_divisi', $pengadaan)->exists()) {
-        //     return redirect()->route('division.index')->with('error', 'Divisi sudah ada.');
-        // } else {
-        // }
-        Procurement::create($pengadaan);
-
-        return redirect()->route('procurement.index')->with('success', 'Divisi berhasil ditambahkan.');
-    }
-
-    public function update(Request $request)
     {
 
         $pengadaanId = $request->id;
