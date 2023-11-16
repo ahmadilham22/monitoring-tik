@@ -15,11 +15,12 @@ use App\Models\DataMaster\SubCategory;
 
 class FixedAssetController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (request()->ajax()) {
             $data = FixedAsset::with(['category', 'subcategory', 'location', 'specificLocation', 'division', 'procurement'])
                 ->select(
+                    'fixed_assets.id',
                     'kode_sn',
                     'categories.nama_kategori as category_name',
                     'sub_categories.nama_sub_kategori as sub_category_name',
@@ -33,20 +34,17 @@ class FixedAssetController extends Controller
                 ->join('locations', 'fixed_assets.location_id', '=', 'locations.id')
                 ->get();
 
+            if ($request->filled('kondisi')) {
+                $data->where('kondisi', $request->tahun);
+            }
+
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
-                    return view('components.actions.fixedAssetAction', compact('data'));
+                    return view('pages.data-asset.fixed-assets.action.fixedAssetAction', compact('data'));
                 })->addIndexColumn()->make(true);
         }
-
         return view('pages.data-asset.fixed-assets.index');
     }
-
-    // public function getSubCategories($category_id)
-    // {
-    //     $data = SubCategory::where('categories_id', $category_id)->get();
-    //     return response()->json($data);
-    // }
 
     public function create()
     {
@@ -77,8 +75,6 @@ class FixedAssetController extends Controller
             'keterangan' => 'required',
         ]);
 
-        // dd($data);
-
         FixedAsset::create($data);
 
         return redirect()->route('asset-fixed.index');
@@ -89,8 +85,16 @@ class FixedAssetController extends Controller
         return view('pages.data-asset.fixed-assets.edit');
     }
 
-    public function show()
+    public function show($id)
     {
-        return view('pages.data-asset.fixed-assets.show');
+        $data = FixedAsset::with(['category', 'subcategory', 'location', 'specificLocation', 'division', 'procurement'])->findOrFail($id);
+        return view('pages.data-asset.fixed-assets.show', compact('data'));
+    }
+
+    public function destroy($id)
+    {
+        $data = FixedAsset::findOrFail($id);
+        $data->delete();
+        return view('pages.data-asset.fixed-assets.index');
     }
 }

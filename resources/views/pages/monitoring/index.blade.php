@@ -77,6 +77,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Kode SN</th>
                                         <th>Kategori</th>
                                         <th>Sub Kategori</th>
                                         <th>Lokasi Umum</th>
@@ -110,20 +111,24 @@
                         name: 'DT_RowIndex',
                     },
                     {
-                        data: 'kategori',
-                        name: 'kategori'
+                        data: 'kode_sn',
+                        name: 'kode_sn',
                     },
                     {
-                        data: 'sub_kategori',
-                        name: 'sub_kategori',
+                        data: 'category_name',
+                        name: 'category_name'
                     },
                     {
-                        data: 'lokasi',
-                        name: 'lokasi'
+                        data: 'sub_category_name',
+                        name: 'sub_category_name',
                     },
                     {
-                        data: 'jumlah',
-                        name: 'jumlah'
+                        data: 'lokasi_umum',
+                        name: 'lokasi_umum'
+                    },
+                    {
+                        data: 'jumlah_barang',
+                        name: 'jumlah_barang'
                     },
                     {
                         data: 'kondisi',
@@ -132,11 +137,10 @@
                     {
                         data: 'penanggung_jawab',
                         name: 'penanggung_jawab'
-                    },
-                    {
+                    }, {
                         data: 'action',
-                        name: 'action'
-                    },
+                        name: 'action',
+                    }
                 ],
             });
         });

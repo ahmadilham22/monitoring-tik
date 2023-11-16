@@ -18,6 +18,7 @@ use App\Http\Controllers\DataMaster\Location\LocationController;
 use App\Http\Controllers\DataMaster\Location\SpecialLocationController;
 use App\Http\Controllers\DataMaster\Procurement\ProcurementController;
 use App\Http\Controllers\DataMaster\SubCategory\SubCategoryController;
+use App\Http\Controllers\Monitoring\DashboardController;
 use App\Http\Controllers\Monitoring\MonitoringController;
 use App\Models\DataMaster\SpecialLocation;
 
@@ -32,9 +33,7 @@ use App\Models\DataMaster\SpecialLocation;
 |
 */
 
-Route::get('/', function () {
-    return view('pages.dashboard.index');
-})->name('home');
+Route::get('/', [DashboardController::class, 'index'])->name('home');
 
 Route::prefix('data-master')->group(function () {
 
@@ -94,11 +93,14 @@ Route::prefix('data-master')->group(function () {
 // Data aset
 Route::prefix('data-assets')->group(function () {
     // Fixed Asset
-    Route::get('/fixed', [FixedAssetController::class, 'index'])->name('asset-fixed.index');
-    Route::get('/fixed/create', [FixedAssetController::class, 'create'])->name('asset-fixed.create');
-    Route::post('/fixed/store', [FixedAssetController::class, 'store'])->name('asset-fixed.store');
-    Route::get('/fixed/edit', [FixedAssetController::class, 'edit'])->name('asset-fixed.edit');
-    Route::get('/fixed/show', [FixedAssetController::class, 'show'])->name('asset-fixed.show');
+    Route::prefix('fixed')->group(function () {
+        Route::get('/', [FixedAssetController::class, 'index'])->name('asset-fixed.index');
+        Route::get('/create', [FixedAssetController::class, 'create'])->name('asset-fixed.create');
+        Route::post('/store', [FixedAssetController::class, 'store'])->name('asset-fixed.store');
+        Route::get('/edit', [FixedAssetController::class, 'edit'])->name('asset-fixed.edit');
+        Route::get('/show/{id}', [FixedAssetController::class, 'show'])->name('asset-fixed.show');
+        Route::delete('/delete/{id}', [FixedAssetController::class, 'destroy'])->name('asset-fixed.destroy');
+    });
 });
 
 // Moved Asset
@@ -113,7 +115,7 @@ Route::prefix('monitoring')->group(function () {
     Route::get('/', [MonitoringController::class, 'index'])->name('monitoring.index');
     Route::get('/create', [MonitoringController::class, 'create'])->name('monitoring.create');
     Route::get('/edit', [MonitoringController::class, 'edit'])->name('monitoring.edit');
-    Route::get('/show', [MonitoringController::class, 'show'])->name('monitoring.show');
+    Route::get('/show/{id}', [MonitoringController::class, 'show'])->name('monitoring.show');
 });
 
 

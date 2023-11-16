@@ -25,6 +25,6 @@ class Category extends Model
 
     public function fixedAssets(): HasMany
     {
-        return $this->hasMany(FixedAsset::class, 'categories_id', 'id');
+        return $this->hasMany(FixedAsset::class);
     }
 }

@@ -2,59 +2,18 @@
 
 
 @section('content')
-    <div class="container mt-5">
+    <div class="container mt-4">
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Data Aset</h4>
+                        <h4>Monitoring Data Aset</h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="card bg-light h-100">
                                     <div class="card-body">
-                                        {{-- <div class="d-flex justify-content-between gap-3">
-                                            <div class="col-sm-4">
-                                                <strong>Tampilkan Gambar</strong>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#gambar">Tampilkan
-                                                </button>
-                                                <div class="modal fade" id="gambar" tabindex="-1"
-                                                    aria-labelledby="gambarLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h1 class="modal-title fs-5" id="gambarLabel">
-                                                                    Gambar Laptop Acer Nitro 5
-                                                                </h1>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="row justify-content-center">
-                                                                    <img class="img-fluid w-75 h-100"
-                                                                        src="{{ asset('assets/img/illustrations/acer-nitro-5.jpg') }}"
-                                                                        alt="">
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">
-                                                                    Close
-                                                                </button>
-                                                                <button type="button" class="btn btn-primary">
-                                                                    Save changes
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr> --}}
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
                                                 <strong>Tampilkan Qr Code</strong>
@@ -86,9 +45,6 @@
                                                                     data-bs-dismiss="modal">
                                                                     Close
                                                                 </button>
-                                                                <button type="button" class="btn btn-primary">
-                                                                    Save changes
-                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -101,7 +57,7 @@
                                                 <strong>Kode SN</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                ALDASDUAD120912
+                                                {{ $data->kode_sn }}
                                             </div>
                                         </div>
                                         <hr>
@@ -110,7 +66,7 @@
                                                 <strong>Kategori</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                Laptop
+                                                {{ $data->category->nama_kategori }}
                                             </div>
                                         </div>
                                         <hr>
@@ -119,7 +75,7 @@
                                                 <strong>Sub Kategori</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                Laptop Acer Nitro 5
+                                                {{-- {{ $data->subcategory->nama_sub_kategori }} --}}
                                             </div>
                                         </div>
                                         <hr>
@@ -128,7 +84,7 @@
                                                 <strong>Jumlah Barang</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                200
+                                                {{ $data->jumlah_barang }}
                                             </div>
                                         </div>
                                         <hr>
@@ -137,7 +93,7 @@
                                                 <strong>Lokasi</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                Gedung TIK Universitas Lampung
+                                                {{ $data->location->lokasi_umum }}
                                             </div>
                                         </div>
                                     </div>
@@ -151,7 +107,7 @@
                                                 <strong>Lokasi Terinci</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                Ruang H-18
+                                                {{ $data->specificLocation->lokasi_khusus }}
                                             </div>
                                         </div>
                                         <hr>
@@ -160,7 +116,7 @@
                                                 <strong>Penanggung Jawab</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                John Doe
+                                                {{ $data->penanggung_jawab }}
                                             </div>
                                         </div>
                                         <hr>
@@ -169,39 +125,29 @@
                                                 <strong>Jabatan</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                Staff
+                                                {{ $data->jabatan }}
                                             </div>
                                         </div>
                                         <hr>
-                                        {{-- <div class="d-flex justify-content-between gap-3">
-                                            <div class="col-sm-4">
-                                                <strong>Kondisi</strong>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim molestiae
-                                                sapiente ipsam in cupiditate, fugiat voluptatem nisi laudantium ratione?
-                                                Sapiente!
-                                            </div>
-                                        </div>
-                                        <hr> --}}
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
-                                                <strong>Periode Pengadaan</strong>
+                                                <strong>Tahun Perolehan</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                2019
+                                                {{ $data->tahun_perolehan }}
                                             </div>
                                         </div>
                                         <hr>
 
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
-                                                <strong>Tahun Perolehan</strong>
+                                                <strong>Keterangan</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                2019
+                                                {{ $data->keterangan }}
                                             </div>
                                         </div>
+                                        <hr>
                                     </div>
                                 </div>
                             </div>

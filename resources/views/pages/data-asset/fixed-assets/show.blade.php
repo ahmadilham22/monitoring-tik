@@ -86,9 +86,9 @@
                                                                     data-bs-dismiss="modal">
                                                                     Close
                                                                 </button>
-                                                                <button type="button" class="btn btn-primary">
+                                                                {{-- <button type="button" class="btn btn-primary">
                                                                     Save changes
-                                                                </button>
+                                                                </button> --}}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -101,7 +101,7 @@
                                                 <strong>Kode SN</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                ALDASDUAD120912
+                                                {{ $data->kode_sn }}
                                             </div>
                                         </div>
                                         <hr>
@@ -110,7 +110,7 @@
                                                 <strong>Kategori</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                Laptop
+                                                {{ $data->category->nama_kategori }}
                                             </div>
                                         </div>
                                         <hr>
@@ -119,7 +119,7 @@
                                                 <strong>Sub Kategori</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                Elektronik
+                                                {{-- {{ $data->subcategory->nama_sub_kategori }} --}}
                                             </div>
                                         </div>
                                         <hr>
@@ -128,7 +128,7 @@
                                                 <strong>Jumlah Barang</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                200
+                                                {{ $data->jumlah_barang }}
                                             </div>
                                         </div>
                                         <hr>
@@ -137,7 +137,7 @@
                                                 <strong>Lokasi</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                Gedung Tik
+                                                {{ $data->location->lokasi_umum }}
                                             </div>
                                         </div>
                                     </div>
@@ -151,7 +151,7 @@
                                                 <strong>Lokasi Terinci</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                Ruang H-18
+                                                {{ $data->specificLocation->lokasi_khusus }}
                                             </div>
                                         </div>
                                         <hr>
@@ -160,7 +160,7 @@
                                                 <strong>Penanggung Jawab</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                John Doe
+                                                {{ $data->penanggung_jawab }}
                                             </div>
                                         </div>
                                         <hr>
@@ -169,7 +169,7 @@
                                                 <strong>Jabatan</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                Staff
+                                                {{ $data->jabatan }}
                                             </div>
                                         </div>
                                         <hr>
@@ -184,24 +184,35 @@
                                             </div>
                                         </div>
                                         <hr> --}}
-                                        <div class="d-flex justify-content-between gap-3">
+                                        {{-- <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
                                                 <strong>Periode Pengadaan</strong>
                                             </div>
                                             <div class="col-sm-8">
                                                 2019
                                             </div>
-                                        </div>
-                                        <hr>
+                                        </div> --}}
+                                        {{-- <hr> --}}
 
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
                                                 <strong>Tahun Perolehan</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                2019
+                                                {{ $data->tahun_perolehan }}
                                             </div>
                                         </div>
+                                        <hr>
+
+                                        <div class="d-flex justify-content-between gap-3">
+                                            <div class="col-sm-4">
+                                                <strong>Keterangan</strong>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                {{ $data->keterangan }}
+                                            </div>
+                                        </div>
+                                        <hr>
                                     </div>
                                 </div>
                             </div>

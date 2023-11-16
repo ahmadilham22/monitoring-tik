@@ -5,37 +5,36 @@ namespace App\Http\Controllers\Monitoring;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use App\Models\DataAsset\FixedAsset;
 
 class MonitoringController extends Controller
 {
     public function index()
     {
         if (request()->ajax()) {
-            $data = [
-                [
-                    'id' => 1,
-                    'kategori' => 'Laptop',
-                    'sub_kategori' => 'Laptop acer Nitro 5',
-                    'lokasi' => 'Gedung TIK',
-                    'jumlah' => '200',
-                    'kondisi' => 'Baik',
-                    'penanggung_jawab' => 'Admin 1',
-                ],
-            ];
+            if (request()->ajax()) {
+                $data = FixedAsset::with(['category', 'subcategory', 'location', 'specificLocation', 'division', 'procurement'])
+                    ->select(
+                        'fixed_assets.id',
+                        'kode_sn',
+                        'categories.nama_kategori as category_name',
+                        'sub_categories.nama_sub_kategori as sub_category_name',
+                        'locations.lokasi_umum',
+                        'jumlah_barang',
+                        'kondisi',
+                        'penanggung_jawab'
+                    )
+                    ->join('categories', 'fixed_assets.category_id', '=', 'categories.id')
+                    ->join('sub_categories', 'fixed_assets.sub_category_id', '=', 'sub_categories.id')
+                    ->join('locations', 'fixed_assets.location_id', '=', 'locations.id')
+                    ->get();
 
-            $datatablesData = collect($data)->map(function ($item) {
-                return [
-                    'id' => $item['id'],
-                    'kategori' => $item['kategori'],
-                    'sub_kategori' => $item['sub_kategori'],
-                    'lokasi' => $item['lokasi'],
-                    'jumlah' => $item['jumlah'],
-                    'kondisi' => $item['kondisi'],
-                    'penanggung_jawab' => $item['penanggung_jawab'],
-                    'action' => view('components.actions.monitoringAction', compact('item'))->render(),
-                ];
-            });
-            return DataTables::of($datatablesData)->addIndexColumn()->make();
+                return DataTables::of($data)
+                    ->addColumn('action', function ($data) {
+                        return view('pages.monitoring._action.monitoringAction', compact('data'));
+                    })->addIndexColumn()->make(true);
+            }
+            return view('pages.data-asset.fixed-assets.index');
         }
 
         return view('pages.monitoring.index');
@@ -49,8 +48,10 @@ class MonitoringController extends Controller
     {
         return view('pages.monitoring.edit');
     }
-    public function show()
+    public function show($id)
     {
-        return view('pages.monitoring.show');
+        $data = FixedAsset::with(['category', 'subcategory', 'location', 'specificLocation', 'division', 'procurement'])->findOrFail($id);
+
+        return view('pages.monitoring.show', compact('data'));
     }
 }
