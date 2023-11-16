@@ -15,11 +15,10 @@ class SpecialLocationController extends Controller
     {
         if (request()->ajax()) {
             $data = SpecialLocation::with(['location'])->get();
-            return datatables()->of($data)
-                ->addColumn('action', 'components.actions.spesificLocationAction')
-                ->rawColumns(['action'])
-                ->addIndexColumn()
-                ->make(true);
+            return DataTables::of($data)
+                ->addColumn('action', function ($data) {
+                    return view('pages.data-master.special-location._action.spesificLocationAction', compact('data'));
+                })->addIndexColumn()->make(true);
         }
         $data = Location::all();
         return view('pages.data-master.special-location.index', compact('data'));
@@ -27,16 +26,6 @@ class SpecialLocationController extends Controller
 
     public function store(Request $request)
     {
-        $lokasi = $request->all();
-
-        SpecialLocation::create($lokasi);
-
-        return redirect()->route('special-location.index')->with('success', 'Lokasi berhasil ditambahkan.');
-    }
-
-    public function update(Request $request)
-    {
-
         $locationId = $request->id;
 
         $location = SpecialLocation::updateOrCreate(

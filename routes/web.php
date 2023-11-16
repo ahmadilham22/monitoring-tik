@@ -63,11 +63,13 @@ Route::prefix('data-master')->group(function () {
     });
 
     // Specific Location
-    Route::get('/special/location', [SpecialLocationController::class, 'index'])->name('special-location.index');
-    Route::post('/special/location', [SpecialLocationController::class, 'store'])->name('special-location.store');
-    Route::post('/special/location/edit', [SpecialLocationController::class, 'edit'])->name('special-location.edit');
-    Route::post('/special/location/update', [SpecialLocationController::class, 'update'])->name('special-location.update');
-    Route::post('/special/location/delete', [SpecialLocationController::class, 'destroy'])->name('special-location.destroy');
+    Route::prefix('/specific-location')->group(function () {
+        Route::get('/', [SpecialLocationController::class, 'index'])->name('special-location.index');
+        Route::post('/store', [SpecialLocationController::class, 'store'])->name('special-location.store');
+        Route::post('/edit', [SpecialLocationController::class, 'edit'])->name('special-location.edit');
+        Route::delete('/delete', [SpecialLocationController::class, 'destroy'])->name('special-location.destroy');
+    });
+
 
     // Location
     Route::prefix('division')->group(function () {
