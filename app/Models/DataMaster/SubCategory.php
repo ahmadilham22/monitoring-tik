@@ -22,11 +22,11 @@ class SubCategory extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'categories_id');
     }
 
     public function fixedAssets(): HasMany
     {
-        return $this->hasMany(FixedAsset::class, 'sub_category_id', 'id');
+        return $this->hasMany(FixedAsset::class, 'sub_category_id');
     }
 }
