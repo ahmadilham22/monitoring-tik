@@ -1,5 +1,39 @@
 @extends('layouts.app')
 
+@section('css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #ced4da;
+            /* Warna border yang mirip dengan Bootstrap */
+            border-radius: .25rem;
+            /* Sudut sudut yang sedikit membulat */
+            height: calc(2.25rem + 2px);
+            /* Tinggi kotak yang sama dengan input Bootstrap */
+            line-height: 1.5;
+            /* Spasi antara baris yang mirip dengan Bootstrap */
+        }
+
+        /* Gaya untuk tombol dropdown */
+        .select2-container--default .select2-selection__arrow {
+            height: calc(2.25rem + 2px);
+            /* Tinggi tombol dropdown yang sama */
+        }
+
+        /* Gaya untuk dropdown item */
+        .select2-container--default .select2-results__option--highlighted {
+            background-color: #f8f9fa;
+            /* Warna latar belakang yang mirip dengan Bootstrap */
+            color: #495057;
+            /* Warna teks yang mirip dengan Bootstrap */
+        }
+    </style>
+@endsection
+
 
 @section('content')
     <div class="container flex-grow-1 container-p-y">
@@ -33,6 +67,10 @@
         </div>
     </div>
     @include('pages.data-master.sub-category._partial.model')
+@endsection
+
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 @endsection
 
 @push('addon-script')
