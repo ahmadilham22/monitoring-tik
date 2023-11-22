@@ -1,4 +1,14 @@
 <script>
+    // SELECT2
+    $(document).ready(function() {
+        $('#cat_id').select2({
+            dropdownParent: $('#subCategory-model'),
+            placeholder: 'Pilih...'
+        })
+    })
+    // SELECT2
+
+    // CRUD
     function add() {
         $('#subCategoryForm').trigger("reset");
         $('#modalHeader').html("Tambah Sub Kategori");
@@ -63,4 +73,5 @@
             }
         });
     });
+    // CRUD
 </script>
