@@ -1,5 +1,35 @@
 @extends('layouts.app')
 
+@section('css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #ced4da;
+            /* Warna border yang mirip dengan Bootstrap */
+            border-radius: .25rem;
+            /* Sudut sudut yang sedikit membulat */
+            height: calc(2.25rem + 2px);
+            /* Tinggi kotak yang sama dengan input Bootstrap */
+            line-height: 1.5;
+            /* Spasi antara baris yang mirip dengan Bootstrap */
+        }
+
+        /* Gaya untuk tombol dropdown */
+        .select2-container--default .select2-selection__arrow {
+            height: calc(2.25rem + 2px);
+            /* Tinggi tombol dropdown yang sama */
+        }
+
+        /* Gaya untuk dropdown item */
+        .select2-container--default .select2-results__option--highlighted {
+            background-color: #f8f9fa;
+            /* Warna latar belakang yang mirip dengan Bootstrap */
+            color: #495057;
+            /* Warna teks yang mirip dengan Bootstrap */
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="container flex-grow-1 container-p-y">
         <div class="row mb-3">
@@ -20,6 +50,20 @@
                             <form action="{{ route('asset-fixed.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
+                                    {{-- Kode BMN --}}
+                                    <div class="mb-3 d-flex">
+                                        <div class="col-md-3 mt-2 col-4">
+                                            <label for="exampleInputEmail1" class="form-label mt-2">Kode BMN</label>
+                                        </div>
+                                        <div class="col-md-7 col-8">
+                                            <input name="kode_bmn" type="text" class="form-control"
+                                                id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                placeholder="Masukan Kode BMN.." />
+                                        </div>
+                                    </div>
+                                    {{-- Kode BMN --}}
+
+                                    {{-- Kode SN --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
                                             <label for="exampleInputEmail1" class="form-label mt-2">Kode SN</label>
@@ -30,129 +74,87 @@
                                                 placeholder="Masukan Kode SN.." />
                                         </div>
                                     </div>
+                                    {{-- Kode SN --}}
+
+                                    {{-- Kategori --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="category_id" class="form-label mt-2">Kategori</label>
+                                            <label for="sub_category_id" class="form-label mt-2">Kategori</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <select id="categorySelect" name="category_id"
-                                                class="form-select form-select mb-3">
-                                                <option selected>Pilih...</option>
-                                                @foreach ($category as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->nama_kategori }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3 d-flex">
-                                        <div class="col-md-3 mt-2 col-4">
-                                            <label for="sub_category_id" class="form-label mt-2">Sub Kategori</label>
-                                        </div>
-                                        <div class="col-md-7 col-8">
-                                            <select id="subcategorySelect" name="sub_category_id"
-                                                class="form-select form-select mb-3">
-                                                <option selected>Pilih...</option>
-                                                @foreach ($subCategory as $item)
+                                            <select id="subcategorySelect" name="sub_category_id" class="form-select mb-3 ">
+                                                <option></option>
+                                                @foreach ($subCategories as $item)
                                                     <option value="{{ $item->id }}"
                                                         data-category-id="{{ $item->categories_id }}">
+                                                        {{ $item->category->nama_kategori }} /
                                                         {{ $item->nama_sub_kategori }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
+                                    {{-- Kategori --}}
+
+                                    {{-- Lokasi --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Lokasi Umum</label>
+                                            <label for="exampleInputEmail1" class="form-label mt-2">Lokasi</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <select name="location_id" class="form-select form-select mb-3"
-                                                aria-label="Large select example">
-                                                <option selected>Pilih...</option>
-                                                @foreach ($location as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->lokasi_umum }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3 d-flex">
-                                        <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Lokasi Khusus</label>
-                                        </div>
-                                        <div class="col-md-7 col-8">
-                                            <select name="specific_location_id" class="form-select form-select mb-3"
-                                                aria-label="Large select example">
-                                                <option selected>Pilih...</option>
+                                            <select id="specifiLocationSelect" name="specific_location_id"
+                                                class="form-select form-select mb-3" aria-label="Large select example">
+                                                <option></option>
                                                 @foreach ($specificLocation as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->lokasi_khusus }}
+                                                    <option value="{{ $item->id }}">{{ $item->location->lokasi_umum }} /
+                                                        {{ $item->lokasi_khusus }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
+                                    {{-- Lokasi --}}
+
+                                    {{-- Pengadaan --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
                                             <label for="exampleInputEmail1" class="form-label mt-2">Mitra</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <select name="procurement_id" class="form-select form-select mb-3"
-                                                aria-label="Large select example">
-                                                <option selected>Pilih...</option>
+                                            <select id="procurementSelect" name="procurement_id"
+                                                class="form-select form-select mb-3" aria-label="Large select example">
+                                                <option></option>
                                                 @foreach ($procurement as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->mitra }}
+                                                    <option value="{{ $item->id }}">{{ $item->mitra }} /
+                                                        {{ $item->jenis_pengadaan }} / {{ $item->tahun_pengadaan }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
+                                    {{-- Pengadaan --}}
+
+                                    {{-- Penanggung Jawab --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
                                             <label for="exampleInputEmail1" class="form-label mt-2">Penanggung
                                                 Jawab</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <input name="penanggung_jawab" type="text" class="form-control"
-                                                id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                placeholder="Masukan Penanggung Jawab.." />
-                                        </div>
-                                    </div>
-                                    <div class="mb-3 d-flex">
-                                        <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Divisi</label>
-                                        </div>
-                                        <div class="col-md-7 col-8">
-                                            <select name="division_id" class="form-select form-select mb-3"
-                                                aria-label="Large select example">
-                                                <option selected>Pilih...</option>
-                                                @foreach ($division as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->nama_divisi }}
+                                            <select id="penanggungJawabSelect" name="user_id"
+                                                class="form-select form-select mb-3" aria-label="Large select example">
+                                                <option></option>
+                                                @foreach ($user as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->nama }} /
+                                                        {{ $item->division->nama_divisi }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="mb-3 d-flex">
-                                        <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Jabatan</label>
-                                        </div>
-                                        <div class="col-md-7 col-8">
-                                            <input name="jabatan" type="text" class="form-control"
-                                                id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                placeholder="Masukan Penanggung Jawab.." />
-                                        </div>
-                                    </div>
-                                    <div class="mb-3 d-flex">
-                                        <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Jumlah Barang</label>
-                                        </div>
-                                        <div class="col-md-7 col-8">
-                                            <input name="jumlah_barang" type="text" class="form-control"
-                                                id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                placeholder="Masukan Penanggung Jawab.." />
-                                        </div>
-                                    </div>
+                                    {{-- Penanggung Jawab --}}
+
+                                    {{-- Kondisi --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
                                             <label for="exampleInputEmail1" class="form-label mt-2">Kondisi</label>
@@ -166,6 +168,9 @@
                                             </select>
                                         </div>
                                     </div>
+                                    {{-- Kondisi --}}
+
+                                    {{-- Tahun Perolehan --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
                                             <label for="exampleInputEmail1" class="form-label mt-2">Tahun
@@ -177,6 +182,9 @@
                                                 placeholder="Masukan Penanggung Jawab.." />
                                         </div>
                                     </div>
+                                    {{-- Tahun Perolehan --}}
+
+                                    {{-- Keterangan --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
                                             <label for="exampleInputEmail1" class="form-label mt-2">Keterangan</label>
@@ -185,6 +193,9 @@
                                             <textarea name="keterangan" class="form-control" id="exampleFormControlTextarea1" rows="5"></textarea>
                                         </div>
                                     </div>
+                                    {{-- Keterangan --}}
+
+                                    {{-- Button --}}
                                     <div class="mb-3 mt-4 d-flex text-right gap-2">
                                         <a href="{{ url()->previous() }}" class="btn btn-danger px-5" type="submit">
                                             Kembali
@@ -195,6 +206,8 @@
                                         <div class="col-md-2 col-4"></div>
                                         <div class="col-md-2 col-8"></div>
                                     </div>
+                                    {{-- Button --}}
+
                                 </div>
                             </form>
                         </div>
@@ -205,33 +218,30 @@
     </div>
 @endsection
 
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+@endsection
+
 @push('addon-script')
+    @include('pages.data-asset.fixed-assets._function.function')
+
     {{-- <script>
-        $(document).ready(function() {
-            $('#categorySelect').select2({
-                placeholder: 'Pilih Kategori',
-            });
-        })
-    </script> --}}
-    <script>
         document.getElementById('categorySelect').addEventListener('change', function() {
             var selectedCategoryId = this.value;
-            // console.log(selectedCategoryId);
+            console.log(selectedCategoryId);
 
-            // Sembunyikan semua opsi Subkategori
             var subcategories = document.querySelectorAll('#subcategorySelect option');
             subcategories.forEach(function(subcategory) {
                 subcategory.style.display = 'none';
             });
-            // console.log(subcategories);
+            console.log(subcategories);
 
-            // Tampilkan hanya Subkategori yang sesuai dengan Kategori yang dipilih
             var matchingSubcategories = document.querySelectorAll('#subcategorySelect option[data-category-id="' +
                 selectedCategoryId + '"]');
-            // console.log(matchingSubcategories);
+            console.log(matchingSubcategories);
             matchingSubcategories.forEach(function(subcategory) {
                 subcategory.style.display = 'block';
             });
         });
-    </script>
+    </script> --}}
 @endpush

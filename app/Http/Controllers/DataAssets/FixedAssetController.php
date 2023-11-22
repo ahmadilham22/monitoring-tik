@@ -4,72 +4,87 @@ namespace App\Http\Controllers\DataAssets;
 
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Http\Controllers\Controller;
-use App\Models\DataAsset\FixedAsset;
+use App\Models\DataMaster\User;
 use App\Models\DataMaster\Category;
 use App\Models\DataMaster\Division;
 use App\Models\DataMaster\Location;
+use App\Http\Controllers\Controller;
+use App\Models\DataAsset\FixedAsset;
 use App\Models\DataMaster\Procurement;
-use App\Models\DataMaster\SpecialLocation;
 use App\Models\DataMaster\SubCategory;
+use App\Models\DataMaster\SpecialLocation;
 
 class FixedAssetController extends Controller
 {
     public function index(Request $request)
     {
         if (request()->ajax()) {
-            $data = FixedAsset::with(['category', 'subcategory', 'location', 'specificLocation', 'division', 'procurement'])
-                ->select(
-                    'fixed_assets.id',
-                    'kode_sn',
-                    'categories.nama_kategori as category_name',
-                    'sub_categories.nama_sub_kategori as sub_category_name',
-                    'locations.lokasi_umum',
-                    'jumlah_barang',
-                    'kondisi',
-                    'penanggung_jawab'
-                )
-                ->join('categories', 'fixed_assets.category_id', '=', 'categories.id')
-                ->join('sub_categories', 'fixed_assets.sub_category_id', '=', 'sub_categories.id')
-                ->join('locations', 'fixed_assets.location_id', '=', 'locations.id')
-                ->get();
+            $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement'])->get();
 
-            if ($request->filled('kondisi')) {
-                $data->where('kondisi', $request->tahun);
+            if ($request->input('kondisi') !== null) {
+                $data = $data->where('kondisi', $request->kondisi);
             }
+
+            // if ($request->input('kategori') !== null) {
+            //     $data = $data->where('category_name', $request->kategori);
+            // }
 
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
                     return view('pages.data-asset.fixed-assets.action.fixedAssetAction', compact('data'));
-                })->addIndexColumn()->make(true);
+                })
+                ->addColumn('checkbox', function ($data) {
+                    return view('pages.data-asset.fixed-assets.action.checkbox', compact('data'));
+                })
+                ->rawColumns(['action', 'checkbox'])
+                ->addIndexColumn()->make(true);
         }
-        return view('pages.data-asset.fixed-assets.index');
+
+        $kondisi = FixedAsset::selectRaw('kondisi')
+            ->distinct()
+            ->pluck('kondisi')
+            ->toArray();
+
+        // $kondisi1 = FixedAsset::with(['category'])
+        //     ->select(
+        //         'categories.nama_kategori as category_name',
+        //     )
+        //     ->join('categories', 'fixed_assets.category_id', '=', 'categories.id')
+        //     ->distinct()
+        //     ->pluck('category_name')
+        //     ->toArray();
+
+        $conditions = array_combine($kondisi, $kondisi);
+        // $categories = array_combine($kondisi1, $kondisi1);
+        // dd($categories);
+
+        return view('pages.data-asset.fixed-assets.index', compact('conditions'));
     }
 
     public function create()
     {
         $category = Category::all();
         $subCategory = SubCategory::all();
+        $subCategories = SubCategory::with('category')->get();
+        // dd($subCategories);
         $location = Location::all();
         $division = Division::all();
         $procurement = Procurement::all();
-        $specificLocation = SpecialLocation::all();
-        return view('pages.data-asset.fixed-assets.create', compact('category', 'subCategory', 'location', 'specificLocation', 'procurement', 'division'));
+        $specificLocation = SpecialLocation::with('location')->get();;
+        $user = User::with('division')->get();
+        // dd($user);
+        return view('pages.data-asset.fixed-assets.create', compact('category', 'subCategories', 'subCategory', 'location', 'specificLocation', 'procurement', 'user'));
     }
 
     public function store(Request $request)
     {
         $data = $this->validate($request, [
-            'category_id' => 'required',
             'sub_category_id' => 'required',
-            'location_id' => 'required',
             'procurement_id' => 'required',
-            'division_id' => 'required',
             'specific_location_id' => 'required',
+            'user_id' => 'required',
+            'kode_bmn' => 'min:5',
             'kode_sn' => 'required',
-            'jumlah_barang' => 'required',
-            'penanggung_jawab' => 'required',
-            'jabatan' => 'required',
             'kondisi' => 'required',
             'tahun_perolehan' => 'required',
             'keterangan' => 'required',
@@ -87,7 +102,8 @@ class FixedAssetController extends Controller
 
     public function show($id)
     {
-        $data = FixedAsset::with(['category', 'subcategory', 'location', 'specificLocation', 'division', 'procurement'])->findOrFail($id);
+        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement'])->findOrFail($id);
+        // dd($data);
         return view('pages.data-asset.fixed-assets.show', compact('data'));
     }
 
@@ -96,5 +112,19 @@ class FixedAssetController extends Controller
         $data = FixedAsset::findOrFail($id);
         $data->delete();
         return view('pages.data-asset.fixed-assets.index');
+    }
+
+    public function selectCategory()
+    {
+        $data = Category::where('nama_kategori', 'LIKE', '%' . request('q') . '%')->paginate(10);
+
+        return response()->json($data);
+    }
+
+    public function selectSubCategory($id)
+    {
+        $data = SubCategory::where('categories_id', $id)->where('nama_sub_kategori', 'LIKE', '%' . request('q') . '%')->paginate(10);
+
+        return response()->json($data);
     }
 }

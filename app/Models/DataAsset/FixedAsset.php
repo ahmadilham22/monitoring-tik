@@ -8,6 +8,7 @@ use App\Models\DataMaster\Location;
 use App\Models\DataMaster\Procurement;
 use App\Models\DataMaster\SpecialLocation;
 use App\Models\DataMaster\SubCategory;
+use App\Models\DataMaster\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,44 +21,32 @@ class FixedAsset extends Model
 
     protected $table = 'fixed_assets';
     protected $fillable = [
-        'category_id',
         'sub_category_id',
-        'location_id',
         'specific_location_id',
-        'division_id',
+        'user_id',
         'procurement_id',
+        'kode_bmn',
         'kode_sn',
         'jumlah_barang',
         'penanggung_jawab',
-        'jabatan',
         'kondisi',
         'tahun_perolehan',
         'keterangan',
     ];
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
-
     public function subcategory()
     {
-        return $this->belongsTo(SubCategory::class);
+        return $this->belongsTo(SubCategory::class, 'id');
     }
 
-    public function location()
+    public function user()
     {
-        return $this->belongsTo(Location::class);
+        return $this->belongsTo(User::class);
     }
 
     public function specificLocation()
     {
         return $this->belongsTo(SpecialLocation::class);
-    }
-
-    public function division()
-    {
-        return $this->belongsTo(Division::class);
     }
 
     public function procurement()

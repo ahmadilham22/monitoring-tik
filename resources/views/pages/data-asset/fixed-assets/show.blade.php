@@ -1,5 +1,13 @@
 @extends('layouts.app')
 
+@section('css')
+    <style>
+        img {
+            width: 200px;
+        }
+    </style>
+@endsection
+
 
 @section('content')
     <div class="container mt-4">
@@ -10,89 +18,22 @@
                         <h4>Data Aset</h4>
                     </div>
                     <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-12 d-flex justify-content-center align-items-center">
+                                <img class="img-fluid" src="{{ asset('assets/img/illustrations/qr-code.webp') }}"
+                                    alt="">
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="card bg-light h-100">
                                     <div class="card-body">
-                                        {{-- <div class="d-flex justify-content-between gap-3">
-                                            <div class="col-sm-4">
-                                                <strong>Tampilkan Gambar</strong>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#gambar">Tampilkan
-                                                </button>
-                                                <div class="modal fade" id="gambar" tabindex="-1"
-                                                    aria-labelledby="gambarLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h1 class="modal-title fs-5" id="gambarLabel">
-                                                                    Gambar Laptop Acer Nitro 5
-                                                                </h1>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="row justify-content-center">
-                                                                    <img class="img-fluid w-75 h-100"
-                                                                        src="{{ asset('assets/img/illustrations/acer-nitro-5.jpg') }}"
-                                                                        alt="">
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">
-                                                                    Close
-                                                                </button>
-                                                                <button type="button" class="btn btn-primary">
-                                                                    Save changes
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr> --}}
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
-                                                <strong>Tampilkan Qr Code</strong>
+                                                <strong>Kode BMN</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#qrCode">Tampilkan
-                                                </button>
-                                                <div class="modal fade" id="qrCode" tabindex="-1"
-                                                    aria-labelledby="qrCodeLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h1 class="modal-title fs-5" id="qrCodeLabel">
-                                                                    Qr Code Laptop Acer Nitro 5
-                                                                </h1>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="row justify-content-center">
-                                                                    <img class="img-fluid w-75 h-100"
-                                                                        src="{{ asset('assets/img/illustrations/qr-code.webp') }}"
-                                                                        alt="">
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">
-                                                                    Close
-                                                                </button>
-                                                                {{-- <button type="button" class="btn btn-primary">
-                                                                    Save changes
-                                                                </button> --}}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                {{ $data->kode_bmn }}
                                             </div>
                                         </div>
                                         <hr>
@@ -110,7 +51,7 @@
                                                 <strong>Kategori</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                {{ $data->category->nama_kategori }}
+                                                {{ $data->subcategory->category->nama_kategori }}
                                             </div>
                                         </div>
                                         <hr>
@@ -119,7 +60,8 @@
                                                 <strong>Sub Kategori</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                {{-- {{ $data->subcategory->nama_sub_kategori }} --}}
+                                                {{ $data->subcategory->nama_sub_kategori }}
+
                                             </div>
                                         </div>
                                         <hr>
@@ -128,7 +70,7 @@
                                                 <strong>Jumlah Barang</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                {{ $data->jumlah_barang }}
+                                                1
                                             </div>
                                         </div>
                                         <hr>
@@ -137,7 +79,8 @@
                                                 <strong>Lokasi</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                {{ $data->location->lokasi_umum }}
+                                                {{ $data->specificlocation->location->lokasi_umum }}
+
                                             </div>
                                         </div>
                                     </div>
@@ -148,10 +91,11 @@
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
-                                                <strong>Lokasi Terinci</strong>
+                                                <strong>Sub Lokasi</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                {{ $data->specificLocation->lokasi_khusus }}
+                                                {{ $data->specificlocation->lokasi_khusus }}
+
                                             </div>
                                         </div>
                                         <hr>
@@ -160,7 +104,7 @@
                                                 <strong>Penanggung Jawab</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                {{ $data->penanggung_jawab }}
+                                                {{ $data->user->nama }}
                                             </div>
                                         </div>
                                         <hr>
@@ -169,7 +113,7 @@
                                                 <strong>Jabatan</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                {{ $data->jabatan }}
+                                                {{ $data->user->division->nama_divisi }}
                                             </div>
                                         </div>
                                         <hr>

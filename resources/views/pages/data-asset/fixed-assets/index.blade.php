@@ -12,29 +12,31 @@
                             Data
                         </a>
                         <div class="row mt-4 mb-4 d-flex">
-                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="col-lg-3 col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label class="form-label">Kondisi</label>
-                                    <select id="kondisiFilter" class="form-select form-select-sm"
+                                    <label class="form-label">Kondisi : </label>
+                                    <select id="kondisiFilter" class="form-select form-select-sm filter"
                                         aria-label="Large select example">
                                         <option value="">Tampilkan Semua</option>
-                                        <option value="Baik">Baik</option>
-                                        <option value="Buruk">Buruk</option>
+                                        @foreach ($conditions as $condition)
+                                            <option value="{{ $condition }}">{{ $condition }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 col-sm-12">
+                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label class="form-label">Jenis Aset</label>
-                                    <select class="form-select form-select-sm" aria-label="Large select example">
-                                        <option selected>Pilih...</option>
-                                        <option value="1">Buku</option>
-                                        <option value="2">Televisi</option>
-                                        <option value="3">laptop</option>
+                                    <label class="form-label">Kategori</label>
+                                    <select id="kategoriFilter" class="form-select form-select-sm filter"
+                                        aria-label="Large select example">
+                                        <option value="">Tampilkan Semua</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category }}">{{ $category }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-12">
+                            </div> --}}
+                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label class="form-label">Jenis Aset</label>
                                     <select class="form-select form-select-sm" aria-label="Large select example">
@@ -60,11 +62,11 @@
                                         <th>Kode SN</th>
                                         <th>Kategori</th>
                                         <th>Sub Kategori</th>
-                                        <th>Lokasi Umum</th>
-                                        <th>Jumlah</th>
+                                        <th>Lokasi</th>
                                         <th>Kondisi</th>
                                         <th>Penanggung Jawab</th>
                                         <th>Aksi</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -80,20 +82,22 @@
 
 @push('addon-script')
     <script>
-        $('#kondisiFilter').on('change', function() {
-            var kondisi = $(this).val();
-
-            $('#myTable').DataTable().ajax.url('{{ route('asset-fixed.index') }}?kondisi=' + kondisi).load();
-        });
+        let kondisi = $('#kondisiFilter').val();
+        let kategori = $('#kategoriFilter').val();
         $(document).ready(function() {
-            $('#myTable').DataTable({
+            let table = $('#myTable').DataTable({
                 processing: true,
                 responsive: true,
                 serverSide: true,
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "All"]
+                ],
                 ajax: {
-                    url: "{{ route('asset-fixed.index') }}",
+                    url: '{{ route('asset-fixed.index') }}',
                     data: function(d) {
-                        d.kondisi = $('#kondisiFilter').val();
+                        d.kondisi = kondisi;
+                        d.kategori = kategori;
                     }
                 },
                 columns: [{
@@ -105,38 +109,45 @@
                         name: 'kode_sn',
                     },
                     {
-                        data: 'category_name',
-                        name: 'category_name'
+                        data: 'subcategory.category.nama_kategori',
+                        name: 'subcategory.category.nama_kategori',
                     },
                     {
-                        data: 'sub_category_name',
-                        name: 'sub_category_name',
+                        data: 'subcategory.nama_sub_kategori',
+                        name: 'subcategory.nama_sub_kategori',
                     },
                     {
-                        data: 'lokasi_umum',
-                        name: 'lokasi_umum'
-                    },
-                    {
-                        data: 'jumlah_barang',
-                        name: 'jumlah_barang'
+                        data: 'specificlocation.location.lokasi_umum',
+                        name: 'specificlocation.location.lokasi_umum'
                     },
                     {
                         data: 'kondisi',
                         name: 'kondisi'
                     },
                     {
-                        data: 'penanggung_jawab',
-                        name: 'penanggung_jawab'
+                        data: 'user.nama',
+                        name: 'user.nama'
                     },
                     {
                         data: 'action',
-                        name: 'action'
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                        searchable: false
                     },
                 ],
             });
-            // $('#kondisiFilter').on('change', function() {
-            //     table.draw();
-            // });
+
+            $('.filter').on('change', function() {
+                kondisi = $('#kondisiFilter').val();
+                kategori = $('#kategoriFilter').val();
+                table.ajax.reload(null, false);
+            })
         });
     </script>
     @include('pages.data-asset.fixed-assets._function.function')
