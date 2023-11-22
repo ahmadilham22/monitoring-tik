@@ -61,7 +61,7 @@
                 </li>
                 <li class="menu-item {{ request()->is('data-master/specific-location*') ? 'active' : '' }}">
                     <a href="{{ route('special-location.index') }}" class="menu-link">
-                        <div data-i18n="Blank">Lokasi Khusus</div>
+                        <div data-i18n="Blank">Sub Lokasi</div>
                     </a>
                 </li>
                 <li class="menu-item {{ request()->is('data-master/division*') ? 'active' : '' }}">

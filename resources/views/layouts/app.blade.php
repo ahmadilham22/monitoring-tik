@@ -11,6 +11,7 @@
 
     <meta name="description" content="" />
     @include('components.style')
+    @yield('css')
 </head>
 
 <body>
@@ -44,6 +45,7 @@
         </div>
     </div>
     @include('components.script')
+    @yield('js')
     @stack('addon-script')
 </body>
 

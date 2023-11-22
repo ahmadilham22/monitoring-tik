@@ -33,4 +33,3 @@
  {{-- Data Tables --}}
  <link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/r-2.5.0/datatables.min.css" rel="stylesheet">
  <link rel="stylesheet" href="{{ asset('assets/css-own.css') }}">
- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />

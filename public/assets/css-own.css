@@ -42,6 +42,14 @@ body {
     border-radius: 20px 0 0 20px;
 }
 
+.dataTables_wrapper .dataTables_processing {
+    /* background-image: url("./img/animation/spinner.gif"); */
+    z-index: 99999;
+    background: white;
+    /* border: 1px solid blue; */
+    border-radius: 3px;
+}
+
 @media only screen and (max-width: 600px) {
     .border-image .content .left-content .fill-content img {
         border-radius: 20px 20px 0 0;
