@@ -11,20 +11,21 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="mb-3">
-                            <label for="kode_lokasi" class="form-label">Kode Lokasi</label>
-                            <input type="text" name="kode_lokasi" id="kode_lokasi" class="form-control"
-                                placeholder="Masukan Kode...">
-                        </div>
-                        <div class="mb-3">
                             <label class="form-label">Lokasi Umum</label>
-                            <select class="form-select form-select mb-3" name="location_id" id="location_id"
+                            <select class="form-select form-select" name="location_id" id="location_id"
                                 aria-label="Large select example">
-                                <option selected>Pilih...</option>
+                                <option></option>
                                 @foreach ($data as $item)
-                                    <option value="{{ $item->id }}">{{ $item->lokasi_umum }}
+                                    <option value="{{ $item->id }}">
+                                        {{ $item->kode_lokasi }} / {{ $item->lokasi_umum }}
                                     </option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="kode_lokasi" class="form-label">Kode Lokasi</label>
+                            <input type="text" name="kode_lokasi" id="kode_lokasi" class="form-control"
+                                placeholder="Masukan Kode...">
                         </div>
                         <div class="mb-3">
                             <label for="lokasi" class="form-label">Lokasi Khusus</label>

@@ -1,4 +1,13 @@
 <script>
+    // SELECT2
+    $(document).ready(function() {
+        $('#location_id').select2({
+            dropdownParent: $('#specificLocation-modal'),
+            placeholder: 'Pilih...'
+        })
+    })
+    // SELECT2
+
     function add() {
         $('#specificLocationForm').trigger("reset");
         $('#modalHeader').html("Tambah Lokasi");
