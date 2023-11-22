@@ -86,8 +86,13 @@ Route::prefix('data-master')->group(function () {
     });
 
     // User
-    Route::get('/user', [UserController::class, 'index'])->name('user.index');
-    Route::get('/user/user-detail', [UserController::class, 'detail'])->name('user.detail');
+    Route::prefix('user')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('user.index');
+        Route::post('/store', [UserController::class, 'store'])->name('user.store');
+        Route::post('/edit', [UserController::class, 'edit'])->name('user.edit');
+        Route::delete('/delete', [UserController::class, 'destroy'])->name('user.destroy');
+        Route::get('/user/user-detail', [UserController::class, 'detail'])->name('user.detail');
+    });
 });
 
 // Data aset
@@ -100,6 +105,8 @@ Route::prefix('data-assets')->group(function () {
         Route::get('/edit', [FixedAssetController::class, 'edit'])->name('asset-fixed.edit');
         Route::get('/show/{id}', [FixedAssetController::class, 'show'])->name('asset-fixed.show');
         Route::delete('/delete/{id}', [FixedAssetController::class, 'destroy'])->name('asset-fixed.destroy');
+        Route::get('/selectCategory', [FixedAssetController::class, 'selectCategory'])->name('selectCategory');
+        Route::get('/selectSubCategory/{id}', [FixedAssetController::class, 'selectsubCategory'])->name('selectSubCategory');
     });
 });
 
