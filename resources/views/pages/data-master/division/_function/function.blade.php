@@ -1,7 +1,7 @@
 <script>
     function add() {
         $('#divisionForm').trigger("reset");
-        $('#modalHeader').html("Add Employee");
+        $('#modalHeader').html("Tambah Divisi");
         $('#division-modal').modal('show');
         $('#id').val('');
     }
@@ -19,6 +19,7 @@
                 $('#modalHeader').html("Edit Divisi");
                 $('#division-modal').modal('show');
                 $('#id').val(res.id);
+                $('#kode_divisi').val(res.kode_divisi);
                 $('#nama_divisi').val(res.nama_divisi);
             }
         });

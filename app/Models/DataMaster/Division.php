@@ -13,6 +13,7 @@ class Division extends Model
 
     protected $table = 'divisions';
     protected $fillable = [
+        'kode_divisi',
         'nama_divisi'
     ];
 
@@ -23,6 +24,11 @@ class Division extends Model
         static::saving(function ($division) {
             $division->nama_divisi = strtoupper($division->nama_divisi);
         });
+    }
+
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class, 'division_id');
     }
 
     public function fixedAssets(): HasMany

@@ -45,6 +45,7 @@ class DivisionController extends Controller
                 'id' => $divisiId
             ],
             [
+                'kode_divisi' => $request->kode_divisi,
                 'nama_divisi' => $request->nama_divisi,
             ]
         );

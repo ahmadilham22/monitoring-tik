@@ -7,7 +7,7 @@
             <div class="col-lg-12 order-0">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Lokasi</h4>
+                        <h4>Divisi</h4>
                     </div>
                     <div class="card-body">
                         <a href="#" class="btn btn-primary" onclick="add()">Tambah Divisi
@@ -17,6 +17,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Kode Divisi</th>
                                         <th>Divisi</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -49,6 +50,10 @@
                 columns: [{
                         data: 'id',
                         name: 'id'
+                    },
+                    {
+                        data: 'kode_divisi',
+                        name: 'kode_divisi'
                     },
                     {
                         data: 'nama_divisi',
