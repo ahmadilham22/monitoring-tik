@@ -15,9 +15,11 @@
             },
             dataType: 'json',
             success: function(res) {
+                console.log(res);
                 $('#modalHeader').html("Edit Lokasi");
                 $('#location-model').modal('show');
                 $('#id').val(res.id);
+                $('#kode_lokasi').val(res.kode_lokasi);
                 $('#lokasi_umum').val(res.lokasi_umum);
             }
         });
@@ -50,6 +52,7 @@
             contentType: false,
             processData: false,
             success: (response) => {
+                console.log(response);
                 $("#location-model").modal('hide');
                 var oTable = $('#myTable').dataTable();
                 oTable.fnDraw(false);

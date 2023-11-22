@@ -45,6 +45,7 @@ class LocationController extends Controller
                     'id' => $locationId
                 ],
                 [
+                    'kode_lokasi' => $request->kode_lokasi,
                     'lokasi_umum' => $request->lokasi_umum,
                 ]
             );

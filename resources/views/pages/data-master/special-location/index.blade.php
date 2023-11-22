@@ -7,10 +7,10 @@
             <div class="col-lg-12 order-0">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Lokasi Khusus</h4>
+                        <h4>Sub Lokasi</h4>
                     </div>
                     <div class="card-body">
-                        <a href="#" class="btn btn-primary" onclick="add()">Tambah Lokasi Khusus
+                        <a href="#" class="btn btn-primary" onclick="add()">Tambah Sub Lokasi
                         </a>
                         <div class="table-responsive text-nowrap mt-4">
                             <table id="myTable" class="table table-bordered table-sm w-100">

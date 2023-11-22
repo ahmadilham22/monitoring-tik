@@ -27,6 +27,6 @@ class SpecialLocation extends Model
 
     public function fixedAssets(): HasMany
     {
-        return $this->hasMany(FixedAsset::class, 'specific_location', 'id');
+        return $this->hasMany(FixedAsset::class, 'specific_location_id', 'id');
     }
 }

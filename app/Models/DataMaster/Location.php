@@ -15,6 +15,7 @@ class Location extends Model
 
     protected $table = 'locations';
     protected $fillable = [
+        'kode_lokasi',
         'lokasi_umum'
     ];
 

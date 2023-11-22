@@ -9,9 +9,16 @@
                 <form action="javascript:void(0)" id="LocationForm" name="LocationForm" class="form-horizontal"
                     method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id" id="id">
-                    <div class="form-group">
-                        <label for="lokasi_umum" class="col-sm-2 control-label">Lokasi Umum</label>
-                        <div class="col-sm-12">
+                    <div class="form-group mb-3">
+                        <label for="kode_lokasi" class="col-12 control-label">Kode Lokasi</label>
+                        <div class="col-sm-12 mt-1">
+                            <input type="text" class="form-control" id="kode_lokasi" name="kode_lokasi"
+                                placeholder="Masukan Lokasi" maxlength="50" required="">
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="lokasi_umum" class="col-12 control-label">Lokasi Umum</label>
+                        <div class="col-sm-12 mt-1">
                             <input type="text" class="form-control" id="lokasi_umum" name="lokasi_umum"
                                 placeholder="Masukan Lokasi" maxlength="50" required="">
                         </div>

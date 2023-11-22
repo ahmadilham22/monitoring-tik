@@ -10,7 +10,7 @@
                         <h4>Lokasi</h4>
                     </div>
                     <div class="card-body">
-                        <a class="btn btn-primary" onclick="add()" href="javascript:void()">Tambah
+                        <a class="btn btn-primary" onclick="add()" href="#">Tambah
                             Lokasi
                         </a>
                         <div class="table-responsive text-nowrap mt-4">
@@ -18,6 +18,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Kode Lokasi</th>
                                         <th>Lokasi</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -45,10 +46,18 @@
             $('#myTable').DataTable({
                 processing: true,
                 serverSide: true,
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "All"]
+                ],
                 ajax: "{{ route('location.index') }}",
                 columns: [{
                         data: 'id',
                         name: 'id'
+                    },
+                    {
+                        data: 'kode_lokasi',
+                        name: 'kode_lokasi'
                     },
                     {
                         data: 'lokasi_umum',

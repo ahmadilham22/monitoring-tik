@@ -16,7 +16,7 @@
             dataType: 'json',
             success: function(res) {
                 // console.log(res);
-                $('#specificLocationForm').html("Edit Lokasi");
+                $('#modalHeader').html("Edit Lokasi");
                 $('#specificLocation-modal').modal('show');
                 $('#id').val(res.id);
                 $('#kode_lokasi').val(res.kode_lokasi);
