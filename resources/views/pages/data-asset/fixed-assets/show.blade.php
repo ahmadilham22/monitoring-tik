@@ -20,8 +20,10 @@
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-12 d-flex justify-content-center align-items-center">
-                                <img class="img-fluid" src="{{ asset('assets/img/illustrations/qr-code.webp') }}"
-                                    alt="">
+                                <div class="visible-print text-center">
+                                    {!! QrCode::size(200)->generate(Request::url()) !!}
+                                    {{-- <p>Scan me to return to the original page.</p> --}}
+                                </div>
                             </div>
                         </div>
                         <div class="row">

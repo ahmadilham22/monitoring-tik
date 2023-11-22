@@ -13,6 +13,7 @@ use App\Models\DataAsset\FixedAsset;
 use App\Models\DataMaster\Procurement;
 use App\Models\DataMaster\SubCategory;
 use App\Models\DataMaster\SpecialLocation;
+use BaconQrCode\Encoder\QrCode;
 
 class FixedAssetController extends Controller
 {
@@ -103,6 +104,7 @@ class FixedAssetController extends Controller
     public function show($id)
     {
         $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement'])->findOrFail($id);
+        // $qrcode = QrCode::($data->kode_sn);
         // dd($data);
         return view('pages.data-asset.fixed-assets.show', compact('data'));
     }
