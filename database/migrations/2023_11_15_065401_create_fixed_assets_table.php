@@ -13,16 +13,12 @@ return new class extends Migration
     {
         Schema::create('fixed_assets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->index()->constrained();
             $table->foreignId('sub_category_id')->index()->constrained();
-            $table->foreignId('location_id')->index()->constrained();
             $table->foreignId('specific_location_id')->index()->constrained();
-            $table->foreignId('division_id')->index()->constrained();
             $table->foreignId('procurement_id')->index()->constrained();
+            $table->foreignId('user_id')->index()->constrained();
+            $table->string('kode_bmn')->nullable();
             $table->string('kode_sn');
-            $table->string('jumlah_barang');
-            $table->string('penanggung_jawab');
-            $table->string('jabatan');
             $table->string('kondisi');
             $table->string('tahun_perolehan');
             $table->string('keterangan');

@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('divisions', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_divisi');
-            $table->string('nama_divisi');
+            $table->string('nama');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->enum('role', ['super_admin', 'admin', 'user'])->default('user');
+            $table->foreignId('division_id')->index()->nullable()->constrained();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('divisions');
+        Schema::dropIfExists('users');
     }
 };
