@@ -47,7 +47,8 @@
                                     <div class="card h-100">
                                         <div class="card-header d-flex align-items-center justify-content-between pb-0">
                                             <div class="card-title mb-0">
-                                                <h5 class="m-0 me-2 mb-3">{{ $item->category_name }}</h5>
+                                                <h5 class="m-0 me-2 mb-3">{{ $item->subcategory->category->nama_kategori }}
+                                                </h5>
                                             </div>
                                         </div>
                                         <div class="card-body">
