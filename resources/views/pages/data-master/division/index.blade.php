@@ -48,8 +48,8 @@
                 serverSide: true,
                 ajax: "{{ route('division.index') }}",
                 columns: [{
-                        data: 'id',
-                        name: 'id'
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
                     },
                     {
                         data: 'kode_divisi',
@@ -62,7 +62,8 @@
                     {
                         data: 'action',
                         name: 'action',
-                        orderable: false
+                        orderable: false,
+                        searchable: false,
                     },
                 ]
             });

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\DataMaster\Division;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 use App\Models\DataMaster\Division;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class DivisionController extends Controller
 {
@@ -22,35 +24,43 @@ class DivisionController extends Controller
         return view('pages.data-master.division.index', compact('data'));
     }
 
-    // public function store(Request $request)
-    // {
-    //     $divisi = strtoupper($request->input('nama_divisi'));
-
-    //     if (Division::where('nama_divisi', $divisi)->exists()) {
-    //         return redirect()->route('division.index')->with('error', 'Divisi sudah ada.');
-    //     } else {
-    //         Division::create(['nama_divisi' => $divisi]);
-
-    //         return redirect()->route('division.index')->with('success', 'Divisi berhasil ditambahkan.');
-    //     }
-    // }
-
     public function store(Request $request)
     {
 
         $divisiId = $request->id;
 
-        $division = Division::updateOrCreate(
-            [
-                'id' => $divisiId
+        $validator = Validator::make($request->all(), [
+            'kode_divisi' => [
+                'required',
+                Rule::unique('divisions')->ignore($divisiId),
             ],
-            [
-                'kode_divisi' => $request->kode_divisi,
-                'nama_divisi' => $request->nama_divisi,
-            ]
-        );
+            'nama_divisi' => 'required',
+        ], [
+            'kode_divisi.required' => 'Kode divisi wajib diisi.',
+            'kode_divisi.unique' => 'Kode divisi sudah ada.',
+            'nama_divisi.required' => 'Nama divisi wajib diisi.',
+        ]);
 
-        return Response()->json($division);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
+
+        try {
+            $division = Division::updateOrCreate(
+                [
+                    'id' => $divisiId
+                ],
+                [
+                    'kode_divisi' => $request->kode_divisi,
+                    'nama_divisi' => $request->nama_divisi,
+                ]
+            );
+
+            return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $division]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
+        }
     }
 
     public function edit(Request $request)
@@ -63,8 +73,8 @@ class DivisionController extends Controller
 
     public function destroy(Request $request)
     {
-        $location = Division::where('id', $request->id);
-        $location->delete();
-        return Response()->json($location);
+        $division = Division::where('id', $request->id);
+        $division->delete();
+        return Response()->json(['data' => $division, 'message' => 'Data Berhasil di Hapus']);
     }
 }
