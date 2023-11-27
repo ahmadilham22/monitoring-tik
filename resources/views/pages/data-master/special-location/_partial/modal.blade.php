@@ -12,9 +12,8 @@
                     <div class="row">
                         <div class="mb-3">
                             <label class="form-label">Lokasi Umum</label>
-                            <select class="form-select form-select" name="location_id" id="location_id"
-                                aria-label="Large select example">
-                                <option></option>
+                            <select class="form-select" name="location_id" id="location_id" required>
+                                <option value="" selected></option>
                                 @foreach ($data as $item)
                                     <option value="{{ $item->id }}">
                                         {{ $item->kode_lokasi }} / {{ $item->lokasi_umum }}
@@ -28,16 +27,13 @@
                                 placeholder="Masukan Kode...">
                         </div>
                         <div class="mb-3">
-                            <label for="lokasi" class="form-label">Lokasi Khusus</label>
+                            <label for="lokasi" class="form-label">Sub Lokasi</label>
                             <input type="text" name="lokasi_khusus" id="lokasi_khusus" class="form-control"
                                 placeholder="Masukan Kode...">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
                     <button type="submit" class="btn btn-primary">
                         Save changes
                     </button>

@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\DataMaster\Location;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 use App\Models\DataMaster\Location;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DataMaster\SpecificLocationRequest;
+use Illuminate\Support\Facades\Validator;
 use App\Models\DataMaster\SpecialLocation;
+use App\Http\Requests\DataMaster\SpecificLocationRequest;
 
 class SpecialLocationController extends Controller
 {
@@ -27,19 +29,41 @@ class SpecialLocationController extends Controller
     public function store(Request $request)
     {
         $locationId = $request->id;
-
-        $location = SpecialLocation::updateOrCreate(
-            [
-                'id' => $locationId
+        $validator = Validator::make($request->all(), [
+            'location_id' => 'required',
+            'kode_lokasi' => [
+                'required',
+                Rule::unique('locations')->ignore($locationId),
             ],
-            [
-                'kode_lokasi' => $request->kode_lokasi,
-                'location_id' => $request->location_id,
-                'lokasi_khusus' => $request->lokasi_khusus,
-            ]
-        );
+            'lokasi_khusus' => 'required',
+        ], [
+            'location_id.required' => 'Lokasi harus diisi',
+            'kode_lokasi.required' => 'Kode lokasi wajib diisi',
+            'kode_lokasi.unique' => 'Kode lokasi sudah ada',
+            'lokasi_khusus.required' => 'Nama sub lokasi wajib diisi',
+        ]);
 
-        return Response()->json($location);
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
+
+        try {
+            $location = SpecialLocation::updateOrCreate(
+                [
+                    'id' => $locationId
+                ],
+                [
+                    'kode_lokasi' => $request->kode_lokasi,
+                    'location_id' => $request->location_id,
+                    'lokasi_khusus' => $request->lokasi_khusus,
+                ]
+            );
+
+            return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $location]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
+        }
     }
 
     public function edit(Request $request)
@@ -54,6 +78,6 @@ class SpecialLocationController extends Controller
     {
         $location = SpecialLocation::where('id', $request->id);
         $location->delete();
-        return Response()->json($location);
+        return Response()->json(['data' => $location, 'message' => 'Data Berhasil di Hapus']);
     }
 }

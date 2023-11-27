@@ -50,8 +50,8 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode Lokasi</th>
                                         <th>Lokasi Umum</th>
+                                        <th>Kode Lokasi</th>
                                         <th>Sub Lokasi</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -83,7 +83,7 @@
 
             $('#myTable').DataTable({
                 responsive: true,
-                processing: true,
+                // processing: true,
                 serverSide: true,
                 ajax: "{{ route('special-location.index') }}",
                 columns: [{
@@ -91,12 +91,13 @@
                         name: 'DT_RowIndex',
                     },
                     {
-                        data: 'kode_lokasi',
-                        name: 'kode_lokasi'
-                    },
-                    {
                         data: 'location.lokasi_umum',
                         name: 'location.lokasi_umum'
+                    },
+
+                    {
+                        data: 'kode_lokasi',
+                        name: 'kode_lokasi'
                     },
                     {
                         data: 'lokasi_khusus',
@@ -104,7 +105,9 @@
                     },
                     {
                         data: 'action',
-                        name: 'action'
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
                     },
                 ],
             });
