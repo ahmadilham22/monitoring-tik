@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\DataMaster\SubCategory;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\DataMaster\SubCategoryRequest;
 use App\Models\DataMaster\Category;
+use App\Http\Controllers\Controller;
 use App\Models\DataMaster\SubCategory;
-use App\Repositories\DataMaster\CategoryRepository;
-use App\Repositories\DataMaster\SubCategoryRepository;
+use Illuminate\Support\Facades\Validator;
 use App\Services\DataMaster\SubCategoryService;
+use App\Repositories\DataMaster\CategoryRepository;
+use App\Http\Requests\DataMaster\SubCategoryRequest;
+use App\Repositories\DataMaster\SubCategoryRepository;
 
 class SubCategoryController extends Controller
 {
@@ -26,21 +28,37 @@ class SubCategoryController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $data = $this->subCategoryRepository->getAll();
+            $data = SubCategory::with('category')->get();
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
                     return view('pages.data-master.sub-category._action.subCategoryAction', compact('data'));
                 })->addIndexColumn()->make(true);
         }
 
-        $data = $this->categoryRepository->getAll();
+        $data = Category::orderBy('nama_kategori')->get();
         return view('pages.data-master.sub-category.index', compact('data'));
     }
 
     public function store(Request $request)
     {
+        $subCategoryId = $request->id;
+        $validator = Validator::make($request->all(), [
+            'kode_sub_kategori' => [
+                'required',
+                Rule::unique('sub_categories')->ignore($subCategoryId),
+            ],
+            'nama_sub_kategori' => 'required',
+        ], [
+            'kode_sub_kategori.required' => 'Kode Sub kategori wajib diisi',
+            'kode_sub_kategori.unique' => 'Kode Sub kategori sudah ada',
+            'nama_sub_kategori.required' => 'Nama Sub kategori wajib diisi',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
         try {
-            $subCategoryId = $request->id;
             $subCategory = SubCategory::updateOrCreate(
                 [
                     'id' => $subCategoryId
@@ -53,7 +71,7 @@ class SubCategoryController extends Controller
             );
 
             return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $subCategory]);
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
         }
     }
@@ -69,6 +87,6 @@ class SubCategoryController extends Controller
     {
         $subCategory = SubCategory::where('id', $request->id);
         $subCategory->delete();
-        return Response()->json($subCategory);
+        return Response()->json(['data' => $subCategory, 'message' => 'Data berhasil di Hapus']);
     }
 }

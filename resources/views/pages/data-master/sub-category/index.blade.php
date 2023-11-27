@@ -44,13 +44,14 @@
                         <h4>Sub Kategori Barang</h4>
                     </div>
                     <div class="card-body">
-                        <a href="javacript:void(0)" class="btn btn-primary" onclick="add()">Tambah Data
+                        <a href="#" class="btn btn-primary" onclick="add()">Tambah Data
                         </a>
                         <div class="table-responsive text-nowrap mt-4">
                             <table id="myTable" class="table table-bordered table-sm w-100">
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Kategori</th>
                                         <th>Kode Sub Kategori</th>
                                         <th>Nama Sub Kategori</th>
                                         <th>Terakhir Update</th>
@@ -82,14 +83,18 @@
                 }
             });
             $('#myTable').DataTable({
-                processing: true,
                 responsive: true,
                 serverSide: true,
                 ajax: "{{ route('sub-category.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
-                    }, {
+                    },
+                    {
+                        data: 'category.nama_kategori',
+                        name: 'category.nama_kategori'
+                    },
+                    {
                         data: 'kode_sub_kategori',
                         name: 'kode_sub_kategori'
                     },
@@ -99,7 +104,13 @@
                     },
                     {
                         data: 'updated_at',
-                        name: 'terakhir_update',
+                        name: 'updated_at',
+                        render: function(data, type, row) {
+                            if (type === 'display' || type === 'filter') {
+                                return moment(data).format('DD/MM/YYYY');
+                            }
+                            return data;
+                        }
                     },
                     {
                         data: 'action',
