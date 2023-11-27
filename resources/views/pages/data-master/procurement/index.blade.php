@@ -46,12 +46,12 @@
             });
 
             $('#myTable').DataTable({
-                processing: true,
+                responsive: true,
                 serverSide: true,
                 ajax: "{{ route('procurement.index') }}",
                 columns: [{
-                        data: 'id',
-                        name: 'id'
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
                     },
                     {
                         data: 'mitra',
@@ -68,7 +68,8 @@
                     {
                         data: 'action',
                         name: 'action',
-                        orderable: false
+                        orderable: false,
+                        searchable: false,
                     },
                 ]
             });

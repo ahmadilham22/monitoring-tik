@@ -2,11 +2,12 @@
 
 namespace App\Models\DataMaster;
 
+use Illuminate\Support\Carbon;
 use App\Models\DataAsset\FixedAsset;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Procurement extends Model
 {
@@ -18,6 +19,11 @@ class Procurement extends Model
         'jenis_pengadaan',
         'tahun_pengadaan',
     ];
+
+    public function getTahunPengadaanAttribute($value)
+    {
+        return Carbon::parse($value)->format('Y');
+    }
 
     public function fixedAssets(): HasMany
     {

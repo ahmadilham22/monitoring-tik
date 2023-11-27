@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\DataMaster\Procurement;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Models\DataMaster\Procurement;
+use Illuminate\Support\Facades\Validator;
 
 class ProcurementController extends Controller
 {
@@ -22,36 +24,41 @@ class ProcurementController extends Controller
         return view('pages.data-master.procurement.index', compact('data'));
     }
 
-    // public function store(Request $request)
-    // {
-    //     $pengadaan = $request->all();
-
-    //     if (Division::where('nama_divisi', $pengadaan)->exists()) {
-    //         return redirect()->route('division.index')->with('error', 'Divisi sudah ada.');
-    //     } else {
-    //     }
-    //     Procurement::create($pengadaan);
-
-    //     return redirect()->route('procurement.index')->with('success', 'Divisi berhasil ditambahkan.');
-    // }
-
     public function store(Request $request)
     {
 
         $pengadaanId = $request->id;
+        $validator = Validator::make($request->all(), [
+            'mitra' => 'required',
+            'jenis_pengadaan' => 'required',
+            'tahun_pengadaan' => 'required',
+        ], [
+            'mitra.required' => 'Mitra wajib diisi',
+            'jenis_pengadaan.required' => 'Jenis pengadaan wajib diisi',
+            'tahun_pengadaan.required' => 'Tahun pengadaan wajib diisi',
+        ]);
 
-        $procurement = Procurement::updateOrCreate(
-            [
-                'id' => $pengadaanId
-            ],
-            [
-                'mitra' => $request->mitra,
-                'jenis_pengadaan' => $request->jenis_pengadaan,
-                'tahun_pengadaan' => $request->tahun_pengadaan,
-            ]
-        );
 
-        return Response()->json($procurement);
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
+
+        try {
+            $procurement = Procurement::updateOrCreate(
+                [
+                    'id' => $pengadaanId
+                ],
+                [
+                    'mitra' => $request->mitra,
+                    'jenis_pengadaan' => $request->jenis_pengadaan,
+                    'tahun_pengadaan' => $request->tahun_pengadaan,
+                ]
+            );
+
+            return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $procurement]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
+        }
     }
 
     public function edit(Request $request)
