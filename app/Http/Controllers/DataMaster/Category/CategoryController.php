@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\DataMaster\Category;
 
-use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\DataMaster\CategoryRequest;
-use App\Models\DataMaster\Category;
-use App\Repositories\DataMaster\CategoryRepository;
-use App\Services\DataMaster\CategoryService;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Yajra\DataTables\DataTables;
+use App\Models\DataMaster\Category;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use App\Services\DataMaster\CategoryService;
+use App\Http\Requests\DataMaster\CategoryRequest;
+use App\Repositories\DataMaster\CategoryRepository;
 
 class CategoryController extends Controller
 {
@@ -34,8 +36,25 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
+        $categoryId = $request->id;
+        $validator = Validator::make($request->all(), [
+            'kode_kategori' => [
+                'required',
+                Rule::unique('categories')->ignore($categoryId),
+            ],
+            'nama_kategori' => 'required',
+        ], [
+            'kode_kategori.required' => 'Kode kategori wajib diisi.',
+            'kode_kategori.unique' => 'Kode kategori sudah ada.',
+            'nama_kategori.required' => 'Nama kategori wajib diisi.',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
+
         try {
-            $categoryId = $request->id;
             $category = Category::updateOrCreate(
                 [
                     'id' => $categoryId
@@ -47,7 +66,7 @@ class CategoryController extends Controller
             );
 
             return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $category]);
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
         }
     }
@@ -63,6 +82,6 @@ class CategoryController extends Controller
     {
         $category = Category::where('id', $request->id);
         $category->delete();
-        return Response()->json($category);
+        return Response()->json(['data' => $category, 'message' => 'Data Berhasil di Hapus']);
     }
 }

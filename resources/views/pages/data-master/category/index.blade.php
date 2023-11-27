@@ -10,7 +10,7 @@
                         <h4>Kategori Barang</h4>
                     </div>
                     <div class="card-body">
-                        <a href="javascript:void(0)" class="btn btn-primary" onclick="add()">Tambah
+                        <a href="#" class="btn btn-primary" onclick="add()">Tambah
                             Kategori
                         </a>
                         <div class="table-responsive text-nowrap mt-4">
@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    @include('pages.data-master.category._partial.model')
+    @include('pages.data-master.category._partial.modal')
 @endsection
 
 @push('addon-script')
@@ -63,11 +63,19 @@
                     },
                     {
                         data: 'updated_at',
-                        name: 'terakhir_update',
+                        name: 'updated_at',
+                        render: function(data, type, row) {
+                            if (type === 'display' || type === 'filter') {
+                                return moment(data).format('DD/MM/YYYY');
+                            }
+                            return data;
+                        }
                     },
                     {
                         data: 'action',
-                        name: 'action'
+                        name: 'action',
+                        orderable: false,
+                        searchable: false
                     },
                 ],
             });

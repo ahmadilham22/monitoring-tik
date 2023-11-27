@@ -5,8 +5,8 @@
                 <h5 class="modal-title" id="modalHeader">Kategori</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="javascript:void(0)" id="subCategoryForm" name="subCategoryForm" class="form-horizontal"
-                method="POST" enctype="multipart/form-data">
+            <form action="#" id="categoryForm" name="categoryForm" class="form-horizontal" method="POST"
+                enctype="multipart/form-data">
                 <input type="hidden" name="id" id="id">
                 <div class="modal-body">
                     <div class="row">
@@ -25,9 +25,6 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
                     <button type="submit" class="btn btn-primary">
                         Save changes
                     </button>
