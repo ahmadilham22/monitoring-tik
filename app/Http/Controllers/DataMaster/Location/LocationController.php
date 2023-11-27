@@ -3,43 +3,49 @@
 namespace App\Http\Controllers\DataMaster\Location;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\DataMaster\LocationRequest;
 use App\Models\DataMaster\Location;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\DataMaster\LocationRequest;
 
 class LocationController extends Controller
 {
     public function index()
     {
         if (request()->ajax()) {
-            return datatables()->of(Location::select('*'))
-                ->addColumn('action', 'pages.data-master.location._action.locationAction')
-                ->rawColumns(['action'])
-                ->addIndexColumn()
-                ->make(true);
+            $data = Location::all();
+            return DataTables::of($data)
+                ->addColumn('action', function ($data) {
+                    return view('pages.data-master.location._action.locationAction', compact('data'));
+                })->addIndexColumn()->make(true);
         }
         $data = Location::all();
         return view('pages.data-master.location.index', compact('data'));
     }
 
-    // public function store(Request $request)
-    // {
-    //     $lokasi = strtoupper($request->input('lokasi_umum'));
-
-    //     if (Location::where('lokasi_umum', $lokasi)->exists()) {
-    //         return redirect()->route('location.index')->with('error', 'Lokasi sudah ada.');
-    //     } else {
-    //         Location::create(['lokasi_umum' => $lokasi]);
-
-    //         return redirect()->route('location.index')->with('success', 'Lokasi berhasil ditambahkan.');
-    //     }
-    // }
-
     public function store(Request $request)
     {
+        $locationId = $request->id;
+        $validator = Validator::make($request->all(), [
+            'kode_lokasi' => [
+                'required',
+                Rule::unique('locations')->ignore($locationId),
+            ],
+            'lokasi_umum' => 'required',
+        ], [
+            'kode_lokasi.required' => 'Kode lokasi wajib diisi',
+            'kode_lokasi.unique' => 'Kode lokasi sudah ada',
+            'lokasi_umum.required' => 'Nama lokasi wajib diisi',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
+
         try {
-            $locationId = $request->id;
             $location = Location::updateOrCreate(
                 [
                     'id' => $locationId
@@ -51,7 +57,7 @@ class LocationController extends Controller
             );
 
             return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $location]);
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
         }
     }
@@ -67,6 +73,6 @@ class LocationController extends Controller
     {
         $location = Location::where('id', $request->id);
         $location->delete();
-        return Response()->json($location);
+        return Response()->json(['data' => $location, 'message' => 'Data Berhasil di Hapus']);
     }
 }

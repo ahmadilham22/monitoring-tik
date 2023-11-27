@@ -44,16 +44,16 @@
                 }
             });
             $('#myTable').DataTable({
-                processing: true,
                 serverSide: true,
+                responsive: true,
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     [10, 25, 50, 100, "All"]
                 ],
                 ajax: "{{ route('location.index') }}",
                 columns: [{
-                        data: 'id',
-                        name: 'id'
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
                     },
                     {
                         data: 'kode_lokasi',
@@ -66,7 +66,8 @@
                     {
                         data: 'action',
                         name: 'action',
-                        orderable: false
+                        orderable: false,
+                        searchable: false
                     },
                 ]
             });
