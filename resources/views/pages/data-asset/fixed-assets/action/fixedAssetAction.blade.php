@@ -4,6 +4,7 @@
         <form action="{{ route('asset-fixed.destroy', $data->id) }}" class="" method="POST">
             @csrf
             @method('DELETE')
-            <button type="submit" class="btn btn-danger btn-xs pt-1"><i class="bx bx-trash mb-1"></i></button>
+            <button type="submit" id="deleteFixedAsset" class="btn btn-danger btn-xs pt-1"
+                data-confirm-delete="true"><i class="bx bx-trash mb-1"></i></button>
         </form>
     </div>

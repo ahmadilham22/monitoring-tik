@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\DataAssets;
 
 use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
 use App\Models\DataMaster\User;
+use BaconQrCode\Encoder\QrCode;
+use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
 use App\Models\DataMaster\Category;
 use App\Models\DataMaster\Division;
 use App\Models\DataMaster\Location;
@@ -13,7 +15,6 @@ use App\Models\DataAsset\FixedAsset;
 use App\Models\DataMaster\Procurement;
 use App\Models\DataMaster\SubCategory;
 use App\Models\DataMaster\SpecialLocation;
-use BaconQrCode\Encoder\QrCode;
 
 class FixedAssetController extends Controller
 {
@@ -26,10 +27,13 @@ class FixedAssetController extends Controller
                 $data = $data->where('kondisi', $request->kondisi);
             }
 
-            // if ($request->input('kategori') !== null) {
-            //     $data = $data->where('category_name', $request->kategori);
-            // }
+            if ($request->input('kategori') !== null) {
+                $data = $data->where('subcategory.category.nama_kategori', $request->kategori);
+            }
 
+            $title = 'Delete User!';
+            $text = "Are you sure you want to delete?";
+            confirmDelete($title, $text);
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
                     return view('pages.data-asset.fixed-assets.action.fixedAssetAction', compact('data'));
@@ -46,18 +50,10 @@ class FixedAssetController extends Controller
             ->pluck('kondisi')
             ->toArray();
 
-        // $kondisi1 = FixedAsset::with(['category'])
-        //     ->select(
-        //         'categories.nama_kategori as category_name',
-        //     )
-        //     ->join('categories', 'fixed_assets.category_id', '=', 'categories.id')
-        //     ->distinct()
-        //     ->pluck('category_name')
-        //     ->toArray();
-
         $conditions = array_combine($kondisi, $kondisi);
-        // $categories = array_combine($kondisi1, $kondisi1);
-        // dd($categories);
+        $title = 'Delete User!';
+        $text = "Are you sure you want to delete?";
+        confirmDelete($title, $text);
 
         return view('pages.data-asset.fixed-assets.index', compact('conditions'));
     }
@@ -67,12 +63,11 @@ class FixedAssetController extends Controller
         $category = Category::all();
         $subCategory = SubCategory::all();
         $subCategories = SubCategory::with('category')->get();
-        // dd($subCategories);
         $location = Location::all();
         $division = Division::all();
         $procurement = Procurement::all();
         $specificLocation = SpecialLocation::with('location')->get();;
-        $user = User::with('division')->get();
+        $user = User::with('division')->whereNotNull('division_id')->get();
         // dd($user);
         return view('pages.data-asset.fixed-assets.create', compact('category', 'subCategories', 'subCategory', 'location', 'specificLocation', 'procurement', 'user'));
     }
@@ -104,8 +99,6 @@ class FixedAssetController extends Controller
     public function show($id)
     {
         $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement'])->findOrFail($id);
-        // $qrcode = QrCode::($data->kode_sn);
-        // dd($data);
         return view('pages.data-asset.fixed-assets.show', compact('data'));
     }
 
@@ -113,7 +106,7 @@ class FixedAssetController extends Controller
     {
         $data = FixedAsset::findOrFail($id);
         $data->delete();
-        return view('pages.data-asset.fixed-assets.index');
+        return redirect()->route('asset-fixed.index');
     }
 
     public function selectCategory()

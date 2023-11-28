@@ -85,8 +85,7 @@
                                             <select id="subcategorySelect" name="sub_category_id" class="form-select mb-3 ">
                                                 <option></option>
                                                 @foreach ($subCategories as $item)
-                                                    <option value="{{ $item->id }}"
-                                                        data-category-id="{{ $item->categories_id }}">
+                                                    <option value="{{ $item->id }}">
                                                         {{ $item->category->nama_kategori }} /
                                                         {{ $item->nama_sub_kategori }}
                                                     </option>
@@ -160,7 +159,8 @@
                                             <label for="exampleInputEmail1" class="form-label mt-2">Kondisi</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <select name="kondisi" class="form-select form-select mb-3 required"
+                                            <select id="kondisi" name="kondisi"
+                                                class="form-select form-select mb-3 required"
                                                 aria-label="Large select example">
                                                 <option value="">Pilih...</option>
                                                 <option value="Baik">Baik</option>

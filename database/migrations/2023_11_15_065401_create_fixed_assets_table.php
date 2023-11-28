@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('procurement_id')->index()->constrained();
             $table->foreignId('user_id')->index()->constrained();
             $table->string('kode_bmn')->nullable();
-            $table->string('kode_sn');
+            $table->string('kode_sn')->unique();
             $table->string('kondisi');
             $table->string('tahun_perolehan');
             $table->string('keterangan');

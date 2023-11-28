@@ -12,6 +12,9 @@
         $('#penanggungJawabSelect').select2({
             placeholder: 'Pilih...'
         })
+        $('#kondisi').select2({
+            placeholder: 'Pilih...'
+        })
     })
     // $(document).ready(function() {
     //     $('.form-select-category').select2({
