@@ -1,4 +1,4 @@
-<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" style="z-index: 2">
     <div class="app-brand demo border-bottom">
         <a href="index.html" class="app-brand-link">
             <span class="app-brand-logo demo">
@@ -36,7 +36,7 @@
                 </li> --}}
                 <li class="menu-item {{ request()->is('data-master/category*') ? 'active' : '' }}">
                     <a href="{{ route('category.index') }}" class="menu-link">
-                        <div data-i18n="Without navbar">Kategori Barang</div>
+                        <div data-i18n="Without navbar">Kategori</div>
                     </a>
                 </li>
                 <li class="menu-item {{ request()->is('data-master/sub-category*') ? 'active' : '' }}">
@@ -86,13 +86,19 @@
         <li class="menu-item {{ request()->is('data-asset*') ? 'active' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
-                <div data-i18n="Layouts">Data Asset</div>
+                <div data-i18n="Layouts">
+                    @if (Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin')
+                        Data Asset
+                    @elseif (Auth::user()->role == 'user')
+                        Monitoring
+                    @endif
+                </div>
             </a>
 
             <ul class="menu-sub">
                 <li class="menu-item {{ request()->is('data-assets/fixed*') ? 'active' : '' }}">
                     <a href="{{ route('asset-fixed.index') }}" class="menu-link">
-                        <div data-i18n="Without menu">Tetap</div>
+                        <div data-i18n="Without menu">Data Aset Tetap</div>
                     </a>
                 </li>
                 {{-- <li class="menu-item {{ request()->is('asset-moved*') ? 'active' : '' }}">
@@ -104,12 +110,12 @@
         </li>
 
         {{-- Monitoring --}}
-        <li class="menu-item {{ request()->is('monitoring*') ? 'active' : '' }}">
+        {{-- <li class="menu-item {{ request()->is('monitoring*') ? 'active' : '' }}">
             <a href="{{ route('monitoring.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-data"></i>
                 <div data-i18n="Analytics">Monitoring</div>
             </a>
-        </li>
+        </li> --}}
         {{-- Monitoring --}}
 
         {{-- Laporan --}}

@@ -1,5 +1,12 @@
 @extends('layouts.app')
 
+@section('css')
+    <style>
+        .swal2-container {
+            z-index: 1000;
+        }
+    </style>
+@endsection
 
 @section('content')
     <div class="container flex-grow-1 container-p-y">
@@ -9,9 +16,9 @@
                     <div class="d-flex align-items-end">
                         <div class="col-sm-7">
                             <div class="card-body">
-                                <h5 class="card-title text-primary mb-5">
-                                    Selamat Datang, John Doe! 🎉
-                                </h5>
+                                <h3 class="card-title text-primary mb-5">
+                                    Selamat Datang, {{ Auth::user()->nama }}! 🎉
+                                </h3>
                                 <p class="mb-4">
                                     {{-- You have done <span class="fw-bold">72%</span> more
                                     sales today. Check your new badge in your profile. --}}
@@ -859,4 +866,18 @@
         </div>
         {{-- <a href="https://themeselection.com/">ThemeSelection</a> --}}
     </div>
+@endsection
+
+@section('js')
+    <script>
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Selamat Datang',
+                text: '{{ session('success') }}',
+                showConfirmButton: true,
+                timer: 3000,
+            })
+        @endif
+    </script>
 @endsection

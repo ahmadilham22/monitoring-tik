@@ -12,6 +12,7 @@
     <meta name="description" content="" />
     @include('components.style')
     @yield('css')
+    @include('sweetalert::alert')
 </head>
 
 <body>
