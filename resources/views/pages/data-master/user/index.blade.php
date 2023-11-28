@@ -46,14 +46,22 @@
                 }
             });
             $('#myTable').DataTable({
-                processing: true,
+                columnDefs: [{
+                    width: '5%',
+                    targets: 0
+                }],
                 responsive: true,
                 serverSide: true,
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "All"]
+                ],
                 ajax: "{{ route('user.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
-                    }, {
+                    },
+                    {
                         data: 'nama',
                         name: 'nama'
                     },
@@ -71,7 +79,9 @@
                     },
                     {
                         data: 'action',
-                        name: 'action'
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
                     },
                 ],
             });

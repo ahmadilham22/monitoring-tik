@@ -4,10 +4,12 @@ namespace App\Http\Controllers\DataMaster\User;
 
 use Illuminate\Http\Request;
 use App\Models\DataMaster\User;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 use App\Models\DataMaster\Division;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -26,9 +28,26 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $userId = $request->id;
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required',
+            'email' => ['required', Rule::unique('users')->whereNull('deleted_at')],
+            'password' => 'required',
+            'role' => 'required',
+        ], [
+            'nama.required' => 'Nama wajib diisi',
+            'email.required' => 'Email wajib diisi',
+            'email.unique' => 'Email sudah ada',
+            'password.required' => 'Password wajib diisi',
+            'role.required' => 'Role wajib diisi',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        }
         try {
-            $userId = $request->id;
-            $User = User::updateOrCreate(
+            $user = User::updateOrCreate(
                 [
                     'id' => $userId
                 ],
@@ -41,17 +60,23 @@ class UserController extends Controller
                 ]
             );
 
-            return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $User]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, $e]);
+            return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $user]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
         }
     }
-    public function edit()
+    public function edit(Request $request)
     {
+        $id = array('id' => $request->id);
+        $user  = User::where($id)->first();
+        return response()->json($user);
     }
 
-    public function destroy()
+    public function destroy(Request $request)
     {
+        $user = User::where('id', $request->id);
+        $user->delete();
+        return Response()->json(['data' => $user, 'message' => 'Data Berhasil di Hapus']);
     }
 
     public function detail()

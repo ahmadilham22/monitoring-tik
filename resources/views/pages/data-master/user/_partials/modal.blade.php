@@ -7,7 +7,7 @@
                  </h1>
                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
              </div>
-             <form action="javascript:void(0)" id="userForm" name="userForm" class="form-horizontal" method="POST"
+             <form action="#" id="userForm" name="userForm" class="form-horizontal" method="POST"
                  enctype="multipart/form-data">
                  <div class="modal-body">
                      <div class="row">
