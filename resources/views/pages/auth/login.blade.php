@@ -118,4 +118,37 @@
 @endsection
 
 @section('js')
+    @if (session('failed'))
+        <script>
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                timer: 2000,
+                icon: 'error',
+                title: 'Gagal',
+                text: '{{ session('failed') }}',
+                showConfirmButton: false,
+            });
+        </script>
+    @endif
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: '{{ session('error') }}',
+                showConfirmButton: true,
+                timer: 3000,
+            });
+        </script>
+    @endif
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: '{{ $errors->first() }}',
+                showConfirmButton: true,
+                timer: 3000,
+            });
+        </script>
+    @endif
 @endsection

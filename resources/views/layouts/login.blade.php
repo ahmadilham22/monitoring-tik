@@ -42,8 +42,8 @@
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="../assets/js/config.js"></script>
     <link rel="stylesheet" href="{{ asset('assets/css-own.css') }}">
-
     @yield('css')
+    @include('sweetalert::alert')
 
 </head>
 
@@ -67,10 +67,13 @@
     <!-- Main JS -->
     <script src="../assets/js/main.js"></script>
 
+
     <!-- Page JS -->
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @yield('js')
 </body>
 
 </html>
