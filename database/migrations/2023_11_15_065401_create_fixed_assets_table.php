@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('kode_sn');
             $table->string('kondisi');
             $table->string('tahun_perolehan');
-            $table->string('keterangan');
+            $table->string('keterangan')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

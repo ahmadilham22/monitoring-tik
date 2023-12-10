@@ -125,12 +125,12 @@ class FixedAssetController extends Controller
             'procurement_id' => 'required',
             'specific_location_id' => 'required',
             'user_id' => 'required',
-            'kode_bmn' => 'min:5',
+            'kode_bmn' => 'nullable|min:5',
             'kode_sn' => 'required|unique:fixed_assets,kode_sn',
             'kondisi' => 'required',
             'unit_id' => 'required',
             'tahun_perolehan' => 'required',
-            'keterangan' => 'required',
+            'keterangan' => 'nullable',
         ], [
             'sub_category_id.required' => 'Kategori harus diisi.',
             'procurement_id.required' => 'Pengadaan harus diisi.',
@@ -142,7 +142,6 @@ class FixedAssetController extends Controller
             'kode_sn.unique' => 'Kode SN sudah ada .',
             'kondisi.required' => 'Kondisi harus diisi.',
             'tahun_perolehan.required' => 'Tahun Perolehan harus diisi.',
-            'keterangan.required' => 'Keterangan harus diisi.',
         ]);
 
         if ($data->fails()) {
@@ -205,7 +204,7 @@ class FixedAssetController extends Controller
 
     public function show($id)
     {
-        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement'])->findOrFail($id);
+        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement', 'unit'])->findOrFail($id);
 
         $folderPath = storage_path('app/public/qrcodes/');
         $qrCodePath = $folderPath . $data->kode_sn . '.png';
