@@ -16,9 +16,9 @@
                     <div class="d-flex align-items-end">
                         <div class="col-sm-7">
                             <div class="card-body">
-                                <h3 class="card-title text-primary mb-5">
+                                <h4 class="card-title text-primary mb-5">
                                     Selamat Datang, {{ Auth::user()->nama }}! 🎉
-                                </h3>
+                                </h4>
                                 <p class="mb-4">
                                     {{-- You have done <span class="fw-bold">72%</span> more
                                     sales today. Check your new badge in your profile. --}}
@@ -50,59 +50,62 @@
                     <div class="card-body">
                         <div class="row">
                             @foreach ($data as $item)
-                                <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                    <div class="card h-100">
-                                        <div class="card-header d-flex align-items-center justify-content-between pb-0">
-                                            <div class="card-title mb-0">
-                                                <h5 class="m-0 me-2 mb-3">{{ $item->subcategory->category->nama_kategori }}
-                                                </h5>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <div class="d-flex flex-column align-items-center gap-1">
-                                                    <h2 class="mb-2">{{ $item->total_count }}</h2>
+                                @if ($item->total_kategori > 0)
+                                    <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-header d-flex align-items-center justify-content-between pb-0">
+                                                <div class="card-title mb-0">
+                                                    <h5 class="m-0 me-2 mb-3">{{ $item->nama_kategori }}
+                                                    </h5>
                                                 </div>
                                             </div>
-                                            <ul class="p-0 m-0">
-                                                <li class="d-flex mb-4 pb-1 me-2">
-                                                    <div class="avatar flex-shrink-0 me-3">
-                                                        <span class="avatar-initial rounded bg-label-info"><i
-                                                                class="bx bx-check"></i></span>
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <div class="d-flex flex-column align-items-center gap-1">
+                                                        <h2 class="mb-2">{{ $item->total_kategori }}</h2>
                                                     </div>
-                                                    <div
-                                                        class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                        <div class="me-2">
-                                                            <h6 class="mb-0">Baik</h6>
+                                                </div>
+                                                <ul class="p-0 m-0">
+                                                    <li class="d-flex mb-4 pb-1 me-2">
+                                                        <div class="avatar flex-shrink-0 me-3">
+                                                            <span class="avatar-initial rounded bg-label-info"><i
+                                                                    class="bx bx-check"></i></span>
                                                         </div>
-                                                        <div class="user-progress">
-                                                            <small class="fw-semibold">190</small>
+                                                        <div
+                                                            class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                                            <div class="me-2">
+                                                                <h6 class="mb-0">Baik</h6>
+                                                            </div>
+                                                            <div class="user-progress">
+                                                                <small class="fw-semibold">{{ $item->baik }}</small>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </li>
-                                                <li class="d-flex mb-4 pb-1 me-2">
-                                                    <div class="avatar flex-shrink-0 me-3">
-                                                        <span class="avatar-initial rounded bg-label-danger"><i
-                                                                class="bx bx-x"></i></span>
-                                                    </div>
-                                                    <div
-                                                        class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                        <div class="me-2">
-                                                            <h6 class="mb-0">Rusak</h6>
-                                                            {{-- <small class="text-muted">Football, Cricket Kit</small> --}}
+                                                    </li>
+                                                    <li class="d-flex mb-4 pb-1 me-2">
+                                                        <div class="avatar flex-shrink-0 me-3">
+                                                            <span class="avatar-initial rounded bg-label-danger"><i
+                                                                    class="bx bx-x"></i></span>
                                                         </div>
-                                                        <div class="user-progress">
-                                                            <small class="fw-semibold">10</small>
+                                                        <div
+                                                            class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                                            <div class="me-2">
+                                                                <h6 class="mb-0">Rusak</h6>
+                                                                {{-- <small class="text-muted">Football, Cricket Kit</small> --}}
+                                                            </div>
+                                                            <div class="user-progress">
+                                                                <small class="fw-semibold">{{ $item->buruk }}</small>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                            <div class="col-lg-12 d-flex">
-                                                <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
+                                                    </li>
+                                                </ul>
+                                                <div class="col-lg-12 d-flex">
+                                                    <a href="{{ route('asset-fixed.index') }}"
+                                                        class="btn btn-primary ms-auto text-white">Selengkapnya</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
                             @endforeach
                             {{-- <div class="">
                                 <div class="collapse" id="dataAsetTetap">
@@ -174,358 +177,8 @@
                 </div>
             </div>
             {{-- Data Aset --}}
-            {{-- Data Aset --}}
-            <div class="col-md-12 mb-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Data Aset Tetap</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                <div class="card h-100">
-                                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
-                                        <div class="card-title mb-0">
-                                            <h5 class="m-0 me-2 mb-3">Laptop</h5>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div class="d-flex flex-column align-items-center gap-1">
-                                                <h2 class="mb-2">200</h2>
-                                                <!-- <span>Total Orders</span> -->
-                                            </div>
-                                        </div>
-                                        <ul class="p-0 m-0">
-                                            <li class="d-flex mb-4 pb-1 me-2">
-                                                <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-info"><i
-                                                            class="bx bx-home-alt"></i></span>
-                                                </div>
-                                                <div
-                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                    <div class="me-2">
-                                                        <h6 class="mb-0">Baik</h6>
-                                                        {{-- <small class="text-muted">Fine Art, Dining</small> --}}
-                                                    </div>
-                                                    <div class="user-progress">
-                                                        <small class="fw-semibold">190</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="d-flex mb-4 pb-1 me-2">
-                                                <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-secondary"><i
-                                                            class="bx bx-football"></i></span>
-                                                </div>
-                                                <div
-                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                    <div class="me-2">
-                                                        <h6 class="mb-0">Rusak</h6>
-                                                        {{-- <small class="text-muted">Football, Cricket Kit</small> --}}
-                                                    </div>
-                                                    <div class="user-progress">
-                                                        <small class="fw-semibold">10</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <div class="col-lg-12 d-flex">
-                                            <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                <div class="card h-100">
-                                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
-                                        <div class="card-title mb-0">
-                                            <h5 class="m-0 me-2 mb-3">Laptop</h5>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div class="d-flex flex-column align-items-center gap-1">
-                                                <h2 class="mb-2">200</h2>
-                                                <!-- <span>Total Orders</span> -->
-                                            </div>
-                                        </div>
-                                        <ul class="p-0 m-0">
-                                            <li class="d-flex mb-4 pb-1 me-2">
-                                                <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-info"><i
-                                                            class="bx bx-home-alt"></i></span>
-                                                </div>
-                                                <div
-                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                    <div class="me-2">
-                                                        <h6 class="mb-0">Baik</h6>
-                                                        {{-- <small class="text-muted">Fine Art, Dining</small> --}}
-                                                    </div>
-                                                    <div class="user-progress">
-                                                        <small class="fw-semibold">190</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="d-flex mb-4 pb-1 me-2">
-                                                <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-secondary"><i
-                                                            class="bx bx-football"></i></span>
-                                                </div>
-                                                <div
-                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                    <div class="me-2">
-                                                        <h6 class="mb-0">Rusak</h6>
-                                                        {{-- <small class="text-muted">Football, Cricket Kit</small> --}}
-                                                    </div>
-                                                    <div class="user-progress">
-                                                        <small class="fw-semibold">10</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <div class="col-lg-12 d-flex">
-                                            <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                <div class="card h-100">
-                                    <div class="card-header d-flex align-items-center justify-content-between pb-0">
-                                        <div class="card-title mb-0">
-                                            <h5 class="m-0 me-2 mb-3">Laptop</h5>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div class="d-flex flex-column align-items-center gap-1">
-                                                <h2 class="mb-2">200</h2>
-                                                <!-- <span>Total Orders</span> -->
-                                            </div>
-                                        </div>
-                                        <ul class="p-0 m-0">
-                                            <li class="d-flex mb-4 pb-1 me-2">
-                                                <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-info"><i
-                                                            class="bx bx-home-alt"></i></span>
-                                                </div>
-                                                <div
-                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                    <div class="me-2">
-                                                        <h6 class="mb-0">Baik</h6>
-                                                        {{-- <small class="text-muted">Fine Art, Dining</small> --}}
-                                                    </div>
-                                                    <div class="user-progress">
-                                                        <small class="fw-semibold">190</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="d-flex mb-4 pb-1 me-2">
-                                                <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-secondary"><i
-                                                            class="bx bx-football"></i></span>
-                                                </div>
-                                                <div
-                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                    <div class="me-2">
-                                                        <h6 class="mb-0">Rusak</h6>
-                                                        {{-- <small class="text-muted">Football, Cricket Kit</small> --}}
-                                                    </div>
-                                                    <div class="user-progress">
-                                                        <small class="fw-semibold">10</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <div class="col-lg-12 d-flex">
-                                            <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="">
-                                <div class="collapse" id="dataAsetBerjalan">
-                                    <div class="row">
-                                        <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                            <div class="card h-100">
-                                                <div
-                                                    class="card-header d-flex align-items-center justify-content-between pb-0">
-                                                    <div class="card-title mb-0">
-                                                        <h5 class="m-0 me-2 mb-3">Total Aset</h5>
-                                                    </div>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                                        <div class="d-flex flex-column align-items-center gap-1">
-                                                            <h2 class="mb-2">200</h2>
-                                                            <!-- <span>Total Orders</span> -->
-                                                        </div>
-                                                    </div>
-                                                    <ul class="p-0 m-0">
-                                                        <li class="d-flex mb-4 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-info"><i
-                                                                        class="bx bx-home-alt"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Decor</h6>
-                                                                    <small class="text-muted">Fine Art, Dining</small>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">849k</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="d-flex mb-4 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-secondary"><i
-                                                                        class="bx bx-football"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Sports</h6>
-                                                                    <small class="text-muted">Football, Cricket Kit</small>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">99</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="col-lg-12 d-flex">
-                                                        <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                            <div class="card h-100">
-                                                <div
-                                                    class="card-header d-flex align-items-center justify-content-between pb-0">
-                                                    <div class="card-title mb-0">
-                                                        <h5 class="m-0 me-2 mb-3">Total Aset</h5>
-                                                    </div>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                                        <div class="d-flex flex-column align-items-center gap-1">
-                                                            <h2 class="mb-2">200</h2>
-                                                            <!-- <span>Total Orders</span> -->
-                                                        </div>
-                                                    </div>
-                                                    <ul class="p-0 m-0">
-                                                        <li class="d-flex mb-4 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-info"><i
-                                                                        class="bx bx-home-alt"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Decor</h6>
-                                                                    <small class="text-muted">Fine Art, Dining</small>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">849k</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="d-flex mb-4 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-secondary"><i
-                                                                        class="bx bx-football"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Sports</h6>
-                                                                    <small class="text-muted">Football, Cricket Kit</small>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">99</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="col-lg-12 d-flex">
-                                                        <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                            <div class="card h-100">
-                                                <div
-                                                    class="card-header d-flex align-items-center justify-content-between pb-0">
-                                                    <div class="card-title mb-0">
-                                                        <h5 class="m-0 me-2 mb-3">Total Aset</h5>
-                                                    </div>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                                        <div class="d-flex flex-column align-items-center gap-1">
-                                                            <h2 class="mb-2">200</h2>
-                                                            <!-- <span>Total Orders</span> -->
-                                                        </div>
-                                                    </div>
-                                                    <ul class="p-0 m-0">
-                                                        <li class="d-flex mb-4 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-info"><i
-                                                                        class="bx bx-home-alt"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Decor</h6>
-                                                                    <small class="text-muted">Fine Art, Dining</small>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">849k</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="d-flex mb-4 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-secondary"><i
-                                                                        class="bx bx-football"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Sports</h6>
-                                                                    <small class="text-muted">Football, Cricket Kit</small>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">99</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="col-lg-12 d-flex">
-                                                        <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="demo-inline-spacing d-flex justify-content-end">
-                                    <a data-bs-toggle="collapse" href="#dataAsetBerjalan" role="button"
-                                        aria-expanded="false" aria-controls="collapseExample">
-                                        Aset Berjalan Lainnya <i class="bx bx-chevron-right"></i>
-                                    </a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- Data Aset --}}
+
+
             {{-- User --}}
             <div class="col-md-12 mb-4">
                 <div class="card">
@@ -534,163 +187,54 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div class="d-flex align-items-center gap-1 mb-3">
-                                                <img src="{{ asset('assets/img/avatars/1.png') }}"
-                                                    class="img-fluid rounded me-3" height="50" width="50"
-                                                    alt="">
-                                                <h4 class="mb-2">John Doe </h4>
+                            @foreach ($dataUsers as $item)
+                                <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <div class="d-flex align-items-center gap-1 mb-3">
+                                                    <img src="{{ asset('assets/img/avatars/1.png') }}"
+                                                        class="img-fluid rounded me-3" height="50" width="50"
+                                                        alt="">
+                                                    <h4 class="mb-2">{{ $item->user_name }}</h4>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="">
-                                            <h5><strong>Penanggung Jawab Aset</strong></h5>
-                                        </div>
-                                        <ul class="p-0 m-0">
-                                            <li class="d-flex mb-1 pb-1 me-2">
-                                                {{-- <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-info"><i
-                                                            class="bx bx-home-alt"></i></span>
-                                                </div> --}}
-                                                <div
-                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                    <div class="me-2">
-                                                        <h6 class="mb-0">Laptop</h6>
-                                                    </div>
-                                                    <div class="user-progress">
-                                                        <small class="fw-semibold">190</small>
-                                                    </div>
+                                            <div class="">
+                                                <h5><strong>Penanggung Jawab Aset</strong></h5>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <div class="d-flex flex-column align-items-center gap-1">
+                                                    <h2 class="mb-2"></h2>
                                                 </div>
-                                            </li>
-                                            <li class="d-flex mb-4 pb-1 me-2">
-                                                {{-- <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-secondary"><i
-                                                            class="bx bx-football"></i></span>
-                                                </div> --}}
-                                                <div
-                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                    <div class="me-2">
-                                                        <h6 class="mb-0">Ac</h6>
-                                                    </div>
-                                                    <div class="user-progress">
-                                                        <small class="fw-semibold">10</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <div class="col-lg-12 d-flex">
-                                            <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
+                                            </div>
+                                            <ul class="p-0 m-0">
+                                                @foreach (json_decode($item->category) as $category)
+                                                    <li class="d-flex mb-4 pb-1 me-2">
+                                                        <div class="avatar flex-shrink-0 me-3">
+                                                            <span class="avatar-initial rounded bg-label-info"><i
+                                                                    class="fa-solid fa-folder"></i></span>
+                                                        </div>
+                                                        <div
+                                                            class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                                            <div class="me-2">
+                                                                <h6 class="mb-0">{{ $category->category_name }}</h6>
+                                                            </div>
+                                                            <div class="user-progress">
+                                                                <small
+                                                                    class="fw-semibold">{{ $category->category_count }}</small>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-12 d-flex justify-content-end">
+                                            <a class="btn btn-primary mb-4 text-white me-4">Selengkapnya</a>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div class="d-flex align-items-center gap-1 mb-3">
-                                                <img src="{{ asset('assets/img/avatars/1.png') }}"
-                                                    class="img-fluid rounded me-3" height="50" width="50"
-                                                    alt="">
-                                                <h4 class="mb-2">John Doe </h4>
-                                            </div>
-                                        </div>
-                                        <div class="">
-                                            <h5><strong>Penanggung Jawab Aset</strong></h5>
-                                        </div>
-                                        <ul class="p-0 m-0">
-                                            <li class="d-flex mb-1 pb-1 me-2">
-                                                {{-- <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-info"><i
-                                                            class="bx bx-home-alt"></i></span>
-                                                </div> --}}
-                                                <div
-                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                    <div class="me-2">
-                                                        <h6 class="mb-0">Laptop</h6>
-                                                    </div>
-                                                    <div class="user-progress">
-                                                        <small class="fw-semibold">190</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="d-flex mb-4 pb-1 me-2">
-                                                {{-- <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-secondary"><i
-                                                            class="bx bx-football"></i></span>
-                                                </div> --}}
-                                                <div
-                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                    <div class="me-2">
-                                                        <h6 class="mb-0">Ac</h6>
-                                                    </div>
-                                                    <div class="user-progress">
-                                                        <small class="fw-semibold">10</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <div class="col-lg-12 d-flex">
-                                            <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div class="d-flex align-items-center gap-1 mb-3">
-                                                <img src="{{ asset('assets/img/avatars/1.png') }}"
-                                                    class="img-fluid rounded me-3" height="50" width="50"
-                                                    alt="">
-                                                <h4 class="mb-2">John Doe </h4>
-                                            </div>
-                                        </div>
-                                        <div class="">
-                                            <h5><strong>Penanggung Jawab Aset</strong></h5>
-                                        </div>
-                                        <ul class="p-0 m-0">
-                                            <li class="d-flex mb-1 pb-1 me-2">
-                                                {{-- <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-info"><i
-                                                            class="bx bx-home-alt"></i></span>
-                                                </div> --}}
-                                                <div
-                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                    <div class="me-2">
-                                                        <h6 class="mb-0">Laptop</h6>
-                                                    </div>
-                                                    <div class="user-progress">
-                                                        <small class="fw-semibold">190</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="d-flex mb-4 pb-1 me-2">
-                                                {{-- <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-secondary"><i
-                                                            class="bx bx-football"></i></span>
-                                                </div> --}}
-                                                <div
-                                                    class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                    <div class="me-2">
-                                                        <h6 class="mb-0">Ac</h6>
-                                                    </div>
-                                                    <div class="user-progress">
-                                                        <small class="fw-semibold">10</small>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                        <div class="col-lg-12 d-flex">
-                                            <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="">
+                            @endforeach
+                            {{-- <div class="">
                                 <div class="collapse" id="dataUser">
                                     <div class="row">
                                         <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
@@ -699,8 +243,8 @@
                                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                                         <div class="d-flex align-items-center gap-1 mb-3">
                                                             <img src="{{ asset('assets/img/avatars/1.png') }}"
-                                                                class="img-fluid rounded me-3" height="50"
-                                                                width="50" alt="">
+                                                                class="img-fluid rounded me-3" height="50" width="50"
+                                                                alt="">
                                                             <h4 class="mb-2">John Doe </h4>
                                                         </div>
                                                     </div>
@@ -709,10 +253,10 @@
                                                     </div>
                                                     <ul class="p-0 m-0">
                                                         <li class="d-flex mb-1 pb-1 me-2">
-                                                            {{-- <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-info"><i
-                                                            class="bx bx-home-alt"></i></span>
-                                                </div> --}}
+                                                            <div class="avatar flex-shrink-0 me-3">
+                                                                <span class="avatar-initial rounded bg-label-info"><i
+                                                                        class="bx bx-home-alt"></i></span>
+                                                            </div>
                                                             <div
                                                                 class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                                 <div class="me-2">
@@ -724,10 +268,10 @@
                                                             </div>
                                                         </li>
                                                         <li class="d-flex mb-4 pb-1 me-2">
-                                                            {{-- <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-secondary"><i
-                                                            class="bx bx-football"></i></span>
-                                                </div> --}}
+                                                            <div class="avatar flex-shrink-0 me-3">
+                                                                <span class="avatar-initial rounded bg-label-secondary"><i
+                                                                        class="bx bx-football"></i></span>
+                                                            </div>
                                                             <div
                                                                 class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                                 <div class="me-2">
@@ -761,10 +305,10 @@
                                                     </div>
                                                     <ul class="p-0 m-0">
                                                         <li class="d-flex mb-1 pb-1 me-2">
-                                                            {{-- <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-info"><i
-                                                            class="bx bx-home-alt"></i></span>
-                                                </div> --}}
+                                                            <div class="avatar flex-shrink-0 me-3">
+                                                                <span class="avatar-initial rounded bg-label-info"><i
+                                                                        class="bx bx-home-alt"></i></span>
+                                                            </div>
                                                             <div
                                                                 class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                                 <div class="me-2">
@@ -776,10 +320,10 @@
                                                             </div>
                                                         </li>
                                                         <li class="d-flex mb-4 pb-1 me-2">
-                                                            {{-- <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-secondary"><i
-                                                            class="bx bx-football"></i></span>
-                                                </div> --}}
+                                                            <div class="avatar flex-shrink-0 me-3">
+                                                                <span class="avatar-initial rounded bg-label-secondary"><i
+                                                                        class="bx bx-football"></i></span>
+                                                            </div>
                                                             <div
                                                                 class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                                 <div class="me-2">
@@ -813,10 +357,10 @@
                                                     </div>
                                                     <ul class="p-0 m-0">
                                                         <li class="d-flex mb-1 pb-1 me-2">
-                                                            {{-- <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-info"><i
-                                                            class="bx bx-home-alt"></i></span>
-                                                </div> --}}
+                                                            <div class="avatar flex-shrink-0 me-3">
+                                                                <span class="avatar-initial rounded bg-label-info"><i
+                                                                        class="bx bx-home-alt"></i></span>
+                                                            </div>
                                                             <div
                                                                 class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                                 <div class="me-2">
@@ -828,10 +372,10 @@
                                                             </div>
                                                         </li>
                                                         <li class="d-flex mb-4 pb-1 me-2">
-                                                            {{-- <div class="avatar flex-shrink-0 me-3">
-                                                    <span class="avatar-initial rounded bg-label-secondary"><i
-                                                            class="bx bx-football"></i></span>
-                                                </div> --}}
+                                                            <div class="avatar flex-shrink-0 me-3">
+                                                                <span class="avatar-initial rounded bg-label-secondary"><i
+                                                                        class="bx bx-football"></i></span>
+                                                            </div>
                                                             <div
                                                                 class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                                                 <div class="me-2">
@@ -857,7 +401,7 @@
                                         Users Lainnya <i class="bx bx-chevron-right"></i>
                                     </a>
                                 </p>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
