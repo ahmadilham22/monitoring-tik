@@ -15,20 +15,14 @@ use App\Repositories\DataMaster\CategoryRepository;
 
 class CategoryController extends Controller
 {
-    private $categoryRepository;
-
-    public function __construct()
-    {
-        $this->categoryRepository = app(CategoryRepository::class);
-    }
 
     public function index()
     {
         if (request()->ajax()) {
-            $data = $this->categoryRepository->getAll();
+            $data = Category::orderBy('updated_at', 'desc')->get();
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
-                    return view('pages.data-master.category._action.categoryAction', compact('data'));
+                    return view('pages.data-master.category._action.tesAction', compact('data'));
                 })->addIndexColumn()->make(true);
         }
         return view('pages.data-master.category.index');
@@ -36,11 +30,10 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $categoryId = $request->id;
         $validator = Validator::make($request->all(), [
             'kode_kategori' => [
                 'required',
-                Rule::unique('categories')->ignore($categoryId),
+                'unique:categories,kode_kategori,NULL,id,deleted_at,NULL'
             ],
             'nama_kategori' => 'required',
         ], [
@@ -49,38 +42,68 @@ class CategoryController extends Controller
             'nama_kategori.required' => 'Nama kategori wajib diisi.',
         ]);
 
-
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
         }
 
         try {
-            $category = Category::updateOrCreate(
-                [
-                    'id' => $categoryId
-                ],
-                [
-                    'kode_kategori' => $request->kode_kategori,
-                    'nama_kategori' => $request->nama_kategori,
-                ]
-            );
-
-            return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $category]);
+            $category = Category::create([
+                'kode_kategori' => $request->kode_kategori,
+                'nama_kategori' => $request->nama_kategori,
+            ]);
+            return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui', 'data' => $category]);
         } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
+            return response()->json(['error' => true, 'message' => 'Gagal memperbarui data', 'errors' => $e->getMessage()]);
         }
     }
 
-    public function edit(Request $request)
+
+    public function edit($id)
     {
-        $id = array('id' => $request->id);
-        $category  = Category::where($id)->first();
-        return response()->json($category);
+        $category = Category::find($id);
+        if ($category) {
+            return response()->json(['success' => true, 'data' => $category]);
+        } else {
+            return response()->json(['success' => true, 'message' => 'Tidak ditemukan']);
+        }
     }
 
-    public function destroy(Request $request)
+    public function update(Request $request, $id)
     {
-        $category = Category::where('id', $request->id);
+        $categoryId = $id;
+        $validator = Validator::make($request->all(), [
+            'kode_kategori' => [
+                'required',
+                Rule::unique('categories')->ignore($categoryId)
+            ],
+            'nama_kategori' => 'required',
+        ], [
+            'kode_kategori.required' => 'Kode kategori wajib diisi.',
+            'kode_kategori.unique' => 'Kode kategori sudah ada.',
+            'nama_kategori.required' => 'Nama kategori wajib diisi.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
+        }
+
+        try {
+            $category = Category::findOrFail($categoryId);
+
+            $category->kode_kategori = $request->input('kode_kategori');
+            $category->nama_kategori = $request->input('nama_kategori');
+
+            $category->update();
+
+            return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui', 'data' => $category]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json(['error' => true, 'message' => 'Gagal memperbarui data', 'errors' => $e->getMessage()]);
+        }
+    }
+
+    public function destroy($id)
+    {
+        $category = Category::find($id);
         $category->delete();
         return Response()->json(['data' => $category, 'message' => 'Data Berhasil di Hapus']);
     }

@@ -20,11 +20,6 @@ class Procurement extends Model
         'tahun_pengadaan',
     ];
 
-    public function getTahunPengadaanAttribute($value)
-    {
-        return Carbon::parse($value)->format('Y');
-    }
-
     public function fixedAssets(): HasMany
     {
         return $this->hasMany(FixedAsset::class, 'procurement_id', 'id');

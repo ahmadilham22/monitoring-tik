@@ -14,7 +14,7 @@ class ProcurementController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $data = Procurement::all();
+            $data = Procurement::orderBy('updated_at', 'desc')->get();
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
                     return view('pages.data-master.procurement._action.procurementsAction', compact('data'));
@@ -26,28 +26,34 @@ class ProcurementController extends Controller
 
     public function store(Request $request)
     {
-
         $pengadaanId = $request->id;
-        $validator = Validator::make($request->all(), [
+
+        $rules = [
             'mitra' => 'required',
             'jenis_pengadaan' => 'required',
             'tahun_pengadaan' => 'required',
-        ], [
-            'mitra.required' => 'Mitra wajib diisi',
-            'jenis_pengadaan.required' => 'Jenis pengadaan wajib diisi',
-            'tahun_pengadaan.required' => 'Tahun pengadaan wajib diisi',
+        ];
+
+        // if (empty($pengadaanId)) {
+        //     $rules['mitra'] .= '|unique:procurements';
+        // } else {
+        //     $rules['mitra'] .= '|unique:procurements,mitra,' . $pengadaanId;
+        // }
+
+        $validator = Validator::make($request->all(), $rules, [
+            'mitra.required' => 'Mitra wajib diisi.',
+            'mitra.unique' => 'Mitra sudah ada.',
+            'jenis_pengadaan.required' => 'Jenis pengadaan wajib diisi.',
+            'tahun_pengadaan.required' => 'Tahun pengadaan wajib diisi.',
         ]);
 
-
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
         }
 
         try {
             $procurement = Procurement::updateOrCreate(
-                [
-                    'id' => $pengadaanId
-                ],
+                ['id' => $pengadaanId],
                 [
                     'mitra' => $request->mitra,
                     'jenis_pengadaan' => $request->jenis_pengadaan,
@@ -57,9 +63,10 @@ class ProcurementController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $procurement]);
         } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
+            return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
         }
     }
+
 
     public function edit(Request $request)
     {
@@ -73,6 +80,6 @@ class ProcurementController extends Controller
     {
         $procurement = Procurement::where('id', $request->id);
         $procurement->delete();
-        return Response()->json($procurement);
+        return Response()->json(['data' => $procurement, 'message' => 'Data Berhasil di Hapus']);
     }
 }

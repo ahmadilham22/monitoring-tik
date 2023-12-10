@@ -14,7 +14,7 @@ class DivisionController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $data = Division::all();
+            $data = Division::orderBy('updated_at', 'desc')->get();
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
                     return view('pages.data-master.division._action.divisionAction', compact('data'));
@@ -26,31 +26,34 @@ class DivisionController extends Controller
 
     public function store(Request $request)
     {
-
         $divisiId = $request->id;
 
-        $validator = Validator::make($request->all(), [
-            'kode_divisi' => [
-                'required',
-                Rule::unique('divisions')->ignore($divisiId),
-            ],
+        $rules = [
+            'kode_divisi' => 'required',
             'nama_divisi' => 'required',
-        ], [
+        ];
+
+        // Jika ini adalah data baru, tambahkan aturan unique untuk 'kode_divisi'
+        if (empty($divisiId)) {
+            $rules['kode_divisi'] .= '|unique:divisions'; // Sesuaikan dengan nama tabel yang benar
+        } else {
+            // Jika ini adalah pengubahan data, tambahkan aturan unique, kecuali untuk data yang sedang diedit
+            $rules['kode_divisi'] .= '|unique:divisions,kode_divisi,' . $divisiId;
+        }
+
+        $validator = Validator::make($request->all(), $rules, [
             'kode_divisi.required' => 'Kode divisi wajib diisi.',
             'kode_divisi.unique' => 'Kode divisi sudah ada.',
             'nama_divisi.required' => 'Nama divisi wajib diisi.',
         ]);
 
-
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
         }
 
         try {
             $division = Division::updateOrCreate(
-                [
-                    'id' => $divisiId
-                ],
+                ['id' => $divisiId],
                 [
                     'kode_divisi' => $request->kode_divisi,
                     'nama_divisi' => $request->nama_divisi,
@@ -59,9 +62,10 @@ class DivisionController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $division]);
         } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
+            return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
         }
     }
+
 
     public function edit(Request $request)
     {

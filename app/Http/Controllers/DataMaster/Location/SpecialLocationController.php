@@ -16,7 +16,7 @@ class SpecialLocationController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $data = SpecialLocation::with(['location'])->get();
+            $data = SpecialLocation::with(['location'])->orderBy('updated_at', 'desc')->get();
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
                     return view('pages.data-master.special-location._action.spesificLocationAction', compact('data'));
@@ -29,23 +29,32 @@ class SpecialLocationController extends Controller
     public function store(Request $request)
     {
         $locationId = $request->id;
-        $validator = Validator::make($request->all(), [
+
+        $isNewRecord = empty($locationId); // Periksa apakah permintaan adalah untuk pembuatan data baru
+
+        $rules = [
             'location_id' => 'required',
-            'kode_lokasi' => [
-                'required',
-                Rule::unique('locations')->ignore($locationId),
-            ],
+            'kode_lokasi' => 'required',
             'lokasi_khusus' => 'required',
-        ], [
+        ];
+
+        // Validasi tambahan untuk pembuatan data baru
+        if ($isNewRecord) {
+            $rules['kode_lokasi'] .= '|unique:specific_locations'; // Tambahkan aturan unique hanya untuk pembuatan data baru
+        } else {
+            // Validasi tambahan untuk perubahan data yang sudah ada
+            $rules['kode_lokasi'] .= '|unique:specific_locations,kode_lokasi,' . $locationId; // Jangan periksa data itu sendiri
+        }
+
+        $validator = Validator::make($request->all(), $rules, [
             'location_id.required' => 'Lokasi harus diisi',
             'kode_lokasi.required' => 'Kode lokasi wajib diisi',
             'kode_lokasi.unique' => 'Kode lokasi sudah ada',
             'lokasi_khusus.required' => 'Nama sub lokasi wajib diisi',
         ]);
 
-
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
         }
 
         try {
@@ -62,9 +71,10 @@ class SpecialLocationController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $location]);
         } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
+            return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
         }
     }
+
 
     public function edit(Request $request)
     {

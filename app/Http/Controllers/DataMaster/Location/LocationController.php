@@ -15,7 +15,7 @@ class LocationController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $data = Location::all();
+            $data = Location::orderBy('updated_at', 'desc')->get();
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
                     return view('pages.data-master.location._action.locationAction', compact('data'));
@@ -28,21 +28,30 @@ class LocationController extends Controller
     public function store(Request $request)
     {
         $locationId = $request->id;
-        $validator = Validator::make($request->all(), [
-            'kode_lokasi' => [
-                'required',
-                Rule::unique('locations')->ignore($locationId),
-            ],
+
+        $isNewRecord = empty($locationId); // Periksa apakah permintaan adalah untuk pembuatan data baru
+
+        $rules = [
+            'kode_lokasi' => 'required',
             'lokasi_umum' => 'required',
-        ], [
+        ];
+
+        // Validasi tambahan untuk pembuatan data baru
+        if ($isNewRecord) {
+            $rules['kode_lokasi'] .= '|unique:locations'; // Tambahkan aturan unique hanya untuk pembuatan data baru
+        } else {
+            // Validasi tambahan untuk perubahan data yang sudah ada
+            $rules['kode_lokasi'] .= '|unique:locations,kode_lokasi,' . $locationId; // Jangan periksa data itu sendiri
+        }
+
+        $validator = Validator::make($request->all(), $rules, [
             'kode_lokasi.required' => 'Kode lokasi wajib diisi',
             'kode_lokasi.unique' => 'Kode lokasi sudah ada',
             'lokasi_umum.required' => 'Nama lokasi wajib diisi',
         ]);
 
-
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
         }
 
         try {
@@ -58,7 +67,7 @@ class LocationController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $location]);
         } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
+            return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
         }
     }
 
