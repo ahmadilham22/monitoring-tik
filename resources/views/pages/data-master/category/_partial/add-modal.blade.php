@@ -1,35 +1,32 @@
-<div class="modal fade" id="category-model" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="AddCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalHeader">Kategori</h5>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Kategori</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="#" id="categoryForm" name="categoryForm" class="form-horizontal" method="POST"
-                enctype="multipart/form-data">
-                <input type="hidden" name="id" id="id">
+            <form action="#" id="add_categoryForm" class="form-horizontal" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="row">
+                        <input type="hidden" id="id">
                         <div class="mb-3">
                             <label for="kode_kategori" class="form-label mt-2">Kode
                                 Kategori</label>
                             <input type="text" class="form-control" name="kode_kategori" id="kode_kategori"
-                                placeholder="Masukan Nama Barang.." value="{{ old('name') }}" />
+                                placeholder="Masukan Kode Kategori.." />
                         </div>
                         <div class="mb-3">
                             <label for="kode_kategori" class="form-label mt-2">Nama
                                 Kategori</label>
                             <input type="text" class="form-control" name="nama_kategori" id="nama_kategori"
-                                placeholder="Masukan Merek.." />
+                                placeholder="Masukan Nama Kategori.." />
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">
-                        Save changes
-                    </button>
-                </div>
             </form>
+            <div class="modal-footer">
+                <button type="submit" id="add_category" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
     </div>
 </div>

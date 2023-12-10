@@ -1,119 +1,171 @@
 <script>
-    function add() {
-        $('#categoryForm').trigger("reset");
-        $('#modalHeader').html("Tambah Kategori");
-        $('#category-model').modal('show');
-        $('#id').val('');
-    }
+    $(document).ready(function() {
 
-    function editFunc(id) {
-        $.ajax({
-            type: "POST",
-            url: "{{ route('category.edit') }}",
-            data: {
-                id: id
-            },
-            dataType: 'json',
-            success: function(res) {
-                $('#modalHeader').html("Edit Kategori");
-                $('#category-model').modal('show');
-                $('#id').val(res.id);
-                $('#kode_kategori').val(res.kode_kategori);
-                $('#nama_kategori').val(res.nama_kategori);
-            }
-        });
-    }
+        $(document).on('click', '#delete_category', function(e) {
+            e.preventDefault();
 
-    function deleteFunc(id) {
-        var id = id;
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Data yang dihapus tidak dapat dikembalikan!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "DELETE",
-                    url: "{{ route('category.destroy') }}",
-                    data: {
-                        id: id
-                    },
-                    dataType: 'json',
-                    success: function(res) {
-                        var oTable = $('#myTable').dataTable();
-                        oTable.fnDraw(false);
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: res.message,
-                            timer: 2000,
-                            showConfirmButton: false
-                        })
-                    }
-                });
-            }
-        });
-    }
-
-    // function deleteFunc(id) {
-    //     var id = id;
-    //     $.ajax({
-    //         type: "DELETE",
-    //         url: "{{ route('category.destroy') }}",
-    //         data: {
-    //             id: id
-    //         },
-    //         dataType: 'json',
-    //         success: function(res) {
-    //             var oTable = $('#myTable').dataTable();
-    //             oTable.fnDraw(false);
-    //         }
-    //     });
-    // }
-
-    $('#categoryForm').submit(function(e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        $.ajax({
-            type: 'POST',
-            url: "{{ route('category.store') }}",
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: (response) => {
-                console.log(response.message);
-                $("#category-model").modal('hide');
-                var oTable = $('#myTable').dataTable();
-                oTable.fnDraw(false);
-                $("#btn-save").html('Submit');
-                $("#btn-save").attr("disabled", false);
-                if (response.success == true) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: response.message,
-                        timer: 1000,
-                        showConfirmButton: false
-                    });
-                } else if (response.success == false) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Failed',
-                        text: response.message,
-                        timer: 2000,
-                        showConfirmButton: false
+            let categoryId = $(this).val();
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "DELETE",
+                        data: {
+                            id: categoryId
+                        },
+                        url: "category/delete/" + categoryId,
+                        dataType: 'json',
+                        success: function(res) {
+                            console.log(res);
+                            var oTable = $('#myTable').dataTable();
+                            oTable.fnDraw(false);
+                            Swal.fire({
+                                toast: true,
+                                position: "top-end",
+                                timer: 2000,
+                                icon: 'success',
+                                title: 'Success',
+                                text: res.message,
+                                showConfirmButton: false
+                            })
+                        }
                     });
                 }
-            },
-            error: function(data) {
-                console.log(data);
+            });
+        });
+
+        $(document).on('click', '#edit_category', function(e) {
+            e.preventDefault();
+
+            let categoryId = $(this).val();
+
+            $('#EditCategoryModal').modal('show');
+            $.ajax({
+                type: 'GET',
+                url: "category/edit/" + categoryId,
+                success: function(response) {
+                    $('#edit_category_id').val(response.data.id);
+                    $('#edit_kode_kategori').val(response.data.kode_kategori);
+                    $('#edit_nama_kategori').val(response.data.nama_kategori);
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            })
+        });
+
+        $(document).on('click', '#update_category', function(e) {
+            e.preventDefault();
+
+            let categoryId = $('#edit_category_id').val();
+            console.log(categoryId);
+            let data = {
+                'kode_kategori': $('#edit_kode_kategori').val(),
+                'nama_kategori': $('#edit_nama_kategori').val(),
             }
+
+            $.ajax({
+                type: 'PUT',
+                url: "category/update/" + categoryId,
+                data: data,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.error) {
+                        $("#EditCategoryModal").modal('hide');
+                        var oTable = $('#myTable').dataTable();
+                        oTable.fnDraw(false);
+                        $('#edit_categoryForm').trigger("reset");
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'error',
+                            title: 'Failed',
+                            text: response.message,
+                            showConfirmButton: false
+                        });
+                    }
+                    $('#edit_category_id').val(response.data.id);
+                    $('#edit_kode_kategori').val(response.data.kode_kategori);
+                    $('#edit_nama_kategori').val(response.data.nama_kategori);
+                    if (response.success) {
+                        $("#EditCategoryModal").modal('hide');
+                        var oTable = $('#myTable').dataTable();
+                        oTable.fnDraw(false);
+                        $('#edit_categoryForm').trigger("reset");
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            })
+        });
+
+        $(document).on('click', '#add_category', function(e) {
+            e.preventDefault();
+
+            let data = {
+                'kode_kategori': $('#kode_kategori').val(),
+                'nama_kategori': $('#nama_kategori').val(),
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('category.store') }}",
+                data: data,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        $("#AddCategoryModal").modal('hide');
+                        var oTable = $('#myTable').dataTable();
+                        oTable.fnDraw(false);
+                        $('#add_categoryForm').trigger("reset");
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            showConfirmButton: false
+                        });
+                    } else if (response.error) {
+                        $("#AddCategoryModal").modal('hide');
+                        var oTable = $('#myTable').dataTable();
+                        oTable.fnDraw(false);
+                        $('#add_categoryForm').trigger("reset");
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'error',
+                            title: 'Failed',
+                            text: response.message,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            })
         });
     });
 </script>

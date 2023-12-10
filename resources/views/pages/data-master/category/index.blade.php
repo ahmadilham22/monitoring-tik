@@ -10,7 +10,8 @@
                         <h4>Kategori Barang</h4>
                     </div>
                     <div class="card-body">
-                        <a href="#" class="btn btn-primary" onclick="add()">Tambah
+                        <a href="#" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#AddCategoryModal">Tambah
                             Kategori
                         </a>
                         <div class="table-responsive text-nowrap mt-4">
@@ -34,7 +35,8 @@
         </div>
     </div>
 
-    @include('pages.data-master.category._partial.modal')
+    @include('pages.data-master.category._partial.add-modal')
+    @include('pages.data-master.category._partial.edit-modal')
 @endsection
 
 @push('addon-script')
@@ -46,9 +48,13 @@
                 }
             });
             $('#myTable').DataTable({
+                serverSide: true,
                 processing: true,
                 responsive: true,
-                serverSide: true,
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "All"]
+                ],
                 ajax: "{{ route('category.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
