@@ -144,7 +144,7 @@ class UserController extends Controller
             $user->role = $request->input('role');
             $user->division_id = $request->input('division_id');
 
-            if ($request->has('password')) {
+            if ($request->filled('password')) {
                 $user->password = Hash::make($request->input('password'));
             }
 
