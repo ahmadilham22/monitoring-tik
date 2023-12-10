@@ -4,7 +4,6 @@ use App\Models\User;
 use GuzzleHttp\Psr7\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UnitController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\GoodsController;
 use App\Http\Controllers\Auth\AuthController;
@@ -18,6 +17,7 @@ use App\Http\Controllers\DataMaster\Location\LocationController;
 use App\Http\Controllers\DataMaster\Location\SpecialLocationController;
 use App\Http\Controllers\DataMaster\Procurement\ProcurementController;
 use App\Http\Controllers\DataMaster\SubCategory\SubCategoryController;
+use App\Http\Controllers\DataMaster\UnitController;
 use App\Http\Controllers\Monitoring\DashboardController;
 use App\Http\Controllers\Monitoring\MonitoringController;
 use App\Models\DataMaster\SpecialLocation;
@@ -36,8 +36,8 @@ use App\Models\DataMaster\SpecialLocation;
 // Data Masetr
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('home');
-    Route::get('/user/user-detail', [UserController::class, 'detail'])->name('user.detail');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('user/detail/{id}', [UserController::class, 'detail'])->name('user.detail');
 });
 
 Route::middleware(['auth', 'super_admin'])->group(function () {
@@ -47,16 +47,18 @@ Route::middleware(['auth', 'super_admin'])->group(function () {
         Route::prefix('/category')->group(function () {
             Route::get('/', [CategoryController::class, 'index'])->name('category.index');
             Route::post('/store', [CategoryController::class, 'store'])->name('category.store');
-            Route::post('/edit', [CategoryController::class, 'edit'])->name('category.edit');
-            Route::delete('/delete', [CategoryController::class, 'destroy'])->name('category.destroy');
+            Route::put('/update/{id}', [CategoryController::class, 'update'])->name('category.update');
+            Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('category.edit');
+            Route::delete('/delete/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
         });
 
         // Sub Categoru
         Route::prefix('/sub-category')->group(function () {
             Route::get('/', [SubCategoryController::class, 'index'])->name('sub-category.index');
             Route::post('/store', [SubCategoryController::class, 'store'])->name('sub-category.store');
-            Route::post('/edit', [SubCategoryController::class, 'edit'])->name('sub-category.edit');
-            Route::delete('/delete', [SubCategoryController::class, 'destroy'])->name('sub-category.destroy');
+            Route::put('/update/{id}', [SubCategoryController::class, 'update'])->name('sub-category.update');
+            Route::get('/edit/{id}', [SubCategoryController::class, 'edit'])->name('sub-category.edit');
+            Route::delete('/delete/{id}', [SubCategoryController::class, 'destroy'])->name('sub-category.destroy');
         });
 
         // Location
@@ -75,13 +77,20 @@ Route::middleware(['auth', 'super_admin'])->group(function () {
             Route::delete('/delete', [SpecialLocationController::class, 'destroy'])->name('special-location.destroy');
         });
 
-
-        // Location
+        // Division
         Route::prefix('division')->group(function () {
             Route::get('/', [DivisionController::class, 'index'])->name('division.index');
             Route::post('/store', [DivisionController::class, 'store'])->name('division.store');
             Route::post('/edit', [DivisionController::class, 'edit'])->name('division.edit');
             Route::delete('/delete', [DivisionController::class, 'destroy'])->name('division.destroy');
+        });
+
+        // Unit
+        Route::prefix('unit')->group(function () {
+            Route::get('/', [UnitController::class, 'index'])->name('unit.index');
+            Route::post('/store', [UnitController::class, 'store'])->name('unit.store');
+            Route::post('/edit', [UnitController::class, 'edit'])->name('unit.edit');
+            Route::delete('/delete', [UnitController::class, 'destroy'])->name('unit.destroy');
         });
 
         Route::prefix('procurement')->group(function () {
@@ -95,8 +104,9 @@ Route::middleware(['auth', 'super_admin'])->group(function () {
         Route::prefix('user')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('user.index');
             Route::post('/store', [UserController::class, 'store'])->name('user.store');
-            Route::post('/edit', [UserController::class, 'edit'])->name('user.edit');
-            Route::delete('/delete', [UserController::class, 'destroy'])->name('user.destroy');
+            Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update');
+            Route::get('/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+            Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('user.destroy');
         });
     });
 });
@@ -106,15 +116,19 @@ Route::middleware(['auth'])->group(function () {
     // Data aset
     Route::prefix('data-assets')->group(function () {
         // Fixed Asset
-        Route::prefix('fixed')->group(function () {
-            Route::get('/', [FixedAssetController::class, 'index'])->name('asset-fixed.index');
-            Route::get('/create', [FixedAssetController::class, 'create'])->name('asset-fixed.create');
-            Route::post('/store', [FixedAssetController::class, 'store'])->name('asset-fixed.store');
-            Route::get('/edit', [FixedAssetController::class, 'edit'])->name('asset-fixed.edit');
-            Route::get('/show/{id}', [FixedAssetController::class, 'show'])->name('asset-fixed.show');
-            Route::delete('/delete/{id}', [FixedAssetController::class, 'destroy'])->name('asset-fixed.destroy');
-            Route::get('/selectCategory', [FixedAssetController::class, 'selectCategory'])->name('selectCategory');
-            Route::get('/selectSubCategory/{id}', [FixedAssetController::class, 'selectsubCategory'])->name('selectSubCategory');
+        Route::controller(FixedAssetController::class)->prefix('fixed')->group(function () {
+            Route::get('/', 'index')->name('asset-fixed.index');
+            Route::get('/create', 'create')->name('asset-fixed.create');
+            Route::post('/store', 'store')->name('asset-fixed.store');
+            Route::post('/storeAjax', 'storeAjax')->name('asset-fixed.store.ajax');
+            Route::get('/edit/{id}', 'edit')->name('asset-fixed.edit');
+            Route::put('/update/{id}', 'update')->name('asset-fixed.update');
+            Route::get('/show/{id}', 'show')->name('asset-fixed.show');
+            Route::delete('/delete/{id}', 'destroy')->name('asset-fixed.destroy');
+            Route::post('/delete-selected-asset', 'DeleteSelectedAsset')->name('asset-fixed.destroy.selected');
+            Route::get('/download/qrcode/{id}', 'DownloadQrCode')->name('asset-fixed.downloadQrCode');
+            Route::post('/download-selected-qrcodes', 'downloadSelectedQrCodes')->name('download-selected-qrcodes');
+            Route::get('/download-selected-qrcodes-zip', 'downloadSelectedQrCodesZip')->name('download-selected-qrcodes-zip');
         });
 
         // Moved Asset
@@ -128,7 +142,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('monitoring')->group(function () {
         Route::get('/', [MonitoringController::class, 'index'])->name('monitoring.index');
         Route::get('/create', [MonitoringController::class, 'create'])->name('monitoring.create');
-        Route::get('/edit', [MonitoringController::class, 'edit'])->name('monitoring.edit');
+        Route::get('/edit/{id}', [MonitoringController::class, 'edit'])->name('monitoring.edit');
         Route::get('/show/{id}', [MonitoringController::class, 'show'])->name('monitoring.show');
     });
 
@@ -136,6 +150,8 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'report'], function () {
         Route::get('/', [ReportController::class, 'index'])->name('report.index');
         Route::get('/create', [ReportController::class, 'create'])->name('report.create');
+        Route::get('/show/{id}', [ReportController::class, 'show'])->name('report.show');
+        Route::get('/export', [ReportController::class, 'export'])->name('report.export');
     });
 });
 
