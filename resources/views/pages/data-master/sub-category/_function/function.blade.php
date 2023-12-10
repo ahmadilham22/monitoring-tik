@@ -156,9 +156,10 @@
                 success: function(response) {
                     if (response.success) {
                         $("#AddSubCategoryModal").modal('hide');
-                        var oTable = $('#myTable').dataTable();
-                        oTable.fnDraw(false);
+                        var table = $('#myTable').DataTable();
+                        table.ajax.reload(null, false);
                         $('#add_subcategoryForm').trigger("reset");
+                        $('#categories_id').val('')
                         Swal.fire({
                             toast: true,
                             position: "top-end",
@@ -170,9 +171,10 @@
                         });
                     } else if (response.error) {
                         $("#AddSubCategoryModal").modal('hide');
-                        var oTable = $('#myTable').dataTable();
-                        oTable.fnDraw(false);
+                        var table = $('#myTable').DataTable();
+                        table.ajax.reload(null, false);
                         $('#add_subcategoryForm').trigger("reset");
+                        $('#categories_id').val('')
                         Swal.fire({
                             toast: true,
                             position: "top-end",
@@ -191,5 +193,3 @@
         });
     });
 </script>
-
-<script></script>
