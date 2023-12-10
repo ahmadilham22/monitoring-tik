@@ -2,18 +2,21 @@
 
 namespace App\Models\DataAsset;
 
+use App\Models\DataMaster\User;
 use App\Models\DataMaster\Category;
 use App\Models\DataMaster\Division;
 use App\Models\DataMaster\Location;
+use Illuminate\Support\Facades\Log;
 use App\Models\DataMaster\Procurement;
-use App\Models\DataMaster\SpecialLocation;
 use App\Models\DataMaster\SubCategory;
-use App\Models\DataMaster\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
+use App\Models\DataMaster\SpecialLocation;
+use App\Models\DataMaster\Unit;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class FixedAsset extends Model
 {
@@ -24,6 +27,7 @@ class FixedAsset extends Model
         'sub_category_id',
         'specific_location_id',
         'user_id',
+        'unit_id',
         'procurement_id',
         'kode_bmn',
         'kode_sn',
@@ -52,5 +56,9 @@ class FixedAsset extends Model
     public function procurement()
     {
         return $this->belongsTo(Procurement::class);
+    }
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 }
