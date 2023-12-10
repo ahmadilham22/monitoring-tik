@@ -48,6 +48,7 @@
     @include('components.script')
     @yield('js')
     @stack('addon-script')
+    @include('components.script-ajax-error')
 </body>
 
 </html>
