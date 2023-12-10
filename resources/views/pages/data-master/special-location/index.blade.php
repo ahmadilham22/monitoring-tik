@@ -53,6 +53,7 @@
                                         <th>Lokasi Umum</th>
                                         <th>Kode Lokasi</th>
                                         <th>Sub Lokasi</th>
+                                        <th>Terakhir Update</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -82,9 +83,13 @@
             });
 
             $('#myTable').DataTable({
-                responsive: true,
-                // processing: true,
                 serverSide: true,
+                processing: true,
+                responsive: true,
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "All"]
+                ],
                 ajax: "{{ route('special-location.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
@@ -102,6 +107,16 @@
                     {
                         data: 'lokasi_khusus',
                         name: 'lokasi_khusus'
+                    },
+                    {
+                        data: 'updated_at',
+                        name: 'updated_at',
+                        render: function(data, type, row) {
+                            if (type === 'display' || type === 'filter') {
+                                return moment(data).format('DD/MM/YYYY');
+                            }
+                            return data;
+                        }
                     },
                     {
                         data: 'action',

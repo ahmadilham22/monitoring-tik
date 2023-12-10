@@ -46,13 +46,15 @@
                     },
                     dataType: 'json',
                     success: function(res) {
-                        var oTable = $('#myTable').dataTable();
-                        oTable.fnDraw(false);
+                        var table = $('#myTable').DataTable();
+                        table.ajax.reload(null, false);
                         Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
                             icon: 'success',
                             title: 'Success',
                             text: res.message,
-                            timer: 2000,
                             showConfirmButton: false
                         })
                     }
@@ -72,28 +74,29 @@
             contentType: false,
             processData: false,
             success: (response) => {
-                console.log('====================================');
-                console.log(response);
-                console.log('====================================');
                 $("#procurement-modal").modal('hide');
-                var oTable = $('#myTable').dataTable();
-                oTable.fnDraw(false);
+                var table = $('#myTable').DataTable();
+                table.ajax.reload(null, false);
                 $("#btn-save").html('Submit');
                 $("#btn-save").attr("disabled", false);
                 if (response.success == true) {
                     Swal.fire({
+                        toast: true,
+                        position: "top-end",
+                        timer: 2000,
                         icon: 'success',
                         title: 'Success',
                         text: response.message,
-                        timer: 1000,
                         showConfirmButton: false
                     });
                 } else if (response.success == false) {
                     Swal.fire({
+                        toast: true,
+                        position: "top-end",
+                        timer: 2000,
                         icon: 'error',
                         title: 'Failed',
                         text: response.message,
-                        timer: 2000,
                         showConfirmButton: false
                     });
                 }

@@ -1,15 +1,14 @@
-<div class="modal fade" id="subCategory-model" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="AddSubCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalHeader">Lokasi Umum</h5>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Tambah Sub Kategori</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="#" id="subCategoryForm" name="subCategoryForm" class="form-horizontal" method="POST"
-                enctype="multipart/form-data">
-                <input type="hidden" name="id" id="id">
+            <form action="#" id="add_subcategoryForm" class="form-horizontal" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="row">
+                        <input type="hidden" id="id">
                         <div class="mb-3">
                             <label class="form-label">Kategori</label>
                             <select id="categories_id" class="form-select" name="categories_id" required>
@@ -35,12 +34,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">
-                        Save changes
-                    </button>
-                </div>
             </form>
+            <div class="modal-footer">
+                <button type="submit" id="add_subcategory" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
     </div>
 </div>

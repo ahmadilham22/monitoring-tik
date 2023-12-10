@@ -44,7 +44,9 @@
                         <h4>Sub Kategori Barang</h4>
                     </div>
                     <div class="card-body">
-                        <a href="#" class="btn btn-primary" onclick="add()">Tambah Data
+                        <a href="#" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#AddSubCategoryModal">Tambah
+                            Kategori
                         </a>
                         <div class="table-responsive text-nowrap mt-4">
                             <table id="myTable" class="table table-bordered table-sm w-100">
@@ -67,14 +69,12 @@
             </div>
         </div>
     </div>
-    @include('pages.data-master.sub-category._partial.model')
+    @include('pages.data-master.sub-category._partial.add-modal')
+    @include('pages.data-master.sub-category._partial.edit-modal')
 @endsection
 
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-@endsection
-
-@push('addon-script')
     <script>
         $(document).ready(function() {
             $.ajaxSetup({
@@ -83,8 +83,13 @@
                 }
             });
             $('#myTable').DataTable({
-                responsive: true,
                 serverSide: true,
+                processing: true,
+                responsive: true,
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "All"]
+                ],
                 ajax: "{{ route('sub-category.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
@@ -121,4 +126,7 @@
         });
     </script>
     @include('pages.data-master.sub-category._function.function')
+@endsection
+
+@push('addon-script')
 @endpush

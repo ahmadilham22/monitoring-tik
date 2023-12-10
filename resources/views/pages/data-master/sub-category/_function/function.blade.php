@@ -1,117 +1,195 @@
 <script>
-    // SELECT2
     $(document).ready(function() {
         $('#categories_id').select2({
-            dropdownParent: $('#subCategory-model'),
-            placeholder: 'Pilih...'
+            placeholder: 'Pilih...',
+            dropdownParent: $('#AddSubCategoryModal'),
         })
     })
-    // SELECT2
 
-    // CRUD
-    function add() {
-        $('#subCategoryForm').trigger("reset");
-        $('#modalHeader').html("Tambah Sub Kategori");
-        $('#subCategory-model').modal('show');
-        $('#id').val('');
-    }
+    $(document).ready(function() {
+        $('#edit_categories_id').select2({
+            placeholder: 'Pilih...',
+            dropdownParent: $('#EditSubCategoryModal'),
+        })
+    })
 
-    function editFunc(id) {
-        $.ajax({
-            type: "POST",
-            url: "{{ route('sub-category.edit') }}",
-            data: {
-                id: id
-            },
-            dataType: 'json',
-            success: function(res) {
-                $('#modalHeader').html("Edit Sub Kategori");
-                $('#subCategory-model').modal('show');
-                $('#id').val(res.id);
-                $('#categories_id').val(res.categories_id);
-                $('#kode_sub_kategori').val(res.kode_sub_kategori);
-                $('#nama_sub_kategori').val(res.nama_sub_kategori);
-            }
-        });
-    }
+    $(document).ready(function() {
 
-    function deleteFunc(id) {
-        var id = id;
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Data yang dihapus tidak dapat dikembalikan!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "DELETE",
-                    url: "{{ route('sub-category.destroy') }}",
-                    data: {
-                        id: id
-                    },
-                    dataType: 'json',
-                    success: function(res) {
-                        var oTable = $('#myTable').dataTable();
-                        oTable.fnDraw(false);
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: res.message,
-                            timer: 2000,
-                            showConfirmButton: false
-                        })
-                    }
-                });
-            }
-        });
-    }
+        $(document).on('click', '#delete_subcategory', function(e) {
+            e.preventDefault();
 
-    $('#subCategoryForm').submit(function(e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        $.ajax({
-            type: 'POST',
-            url: "{{ route('sub-category.store') }}",
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: (response) => {
-                // console.log(response);
-                $("#subCategory-model").modal('hide');
-                var oTable = $('#myTable').dataTable();
-                oTable.fnDraw(false);
-                $("#btn-save").html('Submit');
-                $("#btn-save").attr("disabled", false);
-                if (response.success == true) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: response.message,
-                        timer: 1000,
-                        showConfirmButton: false
-                    });
-                } else if (response.success == false) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Failed',
-                        text: response.message,
-                        timer: 2000,
-                        showConfirmButton: false
+            let subcategoryId = $(this).val();
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "DELETE",
+                        data: {
+                            id: subcategoryId
+                        },
+                        url: "sub-category/delete/" + subcategoryId,
+                        dataType: 'json',
+                        success: function(res) {
+                            console.log(res);
+                            var oTable = $('#myTable').dataTable();
+                            oTable.fnDraw(false);
+                            Swal.fire({
+                                toast: true,
+                                position: "top-end",
+                                timer: 2000,
+                                icon: 'success',
+                                title: 'Success',
+                                text: res.message,
+                                showConfirmButton: false
+                            })
+                        }
                     });
                 }
-            },
-            error: function(xhr, status, error) {
-                var errorMessage = xhr.status + ': ' + xhr.statusText;
-                console.error('Error - ' + errorMessage);
+            });
+        });
+
+        $(document).on('click', '#edit_subcategory', function(e) {
+            e.preventDefault();
+
+            let subcategoryId = $(this).val();
+
+            $('#EditSubCategoryModal').modal('show');
+            $.ajax({
+                type: 'GET',
+                url: "sub-category/edit/" + subcategoryId,
+                success: function(response) {
+                    // console.log(response);
+                    $('#edit_subcategory_id').val(response.data.id);
+                    $('#edit_categories_id').val(response.data.categories_id);
+                    $('#edit_kode_sub_kategori').val(response.data.kode_sub_kategori);
+                    $('#edit_nama_sub_kategori').val(response.data.nama_sub_kategori);
+                    $('#edit_categories_id').val(response.data.categories_id).trigger(
+                        'change');
+
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            })
+        });
+
+        $(document).on('click', '#update_subcategory', function(e) {
+            e.preventDefault();
+
+            let subcategoryId = $('#edit_subcategory_id').val();
+            // console.log(subcategoryId);
+            let data = {
+                'categories_id': $('#edit_categories_id').val(),
+                'kode_sub_kategori': $('#edit_kode_sub_kategori').val(),
+                'nama_sub_kategori': $('#edit_nama_sub_kategori').val(),
             }
 
+            $.ajax({
+                type: 'PUT',
+                url: "sub-category/update/" + subcategoryId,
+                data: data,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.error) {
+                        $("#EditSubCategoryModal").modal('hide');
+                        var oTable = $('#myTable').dataTable();
+                        oTable.fnDraw(false);
+                        $('#edit_subcategoryForm').trigger("reset");
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'error',
+                            title: 'Failed',
+                            text: response.message,
+                            showConfirmButton: false
+                        });
+                    }
+                    $('#edit_subcategory_id').val(response.data.id);
+                    $('#edit_categories_id').val(response.data.categories_id);
+                    $('#edit_kode_sub_kategori').val(response.data.kode_sub_kategori);
+                    $('#edit_nama_sub_kategori').val(response.data.nama_sub_kategori);
+                    if (response.success) {
+                        $("#EditSubCategoryModal").modal('hide');
+                        var oTable = $('#myTable').dataTable();
+                        oTable.fnDraw(false);
+                        $('#edit_subcategoryForm').trigger("reset");
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            })
+        });
+
+        $(document).on('click', '#add_subcategory', function(e) {
+            e.preventDefault();
+
+            let data = {
+                'categories_id': $('#categories_id').val(),
+                'kode_sub_kategori': $('#kode_sub_kategori').val(),
+                'nama_sub_kategori': $('#nama_sub_kategori').val(),
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('sub-category.store') }}",
+                data: data,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        $("#AddSubCategoryModal").modal('hide');
+                        var oTable = $('#myTable').dataTable();
+                        oTable.fnDraw(false);
+                        $('#add_subcategoryForm').trigger("reset");
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            showConfirmButton: false
+                        });
+                    } else if (response.error) {
+                        $("#AddSubCategoryModal").modal('hide');
+                        var oTable = $('#myTable').dataTable();
+                        oTable.fnDraw(false);
+                        $('#add_subcategoryForm').trigger("reset");
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'error',
+                            title: 'Failed',
+                            text: response.message,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            })
         });
     });
-    // CRUD
 </script>
+
+<script></script>

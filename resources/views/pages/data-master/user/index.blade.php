@@ -10,7 +10,7 @@
                         <h4>User</h4>
                     </div>
                     <div class="card-body">
-                        <a href="#" class="btn btn-primary" onclick="add()">Tambah
+                        <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddUserModal">Tambah
                             User
                         </a>
                         <div class="table-responsive text-nowrap mt-2">
@@ -35,6 +35,7 @@
         </div>
     </div>
     @include('pages.data-master.user._partials.modal')
+    @include('pages.data-master.user._partials.edit-modal')
 @endsection
 
 @push('addon-script')
@@ -50,8 +51,9 @@
                     width: '5%',
                     targets: 0
                 }],
-                responsive: true,
+                processing: true,
                 serverSide: true,
+                responsive: true,
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     [10, 25, 50, 100, "All"]

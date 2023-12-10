@@ -1,26 +1,24 @@
 <script>
     function add() {
-        $('#LocationForm').trigger("reset");
-        $('#modalHeader').html("Tambah Lokasi");
-        $('#location-model').modal('show');
+        $('#unitForm').trigger("reset");
+        $('#modalHeader').html("Tambah Satuan");
+        $('#unit-model').modal('show');
         $('#id').val('');
     }
 
     function editFunc(id) {
         $.ajax({
             type: "POST",
-            url: "{{ route('location.edit') }}",
+            url: "{{ route('unit.edit') }}",
             data: {
                 id: id
             },
             dataType: 'json',
             success: function(res) {
-                console.log(res);
-                $('#modalHeader').html("Edit Lokasi");
-                $('#location-model').modal('show');
+                $('#modalHeader').html("Edit Satuan");
+                $('#unit-model').modal('show');
                 $('#id').val(res.id);
-                $('#kode_lokasi').val(res.kode_lokasi);
-                $('#lokasi_umum').val(res.lokasi_umum);
+                $('#nama').val(res.nama);
             }
         });
     }
@@ -40,7 +38,7 @@
             if (result.isConfirmed) {
                 $.ajax({
                     type: "DELETE",
-                    url: "{{ route('location.destroy') }}",
+                    url: "{{ route('unit.destroy') }}",
                     data: {
                         id: id
                     },
@@ -63,18 +61,19 @@
         });
     }
 
-    $('#LocationForm').submit(function(e) {
+    $('#unitForm').submit(function(e) {
         e.preventDefault();
         var formData = new FormData(this);
         $.ajax({
             type: 'POST',
-            url: "{{ route('location.store') }}",
+            url: "{{ route('unit.store') }}",
             data: formData,
             cache: false,
             contentType: false,
             processData: false,
             success: (response) => {
-                $("#location-model").modal('hide');
+                console.log(response);
+                $("#unit-model").modal('hide');
                 var table = $('#myTable').DataTable();
                 table.ajax.reload(null, false);
                 $("#btn-save").html('Submit');
@@ -101,9 +100,8 @@
                     });
                 }
             },
-            error: function(xhr, status, error) {
-                var errorMessage = xhr.status + ': ' + xhr.statusText;
-                console.error('Error - ' + errorMessage);
+            error: function(data) {
+                console.log(data);
             }
         });
     });

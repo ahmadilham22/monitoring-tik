@@ -19,6 +19,7 @@
                                         <th>No</th>
                                         <th>Kode Divisi</th>
                                         <th>Divisi</th>
+                                        <th>Terakhir Update</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -44,8 +45,13 @@
             });
 
             $('#myTable').DataTable({
-                processing: true,
                 serverSide: true,
+                processing: true,
+                responsive: true,
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "All"]
+                ],
                 ajax: "{{ route('division.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
@@ -58,6 +64,13 @@
                     {
                         data: 'nama_divisi',
                         name: 'nama_divisi'
+                    },
+                    {
+                        data: 'updated_at',
+                        name: 'updated_at',
+                        render: function(data, type, row) {
+                            return moment(data).format('DD/MM/YYYY');
+                        }
                     },
                     {
                         data: 'action',

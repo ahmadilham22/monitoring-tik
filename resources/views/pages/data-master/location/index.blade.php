@@ -20,6 +20,7 @@
                                         <th>No</th>
                                         <th>Kode Lokasi</th>
                                         <th>Lokasi</th>
+                                        <th>Terakhir Update</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -44,8 +45,13 @@
                 }
             });
             $('#myTable').DataTable({
-                serverSide: true,
                 responsive: true,
+                processing: true,
+                responsive: true,
+                lengthMenu: [
+                    [10, 25, 50, 100, -1],
+                    [10, 25, 50, 100, "All"]
+                ],
                 lengthMenu: [
                     [10, 25, 50, 100, -1],
                     [10, 25, 50, 100, "All"]
@@ -62,6 +68,16 @@
                     {
                         data: 'lokasi_umum',
                         name: 'lokasi_umum'
+                    },
+                    {
+                        data: 'updated_at',
+                        name: 'updated_at',
+                        render: function(data, type, row) {
+                            if (type === 'display' || type === 'filter') {
+                                return moment(data).format('DD/MM/YYYY');
+                            }
+                            return data;
+                        }
                     },
                     {
                         data: 'action',
