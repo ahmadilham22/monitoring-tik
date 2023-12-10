@@ -16,9 +16,10 @@ return new class extends Migration
             $table->foreignId('sub_category_id')->index()->constrained();
             $table->foreignId('specific_location_id')->index()->constrained();
             $table->foreignId('procurement_id')->index()->constrained();
+            $table->foreignId('unit_id')->index()->constrained();
             $table->foreignId('user_id')->index()->constrained();
             $table->string('kode_bmn')->nullable();
-            $table->string('kode_sn')->unique();
+            $table->string('kode_sn');
             $table->string('kondisi');
             $table->string('tahun_perolehan');
             $table->string('keterangan');

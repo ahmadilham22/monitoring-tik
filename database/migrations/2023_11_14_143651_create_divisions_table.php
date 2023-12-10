@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('divisions', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_divisi')->unique();
+            $table->string('kode_divisi');
             $table->string('nama_divisi');
             $table->softDeletes();
             $table->timestamps();

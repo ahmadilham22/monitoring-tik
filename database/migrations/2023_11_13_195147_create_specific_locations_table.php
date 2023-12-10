@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('specific_locations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('location_id')->index()->constrained();
-            $table->string('kode_lokasi')->unique();
+            $table->string('kode_lokasi');
             $table->string('lokasi_khusus');
             $table->softDeletes();
             $table->timestamps();
