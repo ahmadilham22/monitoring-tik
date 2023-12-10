@@ -76,7 +76,7 @@ class ReportController extends Controller
     }
     public function show($id)
     {
-        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement'])->findOrFail($id);
+        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement', 'unit'])->findOrFail($id);
 
         $folderPath = storage_path('app/public/qrcodes/');
         $qrCodePath = $folderPath . $data->kode_sn . '.png';
