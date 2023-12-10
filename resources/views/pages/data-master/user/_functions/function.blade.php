@@ -81,13 +81,11 @@
                 url: "user/update/" + userId,
                 data: data,
                 dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                        'content') // Pastikan CSRF token tersedia
+                },
                 success: function(response) {
-                    $('#edit_user_id').val(response.data.id);
-                    $('#edit_nama').val(response.data.nama);
-                    $('#edit_email').val(response.data.email);
-                    $('#edit_password').val(response.data.password);
-                    $('#edit_role').val(response.data.role);
-                    $('#edit_division_id').val(response.data.division_id);
                     if (response.success) {
                         $("#EditUserModal").modal('hide');
                         var oTable = $('#myTable').dataTable();
@@ -102,7 +100,7 @@
                             text: response.message,
                             showConfirmButton: false
                         });
-                    } else if (!response.success) {
+                    } else {
                         $("#EditUserModal").modal('hide');
                         var oTable = $('#myTable').dataTable();
                         oTable.fnDraw(false);
@@ -123,6 +121,7 @@
                 }
             })
         });
+
 
         $(document).on('click', '#add_user', function(e) {
             e.preventDefault();
