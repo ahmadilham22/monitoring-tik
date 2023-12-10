@@ -13,45 +13,94 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // $data = FixedAsset::join('categories', 'fixed_assets.category_id', '=', 'categories.id')
-        //     ->select(
-        //         'categories.nama_kategori as category_name',
-        //         DB::raw('count(*) as total_count')
-        //     )
-        //     ->groupBy('categories.nama_kategori')
-        //     ->get();
-        // $datas1 = FixedAsset::join('categories')
-        //     ->select('categories.nama_kategori as category_name');
-        //     ->w
-        // $data1 = [];
-        // foreach ($datas as $data) {
-        //     $data1[] = [
-        //         'nama_kategori' => $data->category_name,
-        //         'jumlah' => $data->total_count
-        //     ];
-        // }
-        // dd($datas);
-        // $datas = FixedAsset::with(['category', 'subcategory', 'location', 'specificLocation', 'division', 'procurement'])
-        //     ->join('categories', 'fixed_assets.category_id', '=', 'categories.id')
-        //     ->select(
-        //         'categories.nama_kategori as category_name',
-        //         'fixed_assets.kondisi as kondisi'
-        //     )
-        //     ->groupBy('categories.nama_kategori', 'fixed_assets.kondisi')
-        //     ->get();
+        $query = "SELECT
+            id,
+            nama_kategori,
+            baik,
+            buruk,
+            (baik + buruk) AS total_kategori
+        FROM (
+            SELECT
+                DISTINCT(ct.id) AS id,
+                ct.nama_kategori,
+                (
+                    SELECT
+                        COUNT(*)
+                    FROM
+                        fixed_assets AS faa
+                        JOIN sub_categories AS sct ON sct.id = faa.sub_category_id
+                        AND sct.deleted_at IS NULL
+                        JOIN categories AS ctt ON ctt.id = sct.categories_id
+                        AND ctt.deleted_at IS NULL
+                    WHERE
+                        ctt.id = ct.id
+                        AND faa.kondisi = 'Buruk'
+                        AND faa.deleted_at IS NULL        ) AS buruk,
+                (
+                    SELECT
+                        COUNT(*)
+                    FROM
+                        fixed_assets AS faaa
+                        JOIN sub_categories AS sctt ON sctt.id = faaa.sub_category_id
+                        AND sctt.deleted_at IS NULL
+                        JOIN categories AS cttt ON cttt.id = sctt.categories_id
+                        AND cttt.deleted_at IS NULL
+                    WHERE
+                        cttt.id = ct.id
+                        AND faaa.kondisi = 'Baik'
+                        AND faaa.deleted_at IS NULL
+                ) AS baik
+            FROM
+                categories AS ct
+            WHERE
+                ct.deleted_at IS NULL
+        ) AS subquery_alias";
 
-        // $data1 = [
-        //     'nama_kategori' => $data->first()->category_name,
-        // ];
-
-        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement'])->get();
-
-        // $data = DB::table('fixed_assets')
-        //     ->select('fixed_assets.*', 'subcategory')
-        //     ->get();
-
-        // dd($data);
-
-        return view('pages.dashboard.index', compact('data'));
+        $queryUser = "SELECT
+        DISTINCT ON (u.id)
+        u.id AS user_id,
+        u.nama AS user_name,
+        JSON_AGG(
+            JSON_BUILD_OBJECT(
+            'category_id', c.id,
+            'category_name', c.nama_kategori,
+            'category_count', category_count
+            ) ORDER BY c.id
+        ) AS category
+        FROM
+        users u
+        JOIN
+        (
+            SELECT
+            u.id AS user_id,
+            c.id AS category_id,
+            COUNT(fa.id) AS category_count
+            FROM
+            users u
+            JOIN
+            fixed_assets fa ON u.id = fa.user_id
+            JOIN
+            sub_categories sc ON fa.sub_category_id = sc.id
+            JOIN
+            categories c ON sc.categories_id = c.id
+            WHERE
+            u.deleted_at IS NULL
+            AND fa.deleted_at IS NULL
+            AND c.deleted_at IS NULL
+            GROUP BY
+            u.id, c.id
+        ) AS counts ON u.id = counts.user_id
+        JOIN
+        categories c ON counts.category_id = c.id
+        GROUP BY
+        u.id, u.nama
+        ORDER BY
+        u.id";
+        $results = DB::select($queryUser);
+        $data = DB::select($query);
+        return view('pages.dashboard.index', [
+            'dataUsers' => $results,
+            'data' => $data,
+        ]);
     }
 }
