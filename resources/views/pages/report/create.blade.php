@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('content')
     <div class="container flex-grow-1 container-p-y">
@@ -95,4 +95,4 @@
             </div>
         </div>
     </div>
-@endsection
+@endsection --}}
