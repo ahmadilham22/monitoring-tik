@@ -15,14 +15,19 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Data Aset</h4>
+                        <h4><a href="{{ route('asset-fixed.index') }}">
+                                <i class="fa-solid fa-circle-chevron-left"></i>
+                            </a> Data Aset</h4>
                     </div>
                     <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-12 d-flex justify-content-center align-items-center">
-                                <div class="visible-print text-center">
-                                    {!! QrCode::size(200)->generate(Request::url()) !!}
-                                    {{-- <p>Scan me to return to the original page.</p> --}}
+                                <div class="visible-print d-blok text-center">
+                                    <img src="{{ asset('storage/qrcodes/' . $data->kode_sn . '.png') }}" alt="QR Code"
+                                        class="img-fluid" style="width: 150px; height:150px;">
+                                    <br>
+                                    <a href="{{ route('asset-fixed.downloadQrCode', $data->id) }}"
+                                        class="btn btn-primary text-white mt-2 btn-xs">Download Qr Code</a>
                                 </div>
                             </div>
                         </div>
@@ -85,12 +90,7 @@
 
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="card bg-light h-100">
-                                    <div class="card-body">
+                                        <hr>
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
                                                 <strong>Sub Lokasi</strong>
@@ -100,52 +100,63 @@
 
                                             </div>
                                         </div>
-                                        <hr>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="card bg-light h-100">
+                                    <div class="card-body">
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
-                                                <strong>Penanggung Jawab</strong>
+                                                <strong>Mitra</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                {{ $data->user->nama }}
+                                                {{ $data->procurement->mitra }}
                                             </div>
                                         </div>
                                         <hr>
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
-                                                <strong>Jabatan</strong>
+                                                <strong>Jenis Pengadaan</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                {{ $data->user->division->nama_divisi }}
+                                                {{ $data->procurement->jenis_pengadaan }}
                                             </div>
                                         </div>
                                         <hr>
-                                        {{-- <div class="d-flex justify-content-between gap-3">
+                                        <div class="d-flex justify-content-between gap-3">
+                                            <div class="col-sm-4">
+                                                <strong>Tahun Pengadaan</strong>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                {{ \Carbon\Carbon::parse($data->procurement->tahun_pengadaan)->format('Y') }}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-between gap-3">
+                                            <div class="col-sm-4">
+                                                <strong>Penanggung Jawab / Divisi</strong>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                {{ $data->user->nama }} / {{ $data->user->division->nama_divisi }}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
                                                 <strong>Kondisi</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim molestiae
-                                                sapiente ipsam in cupiditate, fugiat voluptatem nisi laudantium ratione?
-                                                Sapiente!
+                                                {{ $data->kondisi }}
                                             </div>
                                         </div>
-                                        <hr> --}}
-                                        {{-- <div class="d-flex justify-content-between gap-3">
-                                            <div class="col-sm-4">
-                                                <strong>Periode Pengadaan</strong>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                2019
-                                            </div>
-                                        </div> --}}
-                                        {{-- <hr> --}}
-
+                                        <hr>
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
                                                 <strong>Tahun Perolehan</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                {{ $data->tahun_perolehan }}
+                                                {{ \Carbon\Carbon::parse($data->tahun_perolehan)->format('Y') }}
                                             </div>
                                         </div>
                                         <hr>
@@ -158,7 +169,6 @@
                                                 {{ $data->keterangan }}
                                             </div>
                                         </div>
-                                        <hr>
                                     </div>
                                 </div>
                             </div>

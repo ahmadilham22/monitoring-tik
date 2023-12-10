@@ -45,10 +45,17 @@
                 @endif
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title fw-semibold mb-4">Form Data Aset Tetap</h5>
-                        <div class="row">
-                            <form action="{{ route('asset-fixed.store') }}" method="POST" enctype="multipart/form-data">
+                        <div class="col-lg-12 d-flex">
+                            <h5 class="card-title fw-semibold mb-4">Form Data Aset Tetap</h5>
+                            <button id="resetData" class="btn btn-warning btn-xs ms-auto" type="submit"><i
+                                    class="fa-solid fa-rotate me-2"></i>
+                                Reset Data
+                            </button>
+                        </div>
+                        <div class="row mt-3">
+                            <form action="#" method="POST" enctype="multipart/form-data" id="FixedAssetForm">
                                 @csrf
+                                <input type="hidden" name="id" id="id">
                                 <div class="row">
                                     {{-- Kode BMN --}}
                                     <div class="mb-3 d-flex">
@@ -56,9 +63,8 @@
                                             <label for="exampleInputEmail1" class="form-label mt-2">Kode BMN</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <input name="kode_bmn" type="text" class="form-control"
-                                                id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                placeholder="Masukan Kode BMN.." />
+                                            <input name="kode_bmn" type="text" class="form-control" id="kode_bmn"
+                                                aria-describedby="emailHelp" placeholder="Masukan Kode BMN.." />
                                         </div>
                                     </div>
                                     {{-- Kode BMN --}}
@@ -69,9 +75,8 @@
                                             <label for="exampleInputEmail1" class="form-label mt-2">Kode SN</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <input name="kode_sn" type="text" class="form-control"
-                                                id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                placeholder="Masukan Kode SN.." />
+                                            <input name="kode_sn" type="text" class="form-control" id="kode_sn"
+                                                aria-describedby="emailHelp" placeholder="Masukan Kode SN.." />
                                         </div>
                                     </div>
                                     {{-- Kode SN --}}
@@ -153,6 +158,24 @@
                                     </div>
                                     {{-- Penanggung Jawab --}}
 
+                                    {{-- Unit --}}
+                                    <div class="mb-3 d-flex">
+                                        <div class="col-md-3 mt-2 col-4">
+                                            <label for="exampleInputEmail1" class="form-label mt-2">Satuan</label>
+                                        </div>
+                                        <div class="col-md-7 col-8">
+                                            <select id="unitSelect" name="unit_id" class="form-select form-select mb-3"
+                                                aria-label="Large select example">
+                                                <option></option>
+                                                @foreach ($unit as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->nama }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {{-- Unit --}}
+
                                     {{-- Kondisi --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
@@ -178,7 +201,7 @@
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <input name="tahun_perolehan" type="date" class="form-control"
-                                                id="exampleInputEmail1" aria-describedby="emailHelp"
+                                                id="tahun_perolehan" aria-describedby="emailHelp"
                                                 placeholder="Masukan Penanggung Jawab.." />
                                         </div>
                                     </div>
@@ -190,21 +213,22 @@
                                             <label for="exampleInputEmail1" class="form-label mt-2">Keterangan</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <textarea name="keterangan" class="form-control" id="exampleFormControlTextarea1" rows="5"></textarea>
+                                            <textarea name="keterangan" class="form-control" id="keterangan" rows="5"></textarea>
                                         </div>
                                     </div>
                                     {{-- Keterangan --}}
 
                                     {{-- Button --}}
                                     <div class="mb-3 mt-4 d-flex text-right gap-2">
-                                        <a href="{{ url()->previous() }}" class="btn btn-danger px-5" type="submit">
+                                        <a href="{{ route('asset-fixed.index') }}" class="btn btn-danger px-5"
+                                            type="submit">
                                             Kembali
                                         </a>
                                         <button class="btn btn-primary px-5" type="submit">
                                             Save
                                         </button>
-                                        <div class="col-md-2 col-4"></div>
-                                        <div class="col-md-2 col-8"></div>
+                                        {{-- <div class="col-md-2 col-4"></div>
+                                        <div class="col-md-2 col-8"></div> --}}
                                     </div>
                                     {{-- Button --}}
 
@@ -220,28 +244,59 @@
 
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $('#resetData').on('click', function(e) {
+            $('#FixedAssetForm :input').val('');
+            $('#FixedAssetForm select').val('').trigger('change');
+        })
+        $('#FixedAssetForm').submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            console.log(formData);
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('asset-fixed.store.ajax') }}",
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: (response) => {
+                    console.log(response.data);
+                    $("#btn-save").html('Submit');
+                    $("#btn-save").attr("disabled", false);
+                    if (response.success) {
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            showConfirmButton: false
+                        });
+                        $('#kode_bmn').val('');
+                        $('#kode_sn').val('');
+                        $('#keterangan').val('');
+                    } else if (!response.success) {
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'error',
+                            title: 'Failed',
+                            text: response.message,
+                            showConfirmButton: false
+                        });
+                    }
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        });
+    </script>
 @endsection
 
 @push('addon-script')
     @include('pages.data-asset.fixed-assets._function.function')
-
-    {{-- <script>
-        document.getElementById('categorySelect').addEventListener('change', function() {
-            var selectedCategoryId = this.value;
-            console.log(selectedCategoryId);
-
-            var subcategories = document.querySelectorAll('#subcategorySelect option');
-            subcategories.forEach(function(subcategory) {
-                subcategory.style.display = 'none';
-            });
-            console.log(subcategories);
-
-            var matchingSubcategories = document.querySelectorAll('#subcategorySelect option[data-category-id="' +
-                selectedCategoryId + '"]');
-            console.log(matchingSubcategories);
-            matchingSubcategories.forEach(function(subcategory) {
-                subcategory.style.display = 'block';
-            });
-        });
-    </script> --}}
 @endpush

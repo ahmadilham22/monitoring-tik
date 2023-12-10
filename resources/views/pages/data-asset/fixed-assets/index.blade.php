@@ -8,56 +8,81 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="mb-4">Aset Tetap</h4>
-                        <a href="{{ route('asset-fixed.create') }}" class="btn btn-primary">Tambah
-                            Data
-                        </a>
-                        <div class="row mt-4 mb-4 d-flex">
-                            <div class="col-lg-3 col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label class="form-label">Kondisi : </label>
-                                    <select id="kondisiFilter" class="form-select form-select-sm filter"
-                                        aria-label="Large select example">
-                                        <option value="">Tampilkan Semua</option>
-                                        @foreach ($conditions as $condition)
-                                            <option value="{{ $condition }}">{{ $condition }}</option>
-                                        @endforeach
-                                    </select>
+                        @if (Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin')
+                            <div class="row">
+                                <div class="col-12">
+                                    <p class="d-inline-flex gap-2">
+                                        <a href="{{ route('asset-fixed.create') }}" class="btn btn-primary mt-2"><i
+                                                class="fa-solid fa-plus me-2"></i> Tambah
+                                            Data
+                                        </a>
+                                    </p>
+                                    <button class="btn btn-secondary" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseExample" aria-expanded="false"
+                                        aria-controls="collapseExample">
+                                        <i class="fa-solid fa-filter me-2"></i> Filter Data
+                                    </button>
+                                    <button id="resetFilter" class="btn btn-warning"><i
+                                            class="fa-solid fa-arrows-rotate me-2"></i>
+                                        Reset
+                                        Filter</button>
+                                    <button id="deleteAsset" class="btn btn-danger" disabled><i
+                                            class="fa-solid fa-trash me-2"></i>
+                                        Delete Data</button>
                                 </div>
                             </div>
-                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label class="form-label">Kategori</label>
-                                    <select id="kategoriFilter" class="form-select form-select-sm filter"
-                                        aria-label="Large select example">
-                                        <option value="">Tampilkan Semua</option>
-                                        @foreach ($categories as $category)
-                                            <option value="{{ $category }}">{{ $category }}</option>
-                                        @endforeach
-                                    </select>
+                        @endif
+                        <div class="collapse" id="collapseExample">
+                            <div class="row d-flex">
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Kondisi : </label>
+                                        <select id="kondisiFilter" class="form-select form-select-sm filter"
+                                            aria-label="Large select example">
+                                            <option value="">Tampilkan Semua</option>
+                                            @foreach ($conditions as $condition)
+                                                <option value="{{ $condition }}">{{ $condition }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                            </div> --}}
-                            {{-- <div class="col-lg-3 col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label class="form-label">Jenis Aset</label>
-                                    <select class="form-select form-select-sm" aria-label="Large select example">
-                                        <option selected>Pilih...</option>
-                                        <option value="1">Buku</option>
-                                        <option value="2">Televisi</option>
-                                        <option value="3">laptop</option>
-                                    </select>
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Kategori : </label>
+                                        <select id="kategoriFilter" class="form-select form-select-sm filter"
+                                            aria-label="Large select example">
+                                            <option value="">Tampilkan Semua</option>
+                                            @foreach ($subcategories as $item)
+                                                <option value="{{ $item->id }}">
+                                                    {{ $item->nama_kategori }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                            </div> --}}
-                            {{-- <div class="col-sm-3 col-12 d-flex gap-2 mt-4 mx-auto">
-                                <button class="btn btn-success btn-sm"><i class="bx bx-export me-2 mb-1"></i>Export
-                                    Excel</button>
-                                <button class="btn btn-danger btn-sm"><i class="bx bx-export me-2 mb-1"></i>Export
-                                    PDF</button>
-                            </div> --}}
+                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="form-label">Penanggung Jawab : </label>
+                                        <select id="pjFilter" class="form-select form-select-sm filter"
+                                            aria-label="Large select example">
+                                            <option value="">Tampilkan Semua</option>
+                                            @foreach ($users as $user)
+                                                <option value="{{ $user->id }}">{{ $user->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                         <div class="table-responsive text-nowrap mt-2">
                             <table id="myTable" class="table table-bordered table-sm w-100">
                                 <thead>
                                     <tr>
+                                        <th>
+                                            <input class="form-check-input p-2" type="checkbox" value=""
+                                                id="main_checkbox" name="main_checkbox">
+                                        </th>
                                         <th>No</th>
                                         <th>Kode SN</th>
                                         <th>Kategori</th>
@@ -66,7 +91,6 @@
                                         <th>Kondisi</th>
                                         <th>Penanggung Jawab</th>
                                         <th>Aksi</th>
-                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
@@ -81,39 +105,32 @@
 @endsection
 
 @section('js')
-    {{-- <script>
-        $(function() {
-            $(document).on('click', '#deleteFixedAsset', function(e) {
-                e.preventDefault();
-                var link = $(this).attr('href');
-
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
-                            icon: "success"
-                        });
-                    }
-                });
-            })
-        });
-    </script> --}}
-@endsection
-
-@push('addon-script')
     <script>
         let kondisi = $('#kondisiFilter').val();
         let kategori = $('#kategoriFilter').val();
+        let pj = $('#pjFilter').val();
         $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            // Fungsi untuk mengatur button delete all menjadi disable
+            function buttonDeleteAll() {
+                if ($('input[name="fixedassetcheckbox"]:checked').length > 0) {
+                    $('button#deleteAsset').removeAttr('disabled');
+                } else {
+                    $('button#deleteAsset').attr('disabled', true);
+                }
+            }
+
+            // Fungsi untuk mengatur ulang status checkbox header
+            function resetHeaderCheckbox() {
+                $('input[name="main_checkbox"]').prop('checked', false);
+            }
+
+            // Setting up DataTable
             let table = $('#myTable').DataTable({
                 processing: true,
                 responsive: true,
@@ -127,9 +144,16 @@
                     data: function(d) {
                         d.kondisi = kondisi;
                         d.kategori = kategori;
+                        d.pj = pj;
                     }
                 },
                 columns: [{
+                        data: 'checkbox',
+                        name: 'checkbox',
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
                     },
@@ -163,21 +187,170 @@
                         orderable: false,
                         searchable: false
                     },
-                    {
-                        data: 'checkbox',
-                        name: 'checkbox',
-                        orderable: false,
-                        searchable: false
-                    },
+
                 ],
             });
 
+            // Event handler untuk filter
             $('.filter').on('change', function() {
                 kondisi = $('#kondisiFilter').val();
                 kategori = $('#kategoriFilter').val();
+                pj = $('#pjFilter').val();
                 table.ajax.reload(null, false);
             })
-        });
+
+            // Event handler untuk mereset filter
+            $('#resetFilter').on('click', function() {
+                $('#kondisiFilter').val('');
+                $('#kategoriFilter').val('');
+                $('#pjFilter').val('');
+
+                kondisi = '';
+                kategori = '';
+                pj = '';
+
+                table.search('').draw();
+                table.ajax.reload();
+            });
+
+            // Event handler untuk penggambaran ulang tabel
+            table.on('draw', function() {
+                resetHeaderCheckbox();
+            });
+
+            // Event handler untuk hapus data individual
+            $(document).on('click', '#delete_asset', function(e) {
+                e.preventDefault();
+
+                let userId = $(this).val();
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "DELETE",
+                            data: {
+                                id: userId
+                            },
+                            url: "fixed/delete/" + userId,
+                            dataType: 'json',
+                            success: function(res) {
+                                var oTable = $('#myTable').dataTable();
+                                oTable.fnDraw(false);
+                                Swal.fire({
+                                    toast: true,
+                                    position: "top-end",
+                                    timer: 2000,
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: res.message,
+                                    showConfirmButton: false
+                                })
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Event handler untuk seleksi checkbox utama
+            $(document).on('click', 'input[name="main_checkbox"]', function() {
+                if (this.checked) {
+                    $('input[name="fixedassetcheckbox"]').each(function() {
+                        this.checked = true;
+                    });
+                } else {
+                    $('input[name="fixedassetcheckbox"]').each(function() {
+                        this.checked = false;
+
+                    });
+                }
+            });
+
+            // Event handler untuk mengatur checkbox utama berdasarkan seleksi checkbox individual
+            $(document).on('change', 'input[name="fixedassetcheckbox"]', function() {
+                if ($('input[name="fixedassetcheckbox"]').length == $(
+                        'input[name="fixedassetcheckbox"]:checked').length) {
+                    $('input[name="main_checkbox"]').prop('checked', true);
+                } else {
+                    $('input[name="main_checkbox"]').prop('checked', false);
+
+                }
+                buttonDeleteAll();
+            });
+
+            // Event handler untuk seleksi checkbox utama
+            $('#main_checkbox').on('change', function() {
+                if ($(this).is(':checked')) {
+                    $('#deleteAsset').prop('disabled', false);
+                } else {
+                    $('#deleteAsset').prop('disabled', true);
+                }
+            });
+
+            // Event handler untuk aksi menghapus data terpilih
+            $(document).on('click', 'button#deleteAsset', function() {
+                let checkedAsset = [];
+                $('input[name="fixedassetcheckbox"]:checked').each(function() {
+                    checkedAsset.push($(this).data('id'));
+                })
+
+                let url = "{{ route('asset-fixed.destroy.selected') }}"
+                if (checkedAsset.length > 0) {
+                    Swal.fire({
+                        title: 'Apakah Anda yakin?',
+                        text: "Data yang dihapus tidak dapat dikembalikan!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then(function(result) {
+                        if (result.value) {
+                            $.post(url, {
+                                fixedasset_id: checkedAsset
+                            }, function(data) {
+                                if (data.success) {
+                                    var oTable = $('#myTable').dataTable();
+                                    oTable.fnDraw(false);
+                                    $('button#deleteAsset').attr('disabled', true);
+                                    Swal.fire({
+                                        toast: true,
+                                        position: "top-end",
+                                        timer: 2000,
+                                        icon: 'success',
+                                        title: 'Success',
+                                        text: data.message,
+                                        showConfirmButton: false
+                                    })
+                                }
+                            }, 'json');
+                        }
+                    })
+                }
+            });
+        })
     </script>
+    @if (session('success'))
+        <script>
+            // Menampilkan SweetAlert jika session flash success ada
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                timer: 2000,
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('success') }}',
+                showConfirmButton: false,
+            });
+        </script>
+    @endif
     @include('pages.data-asset.fixed-assets._function.function')
-@endpush
+@endsection
