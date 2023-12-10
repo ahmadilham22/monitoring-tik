@@ -77,7 +77,7 @@
                                                 <strong>Jumlah Barang</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                1
+                                                1 {{ $data->unit->nama }}
                                             </div>
                                         </div>
                                         <hr>
