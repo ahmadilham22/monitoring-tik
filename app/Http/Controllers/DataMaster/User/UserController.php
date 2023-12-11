@@ -10,6 +10,7 @@ use App\Models\DataMaster\Division;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -101,7 +102,51 @@ class UserController extends Controller
         }
     }
 
+    public function detail($id)
+    {
+        $data = User::with('division')->findOrFail($id);
+        $divisions = Division::all();
+        return view('pages.data-master.user.user-detail', compact('data', 'divisions'));
+    }
+    public function updateProfile(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'nama' => 'nullable',
+            'email' => 'nullable',
+            'division_id' => 'nullable',
+            'jabatan' => 'nullable',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+        ]);
 
+        $user = User::findOrFail($id);
+        $user->fill($validatedData);
+
+        // Hapus foto sebelumnya jika ada
+        if ($user->photo) {
+            Storage::delete('public/userImage/' . $user->photo);
+        }
+
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+
+            // Simpan file ke direktori storage/app/public/userImage
+            $path = $file->storeAs('public/userImage', $filename);
+
+            // Simpan nama file yang relevan di kolom 'photo'
+            $user->photo = $filename;
+        }
+
+        // Periksa apakah password dikirimkan, jika ya, perbarui password
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->input('password'));
+        }
+
+        $user->save();
+
+        // return $user;
+        return back()->with('success', 'Berhasil memperbarui data');
+    }
 
     public function edit($id)
     {
@@ -161,11 +206,5 @@ class UserController extends Controller
         $user = User::find($id);
         $user->delete();
         return Response()->json(['data' => $user, 'message' => 'Data Berhasil di Hapus']);
-    }
-
-    public function detail($id)
-    {
-        $data = User::with('division')->findOrFail($id);
-        return view('pages.data-master.user.user-detail', compact('data'));
     }
 }
