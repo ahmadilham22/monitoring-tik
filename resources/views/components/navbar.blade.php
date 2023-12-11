@@ -29,8 +29,14 @@
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow d-flex" href="javascript:void(0);"
                     data-bs-toggle="dropdown">
-                    <div class="avatar avatar-online me-3">
-                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                    <div class="avatar me-2">
+                        @if (Auth::user()->photo)
+                            <img src="{{ asset('storage/userImage/' . Auth::user()->photo) }}"
+                                alt="Foto Profil Pengguna" class="rounded-circle" width="40" height="30" />
+                        @else
+                            <img src="{{ asset('assets/img/avatars/1.png') }}" alt="Foto Profil Default"
+                                class="w-px-40 h-auto rounded-circle" />
+                        @endif
                     </div>
                     <div class="mt-2">
                         <span class="fw-semibold d-block">{{ Auth::user()->nama }}</span>

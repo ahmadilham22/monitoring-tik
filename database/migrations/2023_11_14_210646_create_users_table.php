@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('nama');
             $table->string('email');
             $table->string('password');
+            $table->string('photo')->nullable();
+            $table->string('jabatan')->nullable();
             $table->enum('role', ['super_admin', 'admin', 'user'])->default('user');
             $table->foreignId('division_id')->index()->nullable()->constrained();
             $table->softDeletes();
