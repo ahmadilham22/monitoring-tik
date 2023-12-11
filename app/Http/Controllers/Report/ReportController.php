@@ -58,7 +58,7 @@ class ReportController extends Controller
             ->groupBy('sc.categories_id')
             ->get();
         // dd($subcategories);
-        $users = DB::table('users')->select('id', 'nama')->where('role', 'admin')->get();
+        $users = DB::table('users')->select('id', 'nama')->where('role', 'admin')->whereNotNull('division_id')->get();
 
 
         $conditions = array_combine($kondisi, $kondisi);
