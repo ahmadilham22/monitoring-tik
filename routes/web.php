@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('home');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('user/detail/{id}', [UserController::class, 'detail'])->name('user.detail');
+    Route::put('user/detail/{id}', [UserController::class, 'updateProfile'])->name('user.update-porfile');
 });
 
 Route::middleware(['auth', 'super_admin'])->group(function () {
