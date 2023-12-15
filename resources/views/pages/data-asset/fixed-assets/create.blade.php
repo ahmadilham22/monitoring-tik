@@ -252,7 +252,7 @@
         $('#FixedAssetForm').submit(function(e) {
             e.preventDefault();
             var formData = new FormData(this);
-            console.log(formData);
+	    formData.append('_token', '{{ csrf_token() }}');
             $.ajax({
                 type: 'POST',
                 url: "{{ route('asset-fixed.store.ajax') }}",

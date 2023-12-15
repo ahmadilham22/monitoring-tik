@@ -151,10 +151,13 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'report'], function () {
         Route::get('/', [ReportController::class, 'index'])->name('report.index');
         Route::get('/create', [ReportController::class, 'create'])->name('report.create');
-        Route::get('/show/{id}', [ReportController::class, 'show'])->name('report.show');
+       // Route::get('/show/{id}', [ReportController::class, 'show'])->name('report.show');
         Route::get('/export', [ReportController::class, 'export'])->name('report.export');
     });
 });
+
+Route::get('data-assets/report/show/{id}', [ReportController::class, 'show'])->name('report.show');
+
 
 // Auth
 Route::middleware(['guest'])->group(function () {

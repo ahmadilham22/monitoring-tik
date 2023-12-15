@@ -1,3 +1,7 @@
+@if (
+    (Auth::check() && Auth::user()->role == 'super_admin') ||
+        (Auth::check() && Auth::user()->role == 'admin') ||
+        (Auth::check() && Auth::user()->role == 'user'))
  <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" style="z-index: 2">
      <div class="app-brand demo border-bottom">
          <a href="index.html" class="app-brand-link">
@@ -21,7 +25,7 @@
                  <div data-i18n="Analytics">Dashboard</div>
              </a>
          </li>
-         @if (Auth::user()->role == 'super_admin')
+         @if (Auth::check() && Auth::user()->role == 'super_admin')
              <!-- Data Master -->
              <li class="menu-item {{ request()->is('data-master*') || request()->is('users*') ? 'active' : '' }}">
                  <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -78,9 +82,9 @@
              <a href="javascript:void(0);" class="menu-link menu-toggle">
                  <i class="menu-icon tf-icons bx bx-layout"></i>
                  <div data-i18n="Layouts">
-                     @if (Auth::user()->role == 'super_admin' || Auth::user()->role == 'admin')
+                     @if ((Auth::check() && Auth::user()->role == 'super_admin') || (Auth::check() && Auth::user()->role == 'admin'))
                          Data Asset
-                     @elseif (Auth::user()->role == 'user')
+                     @elseif (Auth::check() && Auth::user()->role == 'user')
                          Monitoring
                      @endif
                  </div>
@@ -101,3 +105,4 @@
          </li>
      </ul>
  </aside>
+@endif

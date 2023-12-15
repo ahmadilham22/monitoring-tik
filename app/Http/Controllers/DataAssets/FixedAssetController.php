@@ -101,7 +101,7 @@ class FixedAssetController extends Controller
         ]);
 
         $fixedAsset = FixedAsset::create($data);
-        $url = "http://127.0.0.1:8000/report/show/" . $fixedAsset->id;
+	$url = url("/report/show{$fixedAsset->id}");
 
 
         $fileName = $data['kode_sn'] . '.png';
@@ -152,9 +152,7 @@ class FixedAssetController extends Controller
 
         // Buat entitas FixedAsset dengan data yang telah divalidasi
         $fixedAsset = FixedAsset::create($validatedData);
-
-        $url = "http://127.0.0.1:8000/report/show/" . $fixedAsset->id;
-
+	$url = url("/data-assets/report/show/{$fixedAsset->id}");
 
         $fileName = $request->input('kode_sn') . '.png';
         $qrCode = QrCode::format('png')

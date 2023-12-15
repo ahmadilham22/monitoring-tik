@@ -1,3 +1,7 @@
+@if (
+    (Auth::check() && Auth::user()->role == 'super_admin') ||
+        (Auth::check() && Auth::user()->role == 'admin') ||
+        (Auth::check() && Auth::user()->role == 'user'))
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
     id="layout-navbar" style="z-index: 1">
     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -30,7 +34,7 @@
                 <a class="nav-link dropdown-toggle hide-arrow d-flex" href="javascript:void(0);"
                     data-bs-toggle="dropdown">
                     <div class="avatar me-2">
-                        @if (Auth::user()->photo)
+                        @if (Auth::check() && Auth::user()->photo)
                             <img src="{{ asset('storage/userImage/' . Auth::user()->photo) }}"
                                 alt="Foto Profil Pengguna" class="rounded-circle" width="40" height="30" />
                         @else
@@ -38,9 +42,11 @@
                                 class="w-px-40 h-auto rounded-circle" />
                         @endif
                     </div>
-                    <div class="mt-2">
-                        <span class="fw-semibold d-block">{{ Auth::user()->nama }}</span>
-                    </div>
+                     @if (Auth::check() && Auth::user())
+                        <div class="mt-2">
+                            <span class="fw-semibold d-block">{{ Auth::user()->nama }}</span>
+                        </div>
+                    @endif
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li>
@@ -52,10 +58,12 @@
                                             class="w-px-40 h-auto rounded-circle" />
                                     </div>
                                 </div>
-                                <div class="flex-grow-1">
-                                    <span class="fw-semibold d-block">{{ Auth::user()->nama }}</span>
-                                    <small class="text-muted">Staff</small>
-                                </div>
+                                 @if (Auth::check() && !is_null(Auth::user()))
+                                    <div class="flex-grow-1">
+                                        <span class="fw-semibold d-block">{{ Auth::user()->nama }}</span>
+                                        <small class="text-muted">Staff</small>
+                                    </div>
+                                @endif
                             </div>
                         </a>
                     </li>
@@ -63,10 +71,12 @@
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{{ route('user.detail', Auth::user()->id) }}">
-                            <i class="bx bx-user me-2"></i>
-                            <span class="align-middle">My Profile</span>
-                        </a>
+                         @if (Auth::check() && !is_null(Auth::user()))
+                            <a class="dropdown-item" href="{{ route('user.detail', Auth::user()->id) }}">
+                                <i class="bx bx-user me-2"></i>
+                                <span class="align-middle">My Profile</span>
+                            </a>
+                        @endif
                     </li>
                     {{-- <li>
                         <a class="dropdown-item" href="#">
@@ -99,3 +109,4 @@
         </ul>
     </div>
 </nav>
+@endif
