@@ -90,29 +90,21 @@ class ReportController extends Controller
 
     public function export(Request $request)
     {
-        // $params = [
-        //     $_GET['kategori'] ?? null,
-        //     $_GET['kondisi'] ?? null,
-        //     $_GET['pj'] ?? null,
-        //     $_GET['id'] ?? null
-        // ];
-        // dd($params);
+        // Mengambil data dari query params
         $kategori = $request->query('kategori');
         $kondisi = $request->query('kondisi');
         $pj = $request->query('pj');
-        $sn = $request->query('sn'); // Mengambil nilai 'sn' dari query string
+        $sn = $request->query('sn');
 
+        // Cek sn jika ada maka jadikan array jika tidak jadikan array kosong
         if ($sn) {
-            $snArray = explode(',', $sn); // Membagi nilai string menjadi array menggunakan koma sebagai pemisah
-            // $snArray akan berisi array dari nilai-nilai yang sebelumnya dipisahkan oleh koma
+            $snArray = explode(',', $sn);
         } else {
-            // $sn kosong atau tidak ada, maka berikan nilai array kosong
             $snArray = [];
         }
 
-        // Lakukan apa pun yang Anda perlukan dengan nilai-nilai ini
+        // memasukan variabel kedalam suatu array
         $params = [$kategori, $kondisi, $pj, $snArray];
-        // dd($params);
         return Excel::download(new ReportExport($params), 'data.xlsx');
     }
 }
