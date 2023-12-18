@@ -15,9 +15,13 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4><a href="{{ route('report.index') }}">
+                        <h4>
+                            <a
+                                href="{{ route('report.index') }}/?id_category={{ $data->subcategory->category->id }}&id_user={{ $data->user->id }}&kondisi={{ $data->kondisi }}">
                                 <i class="fa-solid fa-circle-chevron-left"></i>
-                            </a> Data Aset</h4>
+                            </a>
+                            Data Aset
+                        </h4>
                     </div>
                     <div class="card-body">
                         <div class="row mb-3">

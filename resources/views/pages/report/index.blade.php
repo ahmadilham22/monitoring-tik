@@ -27,7 +27,7 @@
                                     Export Data
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a id="sheet1" class="dropdown-item" href="{{ route('report.export') }}">Sheet
+                                    <li><a id="sheet1" href="{{ route('report.export') }}" class="dropdown-item">Sheet
                                             1</a></li>
                                     {{-- <li><a id="sheet2" class="dropdown-item" href="#">Sheet 2</a></li> --}}
                                 </ul>
@@ -49,7 +49,8 @@
                                                     aria-label="Large select example">
                                                     <option value="">Tampilkan Semua</option>
                                                     @foreach ($conditions as $condition)
-                                                        <option value="{{ $condition }}">{{ $condition }}</option>
+                                                        <option value="{{ $condition }}"
+                                                            id="condition_{{ $condition }}">{{ $condition }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -61,7 +62,8 @@
                                                     aria-label="Large select example">
                                                     <option value="">Tampilkan Semua</option>
                                                     @foreach ($subcategories as $item)
-                                                        <option value="{{ $item->id }}">
+                                                        <option value="{{ $item->id }}"
+                                                            id="id_category_{{ $item->id }}">
                                                             {{ $item->nama_kategori }}
                                                         </option>
                                                     @endforeach
@@ -75,7 +77,8 @@
                                                     aria-label="Large select example">
                                                     <option value="">Tampilkan Semua</option>
                                                     @foreach ($users as $user)
-                                                        <option value="{{ $user->id }}">{{ $user->nama }}</option>
+                                                        <option value="{{ $user->id }}"
+                                                            id="id_user_{{ $user->id }}">{{ $user->nama }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -118,8 +121,25 @@
         let kondisi = $('#kondisiFilter').val();
         let kategori = $('#kategoriFilter').val();
         let pj = $('#pjFilter').val();
-
+        let sn = [];
         $(document).ready(function() {
+            var category_id = (new URL(location.href)).searchParams.get('id_category');
+            var user_id = (new URL(location.href)).searchParams.get('id_user');
+            var params = new URLSearchParams(window.location.search);
+            var condition = params.get('kondisi');
+            if (category_id !== null || category_id !== undefined) {
+                kategori = category_id;
+                $('#id_category_' + kategori).attr('selected', true);
+            }
+            if (user_id !== null || user_id !== undefined) {
+                pj = user_id;
+                $('#id_user_' + pj).attr('selected', true);
+            }
+            if (condition !== null || condition !== undefined) {
+                kondisi = condition;
+                $('#condition_' + kondisi).attr('selected', true);
+            }
+
             let table = $('#myTable').DataTable({
                 processing: true,
                 responsive: true,
@@ -134,7 +154,6 @@
                         d.kondisi = kondisi;
                         d.kategori = kategori;
                         d.pj = pj;
-                        // d.reset = reset;
                     }
                 },
                 columns: [{
@@ -181,6 +200,46 @@
                 ],
             });
 
+            // Event handler untuk filter
+            $('.filter').on('change', function() {
+                kondisi = $('#kondisiFilter').val();
+                kategori = $('#kategoriFilter').val();
+                pj = $('#pjFilter').val();
+                let sheet1 = $("#sheet1").attr("href", "{{ route('report.export') }}?kondisi=" + kondisi +
+                    "&kategori=" + kategori + "&pj=" + pj);
+
+                table.ajax.reload(null, false);
+            })
+
+            $(document).on('change', 'input[name="checkboxreport[]"]', function() {
+                if ($(this).is(":checked")) {
+                    sn = $('input[name="checkboxreport[]"]:checked').map(function() {
+                        return $(this).val();
+                    }).get();
+                    // console.log(sn);
+                    let sheet1 = $("#sheet1").attr("href", "{{ route('report.export') }}?kondisi=" +
+                        kondisi +
+                        "&kategori=" + kategori + "&pj=" + pj + "&sn=" + sn);
+                } else {
+                    console.log("Checkbox is not checked!");
+                }
+            });
+
+            $(document).on('change', 'input[name="maincheckboxreport[]"]', function() {
+                if ($(this).is(":checked")) {
+                    sn = $('input[name="checkboxreport[]"]:checked').map(function() {
+                        return $(this).val();
+                    }).get();
+                    // console.log(sn);
+                    let sheet1 = $("#sheet1").attr("href", "{{ route('report.export') }}?kondisi=" +
+                        kondisi +
+                        "&kategori=" + kategori + "&pj=" + pj + "&sn=" + sn);
+                } else {
+                    console.log("Checkbox is not checked!");
+                }
+            });
+
+
             // Fungsi untuk mengatur ulang status checkbox header
             function resetHeaderCheckbox() {
                 $('input[name="maincheckboxreport[]"]').prop('checked', false);
@@ -194,18 +253,6 @@
                     $('button#downloadReport').attr('disabled', true);
                 }
             }
-
-            // Event handler untuk filter
-            $('.filter').on('change', function() {
-                kondisi = $('#kondisiFilter').val();
-                kategori = $('#kategoriFilter').val();
-                pj = $('#pjFilter').val();
-                let sheet2 = $('#sheet2').val();
-                let sheet1 = $("#sheet1").attr("href", "{{ route('report.export') }}?kondisi=" + kondisi +
-                    "&kategori=" + kategori + "&pj=" + pj);
-
-                table.ajax.reload(null, false);
-            })
 
             // Event handler untuk mereset filter
             $('#resetFilter').on('click', function() {
@@ -286,6 +333,32 @@
                     });
                 }
             });
+
+            // $('#sheet1').click(function() {
+
+            //     kondisi = $('#kondisiFilter').val();
+            //     kategori = $('#kategoriFilter').val();
+            //     pj = $('#pjFilter').val();
+            //     let data = [
+
+            //     ]
+            //     console.log(sn);
+
+            //     $.ajax({
+            //         url: '{{ route('report.export') }}',
+            //         type: 'GET',
+            //         data: {
+            //             sn: sn
+            //         },
+            //         success: function(response) {
+            //             console.log('success');
+            //             // console.log(response);
+            //         },
+            //         error: function(error) {
+            //             console.error(error);
+            //         }
+            //     })
+            // })
         });
     </script>
     @include('pages.data-asset.fixed-assets._function.function')

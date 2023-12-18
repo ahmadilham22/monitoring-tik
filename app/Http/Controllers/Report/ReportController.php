@@ -18,7 +18,7 @@ class ReportController extends Controller
     public function index(Request $request)
     {
         if (request()->ajax()) {
-            $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement'])->get();
+            $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement'])->orderBy('updated_at', 'desc')->get();
 
             if ($request->input('kondisi') !== null) {
                 $data = $data->where('kondisi', $request->kondisi);
@@ -82,9 +82,10 @@ class ReportController extends Controller
         $qrCodePath = $folderPath . $data->kode_sn . '.png';
         if (file_exists($qrCodePath)) {
             return view('pages.report.show', compact('data', 'qrCodePath'));
-        } else {
-            return view('pages.data-asset.fixed-assets.show_not_found', compact('data'));
         }
+        // } else {
+        //     return view('pages.data-asset.fixed-assets.show_not_found', compact('data'));
+        // }
     }
 
     public function export(Request $request)
@@ -99,9 +100,18 @@ class ReportController extends Controller
         $kategori = $request->query('kategori');
         $kondisi = $request->query('kondisi');
         $pj = $request->query('pj');
-        // $id = $request->query('checkedIds');
+        $sn = $request->query('sn'); // Mengambil nilai 'sn' dari query string
+
+        if ($sn) {
+            $snArray = explode(',', $sn); // Membagi nilai string menjadi array menggunakan koma sebagai pemisah
+            // $snArray akan berisi array dari nilai-nilai yang sebelumnya dipisahkan oleh koma
+        } else {
+            // $sn kosong atau tidak ada, maka berikan nilai array kosong
+            $snArray = [];
+        }
+
         // Lakukan apa pun yang Anda perlukan dengan nilai-nilai ini
-        $params = [$kategori, $kondisi, $pj];
+        $params = [$kategori, $kondisi, $pj, $snArray];
         // dd($params);
         return Excel::download(new ReportExport($params), 'data.xlsx');
     }
