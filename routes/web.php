@@ -36,6 +36,7 @@ use App\Models\DataMaster\SpecialLocation;
 // Data Masetr
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('home');
+    Route::get('/dashboard-user', [DashboardController::class, 'getUsers'])->name('home.users');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('user/detail/{id}', [UserController::class, 'detail'])->name('user.detail');
     Route::put('user/detail/{id}', [UserController::class, 'updateProfile'])->name('user.update-porfile');
@@ -130,6 +131,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/download/qrcode/{id}', 'DownloadQrCode')->name('asset-fixed.downloadQrCode');
             Route::post('/download-selected-qrcodes', 'downloadSelectedQrCodes')->name('download-selected-qrcodes');
             Route::get('/download-selected-qrcodes-zip', 'downloadSelectedQrCodesZip')->name('download-selected-qrcodes-zip');
+            Route::post('/save-filters-to-session', 'saveFiltersToSession')->name('save-filters-to-session');
         });
 
         // Moved Asset
@@ -151,7 +153,7 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'report'], function () {
         Route::get('/', [ReportController::class, 'index'])->name('report.index');
         Route::get('/create', [ReportController::class, 'create'])->name('report.create');
-       // Route::get('/show/{id}', [ReportController::class, 'show'])->name('report.show');
+        // Route::get('/show/{id}', [ReportController::class, 'show'])->name('report.show');
         Route::get('/export', [ReportController::class, 'export'])->name('report.export');
     });
 });

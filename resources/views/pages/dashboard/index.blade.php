@@ -48,130 +48,12 @@
                         <h4>Data Aset Tetap</h4>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            @foreach ($data as $item)
-                                @if ($item->total_kategori > 0)
-                                    <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                        <div class="card h-100">
-                                            <div class="card-header d-flex align-items-center justify-content-between pb-0">
-                                                <div class="card-title mb-0">
-                                                    <h5 class="m-0 me-2 mb-3">{{ $item->nama_kategori }}
-                                                    </h5>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                                    <div class="d-flex flex-column align-items-center gap-1">
-                                                        <h2 class="mb-2">{{ $item->total_kategori }}</h2>
-                                                    </div>
-                                                </div>
-                                                <ul class="p-0 m-0">
-                                                    <li class="d-flex mb-4 pb-1 me-2">
-                                                        <div class="avatar flex-shrink-0 me-3">
-                                                            <span class="avatar-initial rounded bg-label-info"><i
-                                                                    class="bx bx-check"></i></span>
-                                                        </div>
-                                                        <div
-                                                            class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                            <div class="me-2">
-                                                                <h6 class="mb-0">Baik</h6>
-                                                            </div>
-                                                            <div class="user-progress">
-                                                                <small class="fw-semibold">{{ $item->baik }}</small>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li class="d-flex mb-4 pb-1 me-2">
-                                                        <div class="avatar flex-shrink-0 me-3">
-                                                            <span class="avatar-initial rounded bg-label-danger"><i
-                                                                    class="bx bx-x"></i></span>
-                                                        </div>
-                                                        <div
-                                                            class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                            <div class="me-2">
-                                                                <h6 class="mb-0">Rusak</h6>
-                                                                {{-- <small class="text-muted">Football, Cricket Kit</small> --}}
-                                                            </div>
-                                                            <div class="user-progress">
-                                                                <small class="fw-semibold">{{ $item->buruk }}</small>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                                <div class="col-lg-12 d-flex">
-                                                    <a href="{{ route('asset-fixed.index') }}"
-                                                        class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                            @endforeach
-                            {{-- <div class="">
-                                <div class="collapse" id="dataAsetTetap">
-                                    <div class="row">
-                                        <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                            <div class="card h-100">
-                                                <div
-                                                    class="card-header d-flex align-items-center justify-content-between pb-0">
-                                                    <div class="card-title mb-0">
-                                                        <h5 class="m-0 me-2 mb-3">Laptop</h5>
-                                                    </div>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                                        <div class="d-flex flex-column align-items-center gap-1">
-                                                            <h2 class="mb-2">200</h2>
-                                                            <!-- <span>Total Orders</span> -->
-                                                        </div>
-                                                    </div>
-                                                    <ul class="p-0 m-0">
-                                                        <li class="d-flex mb-4 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-info"><i
-                                                                        class="bx bx-check"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Baik</h6>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">190</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="d-flex mb-4 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-danger"><i
-                                                                        class="bx bx-x"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Rusak</h6>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">10</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="col-lg-12 d-flex">
-                                                        <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="demo-inline-spacing d-flex justify-content-end">
-                                    <a data-bs-toggle="collapse" href="#dataAsetTetap" role="button" aria-expanded="false"
-                                        aria-controls="collapseExample">
-                                        Aset Tetap Lainnya <i class="bx bx-chevron-right"></i>
-                                    </a>
-                                </p>
-                            </div> --}}
+                        <div class="row data-kategori" id="data-wrapper">
+                            @include('pages.dashboard.data')
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-success load-more-data">View More</button>
+                            <button class="btn btn-danger load-less-data" style="display:none;">View Less</button>
                         </div>
                     </div>
                 </div>
@@ -186,222 +68,12 @@
                         <h4>User</h4>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            @foreach ($dataUsers as $item)
-                                <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                    <div class="card h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <div class="d-flex align-items-center gap-1 mb-3">
-                                                    <img src="{{ asset('assets/img/avatars/1.png') }}"
-                                                        class="img-fluid rounded me-3" height="50" width="50"
-                                                        alt="">
-                                                    <h4 class="mb-2">{{ $item->user_name }}</h4>
-                                                </div>
-                                            </div>
-                                            <div class="">
-                                                <h5><strong>Penanggung Jawab Aset</strong></h5>
-                                            </div>
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <div class="d-flex flex-column align-items-center gap-1">
-                                                    <h2 class="mb-2"></h2>
-                                                </div>
-                                            </div>
-                                            <ul class="p-0 m-0">
-                                                @foreach (json_decode($item->category) as $category)
-                                                    <li class="d-flex mb-4 pb-1 me-2">
-                                                        <div class="avatar flex-shrink-0 me-3">
-                                                            <span class="avatar-initial rounded bg-label-info"><i
-                                                                    class="fa-solid fa-folder"></i></span>
-                                                        </div>
-                                                        <div
-                                                            class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                            <div class="me-2">
-                                                                <h6 class="mb-0">{{ $category->category_name }}</h6>
-                                                            </div>
-                                                            <div class="user-progress">
-                                                                <small
-                                                                    class="fw-semibold">{{ $category->category_count }}</small>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                        <div class="col-lg-12 d-flex justify-content-end">
-                                            <a class="btn btn-primary mb-4 text-white me-4">Selengkapnya</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                            {{-- <div class="">
-                                <div class="collapse" id="dataUser">
-                                    <div class="row">
-                                        <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                            <div class="card h-100">
-                                                <div class="card-body">
-                                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                                        <div class="d-flex align-items-center gap-1 mb-3">
-                                                            <img src="{{ asset('assets/img/avatars/1.png') }}"
-                                                                class="img-fluid rounded me-3" height="50" width="50"
-                                                                alt="">
-                                                            <h4 class="mb-2">John Doe </h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="">
-                                                        <h5><strong>Penanggung Jawab Aset</strong></h5>
-                                                    </div>
-                                                    <ul class="p-0 m-0">
-                                                        <li class="d-flex mb-1 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-info"><i
-                                                                        class="bx bx-home-alt"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Laptop</h6>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">190</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="d-flex mb-4 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-secondary"><i
-                                                                        class="bx bx-football"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Ac</h6>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">10</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="col-lg-12 d-flex">
-                                                        <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                            <div class="card h-100">
-                                                <div class="card-body">
-                                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                                        <div class="d-flex align-items-center gap-1 mb-3">
-                                                            <img src="{{ asset('assets/img/avatars/1.png') }}"
-                                                                class="img-fluid rounded me-3" height="50"
-                                                                width="50" alt="">
-                                                            <h4 class="mb-2">John Doe </h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="">
-                                                        <h5><strong>Penanggung Jawab Aset</strong></h5>
-                                                    </div>
-                                                    <ul class="p-0 m-0">
-                                                        <li class="d-flex mb-1 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-info"><i
-                                                                        class="bx bx-home-alt"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Laptop</h6>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">190</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="d-flex mb-4 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-secondary"><i
-                                                                        class="bx bx-football"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Ac</h6>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">10</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="col-lg-12 d-flex">
-                                                        <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-lg-4 col-xl-4 order-0 mb-4">
-                                            <div class="card h-100">
-                                                <div class="card-body">
-                                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                                        <div class="d-flex align-items-center gap-1 mb-3">
-                                                            <img src="{{ asset('assets/img/avatars/1.png') }}"
-                                                                class="img-fluid rounded me-3" height="50"
-                                                                width="50" alt="">
-                                                            <h4 class="mb-2">John Doe </h4>
-                                                        </div>
-                                                    </div>
-                                                    <div class="">
-                                                        <h5><strong>Penanggung Jawab Aset</strong></h5>
-                                                    </div>
-                                                    <ul class="p-0 m-0">
-                                                        <li class="d-flex mb-1 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-info"><i
-                                                                        class="bx bx-home-alt"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Laptop</h6>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">190</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                        <li class="d-flex mb-4 pb-1 me-2">
-                                                            <div class="avatar flex-shrink-0 me-3">
-                                                                <span class="avatar-initial rounded bg-label-secondary"><i
-                                                                        class="bx bx-football"></i></span>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                                                <div class="me-2">
-                                                                    <h6 class="mb-0">Ac</h6>
-                                                                </div>
-                                                                <div class="user-progress">
-                                                                    <small class="fw-semibold">10</small>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <div class="col-lg-12 d-flex">
-                                                        <a class="btn btn-primary ms-auto text-white">Selengkapnya</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="demo-inline-spacing d-flex justify-content-end">
-                                    <a data-bs-toggle="collapse" href="#dataUser" role="button" aria-expanded="false"
-                                        aria-controls="collapseExample">
-                                        Users Lainnya <i class="bx bx-chevron-right"></i>
-                                    </a>
-                                </p>
-                            </div> --}}
+                        <div class="row data-user" id="data-wrapper-users">
+                            @include('pages.dashboard.data-users')
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-success load-more-data-users">View More</button>
+                            <button class="btn btn-danger load-less-data-users" style="display:none;">View Less</button>
                         </div>
                     </div>
                 </div>
@@ -413,6 +85,109 @@
 @endsection
 
 @section('js')
+    <script>
+        $(document).ready(function() {
+            // Categories
+            var pageCategories = 1;
+
+            // Saat halaman dimuat, simpan data asli sebelum "View More" ditekan
+            var originalDataCategories = $("#data-wrapper").html();
+
+            $('.load-more-data').on('click', function() {
+                pageCategories++; // Increment nomor halaman saat tombol ditekan
+
+                // Lakukan AJAX request untuk memuat data berikutnya
+                $.ajax({
+                    url: "{{ route('home') }}", // Ganti dengan route yang sesuai di Laravel Anda
+                    method: "GET",
+                    data: {
+                        page: pageCategories
+                    },
+                    success: function(response) {
+                        // Memasukkan data baru ke dalam container data yang sudah ada
+                        $("#data-wrapper").append(response.htmlCategories);
+
+                        // Jika tidak ada data lagi atau jumlah total data sudah melebihi perPageCategories, ubah tombol menjadi "View Less"
+                        if (response.nextPageCategories == null) {
+                            $('.load-more-data').hide(); // Sembunyikan tombol "View More"
+                            $('.load-less-data').show(); // Tampilkan tombol "View Less"
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error:', errorThrown);
+                    }
+                });
+            });
+
+            // Event handler untuk tombol "View Less"
+            $('.load-less-data').on('click', function() {
+                // Kembali ke halaman awal (misalnya, halaman pertama)
+                pageCategories = 1;
+
+                // Sembunyikan tombol "View Less"
+                $('.load-less-data').hide();
+                // Tampilkan tombol "View More"
+                $('.load-more-data').show();
+
+                // Menampilkan kembali data asli yang disimpan sebelumnya
+                $("#data-wrapper").empty(); // Menghapus semua data yang sudah dimuat
+                $("#data-wrapper").append(originalDataCategories);
+            });
+            // Categories
+
+
+
+            // Users
+            var pageUsers = 1;
+
+            // Saat halaman dimuat, simpan data asli sebelum "View More" ditekan
+            var originalDataUsers = $("#data-wrapper-users").html();
+
+            $('.load-more-data-users').on('click', function() {
+                pageUsers++; // Increment nomor halaman saat tombol ditekan
+
+                // Lakukan AJAX request untuk memuat data berikutnya
+                $.ajax({
+                    url: "{{ route('home.users') }}", // Ganti dengan route yang sesuai di Laravel Anda
+                    method: "GET",
+                    data: {
+                        page: pageUsers
+                    },
+                    success: function(response) {
+
+                        // Memasukkan data baru ke dalam container data yang sudah ada
+                        $("#data-wrapper-users").append(
+                            response
+                            .htmlUsers);
+
+                        // Jika tidak ada data lagi atau jumlah total data sudah kembali ke jumlah awal, ubah tombol menjadi "View Less"
+                        if (response.nextPageUsers == null) {
+                            $('.load-more-data-users').hide(); // Sembunyikan tombol "View More"
+                            $('.load-less-data-users').show(); // Tampilkan tombol "View Less"
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error:', errorThrown);
+                    }
+                });
+            });
+            // Event handler untuk tombol "View Less"
+            $('.load-less-data-users').on('click', function() {
+                // Kembali ke halaman awal (misalnya, halaman pertama)
+                pageUsers = 1;
+
+                // Sembunyikan tombol "View Less"
+                $('.load-less-data-users').hide();
+                // Tampilkan tombol "View More"
+                $('.load-more-data-users').show();
+
+                // Menampilkan kembali data asli yang disimpan sebelumnya
+                $("#data-wrapper-users").empty(); // Menghapus semua data yang sudah dimuat
+                $("#data-wrapper-users").append(originalDataUsers);
+            });
+            // Users
+        });
+    </script>
     <script>
         @if (session('success'))
             Swal.fire({
