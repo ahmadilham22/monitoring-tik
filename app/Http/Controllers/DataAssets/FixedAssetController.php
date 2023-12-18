@@ -4,7 +4,9 @@ namespace App\Http\Controllers\DataAssets;
 
 use ZipArchive;
 use Illuminate\Http\Request;
+use App\Models\DataMaster\Unit;
 use App\Models\DataMaster\User;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\DB;
 use App\Models\DataMaster\Category;
@@ -14,10 +16,10 @@ use App\Http\Controllers\Controller;
 use App\Models\DataAsset\FixedAsset;
 use App\Models\DataMaster\Procurement;
 use App\Models\DataMaster\SubCategory;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use App\Models\DataMaster\SpecialLocation;
-use App\Models\DataMaster\Unit;
 use Illuminate\Support\Facades\Validator;
+use App\Models\DataMaster\SpecialLocation;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class FixedAssetController extends Controller
@@ -35,13 +37,10 @@ class FixedAssetController extends Controller
                 $data = $data->where('subcategory.categories_id', $request->kategori);
             }
 
-            // if ($kategori !== null) {
-            //     $data = $data->where('subcategory.categories_id', $kategori);
-            // }
-
             if ($request->input('pj') !== null) {
                 $data = $data->where('user.id', $request->pj);
             }
+
 
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
@@ -101,7 +100,7 @@ class FixedAssetController extends Controller
         ]);
 
         $fixedAsset = FixedAsset::create($data);
-	$url = url("/report/show{$fixedAsset->id}");
+        $url = url("/report/show{$fixedAsset->id}");
 
 
         $fileName = $data['kode_sn'] . '.png';
@@ -126,14 +125,14 @@ class FixedAssetController extends Controller
             'specific_location_id' => 'required',
             'user_id' => 'required',
             'kode_bmn' => 'nullable|min:5',
-            'kode_sn' => 'required|unique:fixed_assets,kode_sn',
+            'kode_sn' => 'required|unique:fixed_assets,kode_sn,NULL,id,deleted_at,NULL',
             'kondisi' => 'required',
             'unit_id' => 'required',
             'tahun_perolehan' => 'required',
             'keterangan' => 'nullable',
         ], [
             'sub_category_id.required' => 'Kategori harus diisi.',
-            'procurement_id.required' => 'Pengadaan harus diisi.',
+            'procurement_id.required' => 'Mitra harus diisi.',
             'specific_location_id.required' => 'Lokasi harus diisi.',
             'user_id.required' => 'Penanggung jawab harus diisi.',
             'unit_id.required' => 'Satuan harus diisi.',
@@ -152,7 +151,7 @@ class FixedAssetController extends Controller
 
         // Buat entitas FixedAsset dengan data yang telah divalidasi
         $fixedAsset = FixedAsset::create($validatedData);
-	$url = url("/data-assets/report/show/{$fixedAsset->id}");
+        $url = url("/data-assets/report/show/{$fixedAsset->id}");
 
         $fileName = $request->input('kode_sn') . '.png';
         $qrCode = QrCode::format('png')
@@ -182,28 +181,43 @@ class FixedAssetController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data = $this->validate($request, [
+        $validatedData = $request->validate([
             'sub_category_id' => 'required',
             'procurement_id' => 'required',
             'specific_location_id' => 'required',
             'user_id' => 'required',
-            'unit_id' => 'required',
-            'kode_bmn' => 'min:5',
-            'kode_sn' => 'required',
+            'kode_bmn' => 'nullable|min:5',
+            'kode_sn' => [
+                'required',
+                Rule::unique('fixed_assets')->ignore($request->id)->whereNull('deleted_at'),
+            ],
             'kondisi' => 'required',
+            'unit_id' => 'required',
             'tahun_perolehan' => 'required',
-            'keterangan' => 'required',
+            'keterangan' => 'nullable',
+        ], [
+            'sub_category_id.required' => 'Kategori harus diisi.',
+            'procurement_id.required' => 'Mitra harus diisi.',
+            'specific_location_id.required' => 'Lokasi harus diisi.',
+            'user_id.required' => 'Penanggung jawab harus diisi.',
+            'unit_id.required' => 'Satuan harus diisi.',
+            'kode_bmn.min' => 'Kode BMN minimal harus 5 karakter.',
+            'kode_sn.required' => 'Kode SN harus diisi.',
+            'kode_sn.unique' => 'Kode SN sudah ada.',
+            'kondisi.required' => 'Kondisi harus diisi.',
+            'tahun_perolehan.required' => 'Tahun Perolehan harus diisi.',
         ]);
+
         $aset = FixedAsset::findOrFail($id);
 
-        $aset->update($data);
+        $aset->update($validatedData);
+
         return redirect()->route('asset-fixed.index')->with('success', 'Berhasil mengubah data');
     }
 
     public function show($id)
     {
         $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement', 'unit'])->findOrFail($id);
-
         $folderPath = storage_path('app/public/qrcodes/');
         $qrCodePath = $folderPath . $data->kode_sn . '.png';
         return view('pages.data-asset.fixed-assets.show', compact('data', 'qrCodePath'));

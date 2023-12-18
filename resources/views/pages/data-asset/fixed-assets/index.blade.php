@@ -41,21 +41,23 @@
                                             aria-label="Large select example">
                                             <option value="">Tampilkan Semua</option>
                                             @foreach ($conditions as $condition)
-                                                <option value="{{ $condition }}">{{ $condition }}</option>
+                                                <option value="{{ $condition }}" id="condition_{{ $condition }}">
+                                                    {{ $condition }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-md-6 col-sm-12">
+                                <div
+                                    class="col-lg-3
+                                                    col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label class="form-label">Kategori : </label>
                                         <select id="kategoriFilter" class="form-select form-select-sm filter"
                                             aria-label="Large select example">
                                             <option value="">Tampilkan Semua</option>
                                             @foreach ($subcategories as $item)
-                                                <option value="{{ $item->id }}">
-                                                    {{ $item->nama_kategori }}
-                                                </option>
+                                                <option value="{{ $item->id }}" id="id_category_{{ $item->id }}">
+                                                    {{ $item->nama_kategori }} </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -67,7 +69,8 @@
                                             aria-label="Large select example">
                                             <option value="">Tampilkan Semua</option>
                                             @foreach ($users as $user)
-                                                <option value="{{ $user->id }}">{{ $user->nama }}</option>
+                                                <option value="{{ $user->id }}" id="id_user_{{ $user->id }}">
+                                                    {{ $user->nama }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -110,6 +113,24 @@
         let kategori = $('#kategoriFilter').val();
         let pj = $('#pjFilter').val();
         $(document).ready(function() {
+            var category_id = (new URL(location.href)).searchParams.get('id_category');
+            var user_id = (new URL(location.href)).searchParams.get('id_user');
+            var params = new URLSearchParams(window.location.search);
+            var condition = params.get('kondisi');
+            if (category_id !== null || category_id !== undefined) {
+                kategori = category_id;
+                $('#id_category_' + kategori).attr('selected', true);
+            }
+            if (user_id !== null || user_id !== undefined) {
+                pj = user_id;
+                $('#id_user_' + pj).attr('selected', true);
+            }
+            if (condition !== null || condition !== undefined) {
+                kondisi = condition;
+                $('#condition_' + kondisi).attr('selected', true);
+            }
+
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -301,6 +322,7 @@
                     checkedAsset.push($(this).data('id'));
                 })
 
+
                 let url = "{{ route('asset-fixed.destroy.selected') }}"
                 if (checkedAsset.length > 0) {
                     Swal.fire({
@@ -336,6 +358,7 @@
                     })
                 }
             });
+
         })
     </script>
     @if (session('success'))

@@ -34,15 +34,6 @@
     <div class="container flex-grow-1 container-p-y">
         <div class="row mb-3">
             <div class="col-lg-12 order-0">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
                 <div class="card">
                     <div class="card-body">
                         <div class="col-lg-12 d-flex">
@@ -227,6 +218,13 @@
                                         <button class="btn btn-primary px-5" type="submit">
                                             Save
                                         </button>
+                                        <div class="auto-load text-center" style="display: none; z-index: 100;">
+                                            <div class="d-flex justify-content-center">
+                                                <div class="spinner-border" role="status">
+                                                    {{-- <span>Loading...</span> --}}
+                                                </div>
+                                            </div>
+                                        </div>
                                         {{-- <div class="col-md-2 col-4"></div>
                                         <div class="col-md-2 col-8"></div> --}}
                                     </div>
@@ -252,16 +250,19 @@
         $('#FixedAssetForm').submit(function(e) {
             e.preventDefault();
             var formData = new FormData(this);
-	    formData.append('_token', '{{ csrf_token() }}');
+            formData.append('_token', '{{ csrf_token() }}');
             $.ajax({
                 type: 'POST',
+                beforeSend: function() {
+                    $('.auto-load').show();
+                },
                 url: "{{ route('asset-fixed.store.ajax') }}",
                 data: formData,
                 cache: false,
                 contentType: false,
                 processData: false,
                 success: (response) => {
-                    console.log(response.data);
+                    $('.auto-load').hide();
                     $("#btn-save").html('Submit');
                     $("#btn-save").attr("disabled", false);
                     if (response.success) {

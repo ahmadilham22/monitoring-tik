@@ -34,7 +34,7 @@
     <div class="container flex-grow-1 container-p-y">
         <div class="row mb-3">
             <div class="col-lg-12 order-0">
-                @if ($errors->any())
+                {{-- @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
                             @foreach ($errors->all() as $error)
@@ -42,7 +42,7 @@
                             @endforeach
                         </ul>
                     </div>
-                @endif
+                @endif --}}
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title fw-semibold mb-4">Form Ubah Data Aset Tetap</h5>
@@ -58,10 +58,15 @@
                                             <label for="exampleInputEmail1" class="form-label mt-2">Kode BMN</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <input name="kode_bmn" type="text" class="form-control"
+                                            <input name="kode_bmn" type="text"
+                                                class="form-control @error('kode_bmn') is-invalid @enderror"
                                                 id="exampleInputEmail1" aria-describedby="emailHelp"
                                                 placeholder="Masukan Kode BMN.."
                                                 value="{{ old('kode_bmn', $aset->kode_bmn) }}" />
+
+                                            @error('kode_bmn')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     {{-- Kode BMN --}}
@@ -72,10 +77,15 @@
                                             <label for="exampleInputEmail1" class="form-label mt-2">Kode SN</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <input name="kode_sn" type="text" class="form-control"
+                                            <input name="kode_sn" type="text"
+                                                class="form-control @error('kode_sn') is-invalid @enderror"
                                                 id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                placeholder="Masukan Kode SN.."
+                                                placeholder="Masukkan Kode SN.."
                                                 value="{{ old('kode_sn', $aset->kode_sn) }}" />
+
+                                            @error('kode_sn')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     {{-- Kode SN --}}
@@ -86,7 +96,8 @@
                                             <label for="sub_category_id" class="form-label mt-2">Kategori</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <select id="subcategorySelect" name="sub_category_id" class="form-select mb-3 ">
+                                            <select id="subcategorySelect" name="sub_category_id"
+                                                class="form-select mb-3 @error('sub_category_id') is-invalid @enderror">
                                                 <option></option>
                                                 @foreach ($subCategories as $item)
                                                     <option value="{{ $item->id }}"
@@ -96,6 +107,10 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+
+                                            @error('sub_category_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     {{-- Kategori --}}
@@ -107,7 +122,8 @@
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <select id="specifiLocationSelect" name="specific_location_id"
-                                                class="form-select form-select mb-3" aria-label="Large select example">
+                                                class="form-select form-select mb-3 @error('specific_location_id') is-invalid @enderror"
+                                                aria-label="Large select example">
                                                 <option></option>
                                                 @foreach ($specificLocation as $item)
                                                     <option value="{{ $item->id }}"
@@ -117,6 +133,9 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            @error('specific_location_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     {{-- Lokasi --}}
@@ -128,7 +147,8 @@
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <select id="procurementSelect" name="procurement_id"
-                                                class="form-select form-select mb-3" aria-label="Large select example">
+                                                class="form-select form-select mb-3 @error('procurement_id') is-invalid @enderror"
+                                                aria-label="Large select example">
                                                 <option></option>
                                                 @foreach ($procurement as $item)
                                                     <option value="{{ $item->id }}"
@@ -138,6 +158,9 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            @error('procurement_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     {{-- Pengadaan --}}
@@ -150,7 +173,8 @@
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <select id="penanggungJawabSelect" name="user_id"
-                                                class="form-select form-select mb-3" aria-label="Large select example">
+                                                class="form-select form-select mb-3 @error('user_id') is-invalid @enderror"
+                                                aria-label="Large select example">
                                                 <option></option>
                                                 @foreach ($user as $item)
                                                     <option value="{{ $item->id }}"
@@ -160,6 +184,9 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            @error('user_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     {{-- Penanggung Jawab --}}
@@ -170,16 +197,20 @@
                                             <label for="exampleInputEmail1" class="form-label mt-2">Satuan</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <select id="unitSelect" name="unit_id" class="form-select form-select mb-3"
+                                            <select id="unitSelect" name="unit_id"
+                                                class="form-select form-select mb-3 @error('unit_id') is-invalid @enderror"
                                                 aria-label="Large select example">
                                                 <option></option>
                                                 @foreach ($unit as $item)
                                                     <option value="{{ $item->id }}"
-                                                        {{ old('unit_id', $aset->unit_id == $item->id ? 'selected' : '') }}>
+                                                        {{ old('unit_id', $aset->unit_id) == $item->id ? 'selected' : '' }}>
                                                         {{ $item->nama }}
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            @error('unit_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     {{-- Unit --}}
@@ -191,7 +222,7 @@
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <select id="kondisi" name="kondisi"
-                                                class="form-select form-select mb-3 required"
+                                                class="form-select form-select mb-3 required  @error('kondisi') is-invalid @enderror"
                                                 aria-label="Large select example">
                                                 <option value=""
                                                     {{ old('kondisi', $aset->kondisi) == '' ? 'selected' : '' }}>
@@ -203,6 +234,9 @@
                                                     {{ old('kondisi', $aset->kondisi) === 'Buruk' ? 'selected' : '' }}>
                                                     Buruk</option>
                                             </select>
+                                            @error('kondisi')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     {{-- Kondisi --}}
@@ -214,10 +248,14 @@
                                                 Perolehan</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <input name="tahun_perolehan" type="date" class="form-control"
+                                            <input name="tahun_perolehan" type="date"
+                                                class="form-control @error('tahun_perolehan') is-invalid @enderror"
                                                 id="exampleInputEmail1" aria-describedby="emailHelp"
                                                 placeholder="Masukan Penanggung Jawab.."
                                                 value="{{ old('tahun_perolehan', $aset->tahun_perolehan) }}" />
+                                            @error('tahun_perolehan')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     {{-- Tahun Perolehan --}}
@@ -228,7 +266,11 @@
                                             <label for="exampleInputEmail1" class="form-label mt-2">Keterangan</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <textarea name="keterangan" class="form-control" id="exampleFormControlTextarea1" rows="5">{{ old('keterangan', $aset->keterangan) }}</textarea>
+                                            <textarea name="keterangan" class="form-control @error('keterangan') is-invalid @enderror"
+                                                id="exampleFormControlTextarea1" rows="5">{{ old('keterangan', $aset->keterangan) }}</textarea>
+                                            @error('keterangan')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     {{-- Keterangan --}}
