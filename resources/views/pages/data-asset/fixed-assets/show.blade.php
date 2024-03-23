@@ -16,8 +16,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4>
-                            <a
-                                href="{{ route('asset-fixed.index') }}/?id_category={{ $data->subcategory->category->id }}&id_user={{ $data->user->id }}&kondisi={{ $data->kondisi }}">
+                            <a href="{{ route('asset-fixed.index') }}">
                                 <i class="fa-solid fa-circle-chevron-left"></i>
                             </a> Data Aset
                         </h4>

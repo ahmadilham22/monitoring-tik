@@ -212,9 +212,6 @@
             })
 
             $(document).on('change', 'input[name="checkboxreport[]"]', function() {
-                kondisi = $('#kondisiFilter').val();
-                kategori = $('#kategoriFilter').val();
-                pj = $('#pjFilter').val();
                 if ($(this).is(":checked")) {
                     sn = $('input[name="checkboxreport[]"]:checked').map(function() {
                         return $(this).val();
@@ -229,9 +226,6 @@
             });
 
             $(document).on('change', 'input[name="maincheckboxreport[]"]', function() {
-                kondisi = $('#kondisiFilter').val();
-                kategori = $('#kategoriFilter').val();
-                pj = $('#pjFilter').val();
                 if ($(this).is(":checked")) {
                     sn = $('input[name="checkboxreport[]"]:checked').map(function() {
                         return $(this).val();
