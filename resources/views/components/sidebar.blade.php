@@ -55,7 +55,7 @@
                         </li>
                         <li class="menu-item {{ request()->is('data-master/unit*') ? 'active' : '' }}">
                             <a href="{{ route('unit.index') }}" class="menu-link">
-                                <div data-i18n="Blank">Unit</div>
+                                <div data-i18n="Blank">Satuan</div>
                             </a>
                         </li>
                         <li class="menu-item {{ request()->is('data-master/division*') ? 'active' : '' }}">
