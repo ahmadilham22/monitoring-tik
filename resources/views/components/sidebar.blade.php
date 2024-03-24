@@ -4,7 +4,7 @@
         (Auth::check() && Auth::user()->role == 'user'))
     <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" style="z-index: 2">
         <div class="app-brand demo border-bottom">
-            <a href="index.html" class="app-brand-link">
+            <a href="{{ route('home') }}" class="app-brand-link">
                 <span class="app-brand-logo demo">
                     <img src="{{ asset('assets/img/avatars/unila.png') }}" alt class="w-px-40 h-auto rounded-circle" />
                 </span>
