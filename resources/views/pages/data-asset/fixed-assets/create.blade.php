@@ -179,6 +179,7 @@
                                                 <option value="">Pilih...</option>
                                                 <option value="Baik">Baik</option>
                                                 <option value="Buruk">Buruk</option>
+                                                <option>Sedang dipinjam</option>
                                             </select>
                                         </div>
                                     </div>
@@ -197,6 +198,28 @@
                                         </div>
                                     </div>
                                     {{-- Tahun Perolehan --}}
+
+                                    {{-- Gambar Aset --}}
+                                    <div class="mb-3 d-flex">
+                                        <div class="col-md-3 mt-2 col-4">
+                                            <label for="exampleInputEmail1" class="form-label mt-2">Gambar Aset</label>
+                                        </div>
+                                        <div class="col-md-7 col-8">
+                                            <input type="file" class="form-control" />
+                                        </div>
+                                    </div>
+                                    {{-- Gambar Aset --}}
+
+                                    {{-- Harga Aset --}}
+                                    <div class="mb-3 d-flex">
+                                        <div class="col-md-3 mt-2 col-4">
+                                            <label for="exampleInputEmail1" class="form-label mt-2">Harga Aset</label>
+                                        </div>
+                                        <div class="col-md-7 col-8">
+                                            <input type="text" class="form-control" />
+                                        </div>
+                                    </div>
+                                    {{-- Harga Aset --}}
 
                                     {{-- Keterangan --}}
                                     <div class="mb-3 d-flex">
