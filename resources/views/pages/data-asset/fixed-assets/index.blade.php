@@ -26,9 +26,14 @@
                                             class="fa-solid fa-arrows-rotate me-2"></i>
                                         Reset
                                         Filter</button>
-                                    <button id="deleteAsset" class="btn btn-danger" disabled><i
-                                            class="fa-solid fa-trash me-2"></i>
-                                        Delete Data</button>
+                                    <button id="importData" class="btn btn-success"><i
+                                            class="fa-solid fa-file-import me-2"></i>
+                                        Import Data</button>
+                                    @if (Auth::user()->role == 'super_admin')
+                                        <button id="deleteAsset" class="btn btn-danger" disabled><i
+                                                class="fa-solid fa-trash me-2"></i>
+                                            Delete Data</button>
+                                    @endif
                                 </div>
                             </div>
                         @endif
