@@ -48,13 +48,31 @@
                         <h4>Data Aset Tetap</h4>
                     </div>
                     <div class="card-body">
-                        <div class="row data-kategori" id="data-wrapper">
+                        <div class="row d-flex justify-content-between">
+                            <div class="col-lg-5 col-sm-12">
+                                {{-- <span class="text-center">
+                                    <h4>Kondisi Baik</h4>
+                                </span> --}}
+                                <div>
+                                    <canvas id="myChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-lg-5 col-sm-12">
+                                {{-- <span class="text-center">
+                                    <h4>Kondisi Rusak</h4>
+                                </span> --}}
+                                <div>
+                                    <canvas id="chartGood"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        {{-- <div class="row data-kategori" id="data-wrapper">
                             @include('pages.dashboard.data')
                         </div>
                         <div class="text-center">
                             <button class="btn btn-success load-more-data">View More</button>
                             <button class="btn btn-danger load-less-data" style="display:none;">View Less</button>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -188,6 +206,61 @@
             // Users
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: 'Jumlah',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Kondisi Baik'
+                    }
+                }
+            }
+        });
+
+        const ctx1 = document.getElementById('chartGood');
+
+        new Chart(ctx1, {
+            type: 'pie',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: 'Jumlah',
+                    data: [12, 19, 3, 5, 2, 3],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Kondisi Rusak'
+                    }
+                }
+            }
+        });
+    </script>
+    <script></script>
     <script>
         @if (session('success'))
             Swal.fire({
