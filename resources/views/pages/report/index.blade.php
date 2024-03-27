@@ -83,6 +83,21 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-12">
+                                            <div class="form-group">
+                                                <label class="form-label">Periode : </label>
+                                                <select id="periodeFilter" class="form-select form-select-sm filter"
+                                                    aria-label="Large select example">
+                                                    <option value="">Tampilkan Semua</option>
+                                                    <option value="">2020</option>
+                                                    <option value="">2019</option>
+                                                    {{-- @foreach ($users as $user)
+                                                        <option value="{{ $user->id }}"
+                                                            id="id_user_{{ $user->id }}">{{ $user->nama }}</option>
+                                                    @endforeach --}}
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
