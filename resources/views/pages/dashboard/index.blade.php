@@ -5,6 +5,33 @@
         .swal2-container {
             z-index: 1000;
         }
+
+        .chartMenu {
+            width: 100vw;
+            height: 40px;
+            background: #1A1A1A;
+            color: rgba(54, 162, 235, 1);
+        }
+
+        .chartMenu p {
+            padding: 10px;
+            font-size: 20px;
+        }
+
+        .chartCard {
+            width: 100vw;
+            height: calc(100vh - 40px);
+            background: rgba(54, 162, 235, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chartBox {
+            width: 580px;
+            /* padding: 20px; */
+            border-radius: 20px;
+        }
     </style>
 @endsection
 
@@ -62,7 +89,7 @@
                                     <h4>Kondisi Rusak</h4>
                                 </span> --}}
                                 <div>
-                                    <canvas id="chartGood"></canvas>
+                                    <canvas id="myChart1"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -207,60 +234,188 @@
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+
+    {{-- <script>
         const ctx = document.getElementById('myChart');
+        const data = {
+            labels: ['Laptop', 'Ac', 'Printer', 'All In One', 'Kipas', 'Mouse'],
+            datasets: [{
+                label: 'Jumlah',
+                data: [18, 12, 6, 9, 12, 9],
+                backgroundColor: [
+                    'rgba(255, 26, 104, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(0, 0, 0, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 26, 104, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(0, 0, 0, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
 
-        new Chart(ctx, {
+        const config = {
             type: 'pie',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: 'Jumlah',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1
-                }]
+            data,
+            options: {
+
             },
+            plugins: [ChartDataLabels]
+        }
+
+        const myChart = new Char(document.getElementById('myChart'), config)
+
+
+
+        // new Chart(ctx, {
+        //     type: 'pie',
+        //     data: {
+        //         labels: ['Laptop', 'Ac', 'Printer', 'All In One', 'Kipas', 'Mouse'],
+        //         datasets: [{
+        //             label: 'Jumlah',
+        //             data: [12, 19, 3, 5, 2, 3],
+        //             borderWidth: 1
+        //         }]
+        //     },
+        //     options: {
+        //         responsive: true,
+        //         plugins: {
+        //             legend: {
+        //                 position: 'top',
+        //             },
+        //             title: {
+        //                 display: true,
+        //                 text: 'Kondisi Baik'
+        //             }
+        //         }
+        //     }
+        // });
+
+        // const ctx1 = document.getElementById('chartGood');
+
+        // new Chart(ctx1, {
+        //     type: 'pie',
+        //     data: {
+        //         labels: ['Laptop', 'Ac', 'Printer', 'All In One', 'Kipas', 'Mouse'],
+        //         datasets: [{
+        //             label: 'Jumlah',
+        //             data: [12, 19, 3, 5, 2, 3],
+        //             borderWidth: 1
+        //         }]
+        //     },
+        //     options: {
+        //         responsive: true,
+        //         plugins: {
+        //             legend: {
+        //                 position: 'top',
+        //             },
+        //             title: {
+        //                 display: true,
+        //                 text: 'Kondisi Rusak'
+        //             }
+        //         }
+        //     }
+        // });
+    </script> --}}
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"
+        integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"></script>
+    <script>
+        const data = {
+            labels: ['Laptop', 'Ac', 'Printer', 'Kipas', 'Keyboard', 'Mouse', 'All In One'],
+            datasets: [{
+                // label: 'Weekly Sales',
+                data: [18, 12, 6, 9, 12, 3, 9],
+                borderWidth: 0
+            }]
+        };
+        const goodCategory = {
+            type: 'pie',
+            data,
             options: {
                 responsive: true,
                 plugins: {
+                    labels: {
+                        render: (args) => {
+                            console.log(args);
+                            return `${args.value} ${args.label}`;
+                        }
+                    },
                     legend: {
-                        position: 'top',
+                        position: 'bottom',
                     },
                     title: {
                         display: true,
-                        text: 'Kondisi Baik'
+                        text: 'Kondisi Baik',
+                        padding: {
+                            bottom: 30
+                        },
+                        font: {
+                            size: 16,
+                        }
                     }
-                }
-            }
-        });
-
-        const ctx1 = document.getElementById('chartGood');
-
-        new Chart(ctx1, {
-            type: 'pie',
-            data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: 'Jumlah',
-                    data: [12, 19, 3, 5, 2, 3],
-                    borderWidth: 1
-                }]
+                },
             },
+            // plugins: [ChartDataLabels]
+        };
+
+        const badCategory = {
+            type: 'pie',
+            data,
             options: {
                 responsive: true,
                 plugins: {
+                    labels: {
+                        render: (args) => {
+                            console.log(args);
+                            return `${args.value} ${args.label}`;
+                        }
+                    },
                     legend: {
-                        position: 'top',
+                        position: 'bottom',
                     },
                     title: {
                         display: true,
-                        text: 'Kondisi Rusak'
+                        text: 'Kondisi Rusak',
+                        padding: {
+                            bottom: 30
+                        },
+                        font: {
+                            size: 16,
+                        }
                     }
-                }
-            }
-        });
+                },
+            },
+            // plugins: [ChartDataLabels]
+        };
+
+
+        // render init block
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            goodCategory
+        );
+        const myChart1 = new Chart(
+            document.getElementById('myChart1'),
+            badCategory
+        );
+
+        // Instantly assign Chart.js version
+        const chartVersion = document.getElementById('chartVersion');
+        chartVersion.innerText = Chart.version;
     </script>
-    <script></script>
     <script>
         @if (session('success'))
             Swal.fire({
