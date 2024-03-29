@@ -179,7 +179,7 @@
                                                 <option value="">Pilih...</option>
                                                 <option value="Baik">Baik</option>
                                                 <option value="Buruk">Buruk</option>
-                                                <option>Sedang dipinjam</option>
+                                                <option>Pinjam</option>
                                             </select>
                                         </div>
                                     </div>
