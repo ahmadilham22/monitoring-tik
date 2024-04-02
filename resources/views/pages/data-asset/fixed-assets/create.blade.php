@@ -51,11 +51,11 @@
                                     {{-- Kode BMN --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Kode BMN</label>
+                                            <label for="kode_bmn" class="form-label mt-2">Kode BMN</label>
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <input name="kode_bmn" type="text" class="form-control" id="kode_bmn"
-                                                aria-describedby="emailHelp" placeholder="Masukan Kode BMN.." />
+                                                placeholder="Masukan Kode BMN.." />
                                         </div>
                                     </div>
                                     {{-- Kode BMN --}}
@@ -63,11 +63,11 @@
                                     {{-- Kode SN --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Kode SN</label>
+                                            <label for="kode_sn" class="form-label mt-2">Kode SN</label>
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <input name="kode_sn" type="text" class="form-control" id="kode_sn"
-                                                aria-describedby="emailHelp" placeholder="Masukan Kode SN.." />
+                                                placeholder="Masukan Kode SN.." />
                                         </div>
                                     </div>
                                     {{-- Kode SN --}}
@@ -94,7 +94,7 @@
                                     {{-- Lokasi --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Lokasi</label>
+                                            <label for="specific_location" class="form-label mt-2">Lokasi</label>
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <select id="specifiLocationSelect" name="specific_location_id"
@@ -113,7 +113,7 @@
                                     {{-- Pengadaan --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Mitra</label>
+                                            <label for="procurement" class="form-label mt-2">Mitra</label>
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <select id="procurementSelect" name="procurement_id"
@@ -132,7 +132,7 @@
                                     {{-- Penanggung Jawab --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Penanggung
+                                            <label for="user" class="form-label mt-2">Penanggung
                                                 Jawab</label>
                                         </div>
                                         <div class="col-md-7 col-8">
@@ -152,7 +152,7 @@
                                     {{-- Unit --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Satuan</label>
+                                            <label for="unit" class="form-label mt-2">Satuan</label>
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <select id="unitSelect" name="unit_id" class="form-select form-select mb-3"
@@ -170,7 +170,7 @@
                                     {{-- Kondisi --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Kondisi</label>
+                                            <label for="kondisi" class="form-label mt-2">Kondisi</label>
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <select id="kondisi" name="kondisi"
@@ -178,8 +178,8 @@
                                                 aria-label="Large select example">
                                                 <option value="">Pilih...</option>
                                                 <option value="Baik">Baik</option>
-                                                <option value="Buruk">Buruk</option>
-                                                <option>Pinjam</option>
+                                                <option value="Rusak">Rusak</option>
+                                                <option value="Pinjam">Pinjam</option>
                                             </select>
                                         </div>
                                     </div>
@@ -188,13 +188,12 @@
                                     {{-- Tahun Perolehan --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Tahun
+                                            <label for="tahun_perolehan" class="form-label mt-2">Tahun
                                                 Perolehan</label>
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <input name="tahun_perolehan" type="date" class="form-control"
-                                                id="tahun_perolehan" aria-describedby="emailHelp"
-                                                placeholder="Masukan Penanggung Jawab.." />
+                                                id="tahun_perolehan" placeholder="Masukan Tahun Perolehan.." />
                                         </div>
                                     </div>
                                     {{-- Tahun Perolehan --}}
@@ -202,10 +201,10 @@
                                     {{-- Gambar Aset --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Gambar Aset</label>
+                                            <label for="image" class="form-label mt-2">Gambar Aset</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <input type="file" class="form-control" />
+                                            <input type="file" name="image" class="form-control" />
                                         </div>
                                     </div>
                                     {{-- Gambar Aset --}}
@@ -213,10 +212,10 @@
                                     {{-- Harga Aset --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Harga Aset</label>
+                                            <label for="harga" class="form-label mt-2">Harga Aset</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <input type="text" class="form-control" />
+                                            <input type="text" name="harga" class="form-control" />
                                         </div>
                                     </div>
                                     {{-- Harga Aset --}}
@@ -224,7 +223,7 @@
                                     {{-- Keterangan --}}
                                     <div class="mb-3 d-flex">
                                         <div class="col-md-3 mt-2 col-4">
-                                            <label for="exampleInputEmail1" class="form-label mt-2">Keterangan</label>
+                                            <label for="keterangan" class="form-label mt-2">Keterangan</label>
                                         </div>
                                         <div class="col-md-7 col-8">
                                             <textarea name="keterangan" class="form-control" id="keterangan" rows="5"></textarea>

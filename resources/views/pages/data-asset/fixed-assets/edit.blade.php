@@ -230,9 +230,12 @@
                                                 <option value="Baik"
                                                     {{ old('kondisi', $aset->kondisi) === 'Baik' ? 'selected' : '' }}>
                                                     Baik</option>
-                                                <option value="Buruk"
-                                                    {{ old('kondisi', $aset->kondisi) === 'Buruk' ? 'selected' : '' }}>
-                                                    Buruk</option>
+                                                <option value="Rusak"
+                                                    {{ old('kondisi', $aset->kondisi) === 'Rusak' ? 'selected' : '' }}>
+                                                    Rusak</option>
+                                                <option value="Pinjam"
+                                                    {{ old('kondisi', $aset->kondisi) === 'Pinjam' ? 'selected' : '' }}>
+                                                    Pinjam</option>
                                             </select>
                                             @error('kondisi')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -259,6 +262,31 @@
                                         </div>
                                     </div>
                                     {{-- Tahun Perolehan --}}
+
+                                    {{-- Gambar Aset --}}
+                                    <div class="mb-3 d-flex">
+                                        <div class="col-md-3 mt-2 col-4">
+                                            <label for="image" class="form-label mt-2">Gambar Aset</label>
+                                        </div>
+                                        <div class="col-md-7 col-8">
+                                            <input type="file" name="image"
+                                                class="form-control @error('image') is-invalid @enderror" />
+                                        </div>
+                                    </div>
+                                    {{-- Gambar Aset --}}
+
+                                    {{-- Harga Aset --}}
+                                    <div class="mb-3 d-flex">
+                                        <div class="col-md-3 mt-2 col-4">
+                                            <label for="harga" class="form-label mt-2">Harga Aset</label>
+                                        </div>
+                                        <div class="col-md-7 col-8">
+                                            <input type="text" name="harga"
+                                                class="form-control @error('harga') is-invalid @enderror"
+                                                value="{{ old('harga', $aset->harga) }}" />
+                                        </div>
+                                    </div>
+                                    {{-- Harga Aset --}}
 
                                     {{-- Keterangan --}}
                                     <div class="mb-3 d-flex">
