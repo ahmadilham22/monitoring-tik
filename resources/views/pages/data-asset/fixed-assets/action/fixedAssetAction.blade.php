@@ -1,5 +1,6 @@
     <div class="d-flex gap-2">
-        <a href="{{ route('asset-fixed.show', $data->id) }}" class="btn btn-primary btn-xs"><i class="bx bx-show"></i></a>
+        <a href="{{ route('asset-fixed.show', $data->kode_sn) }}" class="btn btn-primary btn-xs"><i
+                class="bx bx-show"></i></a>
         @if (Auth::user()->role == 'admin' || Auth::user()->role == 'super_admin')
             <a href="{{ route('asset-fixed.edit', $data->id) }}" class="btn btn-warning btn-xs"><i
                     class="bx bx-edit-alt"></i></a>
