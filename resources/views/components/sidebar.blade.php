@@ -3,12 +3,12 @@
         (Auth::check() && Auth::user()->role == 'admin') ||
         (Auth::check() && Auth::user()->role == 'user'))
     <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" style="z-index: 2">
-        <div class="app-brand demo border-bottom">
+        <div class="app-brand demo border-bottom d-flex">
             <a href="{{ route('home') }}" class="app-brand-link">
                 <span class="app-brand-logo demo">
                     <img src="{{ asset('assets/img/avatars/unila.png') }}" alt class="w-px-40 h-auto rounded-circle" />
                 </span>
-                <span class="app-brand-text demo menu-text fw-bolder ms-2">Inventory</span>
+                <h4 class="app-brand-text menu-text fw-bolder ms-2 mt-3">Manajemen Aset</h4>
             </a>
             <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
                 <i class="bx bx-chevron-left bx-sm align-middle"></i>
