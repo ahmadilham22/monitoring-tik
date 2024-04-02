@@ -34,6 +34,8 @@ class FixedAsset extends Model
         'jumlah_barang',
         'penanggung_jawab',
         'kondisi',
+        'image',
+        'harga',
         'tahun_perolehan',
         'keterangan',
     ];
