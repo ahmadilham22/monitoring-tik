@@ -34,10 +34,9 @@
                           <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                               <div class="me-2">
                                   <h6 class="mb-0">Rusak</h6>
-                                  {{-- <small class="text-muted">Football, Cricket Kit</small> --}}
                               </div>
                               <div class="user-progress">
-                                  <small class="fw-semibold">{{ $item->buruk }}</small>
+                                  <small class="fw-semibold">{{ $item->rusak }}</small>
                               </div>
                           </div>
                       </li>
