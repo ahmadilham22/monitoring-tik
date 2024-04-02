@@ -2,9 +2,9 @@
 
 @section('css')
     <style>
-        img {
-            width: 200px;
-        }
+        /* img {
+                                                                                    width: 200px;
+                                                                                } */
     </style>
 @endsection
 
@@ -102,6 +102,16 @@
 
                                             </div>
                                         </div>
+                                        <hr>
+                                        <div class="d-flex justify-content-between gap-3">
+                                            <div class="col-sm-4">
+                                                <strong>Penanggung Jawab / Divisi</strong>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                {{ $data->user->nama }} / {{ $data->user->division->nama_divisi }}
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -137,15 +147,6 @@
                                         <hr>
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
-                                                <strong>Penanggung Jawab / Divisi</strong>
-                                            </div>
-                                            <div class="col-sm-8">
-                                                {{ $data->user->nama }} / {{ $data->user->division->nama_divisi }}
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="d-flex justify-content-between gap-3">
-                                            <div class="col-sm-4">
                                                 <strong>Kondisi</strong>
                                             </div>
                                             <div class="col-sm-8">
@@ -165,10 +166,36 @@
 
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
+                                                <strong>Harga</strong>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                {{ $data->harga }}
+                                            </div>
+                                        </div>
+                                        <hr>
+
+                                        <div class="d-flex justify-content-between gap-3">
+                                            <div class="col-sm-4">
                                                 <strong>Keterangan</strong>
                                             </div>
                                             <div class="col-sm-8">
                                                 {{ $data->keterangan }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 mt-3">
+                                <div class="card bg-light h-100">
+                                    <div class="card-body">
+                                        <div class="col-12 d-block justify-content-center align-items-center">
+                                            <div class="visible-print d-blok text-center">
+                                                <h4>Gambar Aset</h4>
+                                                <br>
+                                                <img src="{{ asset('storage/assetImage/' . $data->image) }}"
+                                                    alt="Gambar Aset" class="img-fluid w-75">
+                                                {{-- <a href="{{ route('asset-fixed.downloadQrCode', $data->id) }}"
+                                                    class="btn btn-primary text-white mt-2 btn-xs">Download Qr Code</a> --}}
                                             </div>
                                         </div>
                                     </div>
