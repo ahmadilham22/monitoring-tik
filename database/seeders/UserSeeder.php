@@ -158,13 +158,13 @@ class UserSeeder extends Seeder
                 'nama' => 'Gontor Ganta Nama',
                 'email' => 'Gontorgantanama@gmail.com',
                 'password' => Hash::make('123456789'),
-                'role' => 'super_admin',
+                'role' => 'admin',
             ],
             [
                 'nama' => 'Rahmad Junaidi',
                 'email' => 'Rahmadjunaidi@gmail.com',
                 'password' => Hash::make('123456789'),
-                'role' => 'super_admin',
+                'role' => 'admin',
             ],
             [
                 'nama' => 'Muhammad Ikhsan',
@@ -176,7 +176,7 @@ class UserSeeder extends Seeder
                 'nama' => 'Aditya Anggi',
                 'email' => 'AdityaAnggi@gmail.com',
                 'password' => Hash::make('123456789'),
-                'role' => 'super_admin',
+                'role' => 'admin',
             ],
         ];
 
