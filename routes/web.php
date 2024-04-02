@@ -125,13 +125,14 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/storeAjax', 'storeAjax')->name('asset-fixed.store.ajax');
             Route::get('/edit/{id}', 'edit')->name('asset-fixed.edit');
             Route::put('/update/{id}', 'update')->name('asset-fixed.update');
-            Route::get('/show/{id}', 'show')->name('asset-fixed.show');
+            Route::get('/show/{kode_sn}', 'show')->name('asset-fixed.show');
             Route::delete('/delete/{id}', 'destroy')->name('asset-fixed.destroy');
             Route::post('/delete-selected-asset', 'DeleteSelectedAsset')->name('asset-fixed.destroy.selected');
             Route::get('/download/qrcode/{id}', 'DownloadQrCode')->name('asset-fixed.downloadQrCode');
             Route::post('/download-selected-qrcodes', 'downloadSelectedQrCodes')->name('download-selected-qrcodes');
             Route::get('/download-selected-qrcodes-zip', 'downloadSelectedQrCodesZip')->name('download-selected-qrcodes-zip');
             Route::post('/save-filters-to-session', 'saveFiltersToSession')->name('save-filters-to-session');
+            Route::post('/import-excel', 'import')->name('import-excel');
         });
 
         // Moved Asset
@@ -153,12 +154,11 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'report'], function () {
         Route::get('/', [ReportController::class, 'index'])->name('report.index');
         Route::get('/create', [ReportController::class, 'create'])->name('report.create');
-        // Route::get('/show/{id}', [ReportController::class, 'show'])->name('report.show');
         Route::get('/export', [ReportController::class, 'export'])->name('report.export');
     });
 });
 
-Route::get('data-assets/report/show/{id}', [ReportController::class, 'show'])->name('report.show');
+Route::get('report/show/{kode_sn}', [ReportController::class, 'show'])->name('report.show');
 
 
 // Auth
