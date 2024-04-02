@@ -77,20 +77,26 @@
                     <div class="card-body">
                         <div class="row d-flex justify-content-between">
                             <div class="col-lg-5 col-sm-12">
-                                {{-- <span class="text-center">
+                                <span class="text-center">
                                     <h4>Kondisi Baik</h4>
-                                </span> --}}
-                                <div>
+                                </span>
+                                @if (array_sum($dataset['datasetBaik']) == 0)
+                                    <p class="text-center mt-5">No data found
+                                    </p>
+                                @else
                                     <canvas id="myChart"></canvas>
-                                </div>
+                                @endif
                             </div>
                             <div class="col-lg-5 col-sm-12">
-                                {{-- <span class="text-center">
+                                <span class="text-center">
                                     <h4>Kondisi Rusak</h4>
-                                </span> --}}
-                                <div>
+                                </span>
+                                @if (array_sum($dataset['datasetRusak']) == 0)
+                                    <p class="text-center mt-5">No data found
+                                    </p>
+                                @else
                                     <canvas id="myChart1"></canvas>
-                                </div>
+                                @endif
                             </div>
                         </div>
                         {{-- <div class="row data-kategori" id="data-wrapper">
@@ -234,122 +240,35 @@
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    {{-- <script>
-        const ctx = document.getElementById('myChart');
-        const data = {
-            labels: ['Laptop', 'Ac', 'Printer', 'All In One', 'Kipas', 'Mouse'],
-            datasets: [{
-                label: 'Jumlah',
-                data: [18, 12, 6, 9, 12, 9],
-                backgroundColor: [
-                    'rgba(255, 26, 104, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(0, 0, 0, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 26, 104, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(0, 0, 0, 1)'
-                ],
-                borderWidth: 1
-            }]
-        };
-
-        const config = {
-            type: 'pie',
-            data,
-            options: {
-
-            },
-            plugins: [ChartDataLabels]
-        }
-
-        const myChart = new Char(document.getElementById('myChart'), config)
-
-
-
-        // new Chart(ctx, {
-        //     type: 'pie',
-        //     data: {
-        //         labels: ['Laptop', 'Ac', 'Printer', 'All In One', 'Kipas', 'Mouse'],
-        //         datasets: [{
-        //             label: 'Jumlah',
-        //             data: [12, 19, 3, 5, 2, 3],
-        //             borderWidth: 1
-        //         }]
-        //     },
-        //     options: {
-        //         responsive: true,
-        //         plugins: {
-        //             legend: {
-        //                 position: 'top',
-        //             },
-        //             title: {
-        //                 display: true,
-        //                 text: 'Kondisi Baik'
-        //             }
-        //         }
-        //     }
-        // });
-
-        // const ctx1 = document.getElementById('chartGood');
-
-        // new Chart(ctx1, {
-        //     type: 'pie',
-        //     data: {
-        //         labels: ['Laptop', 'Ac', 'Printer', 'All In One', 'Kipas', 'Mouse'],
-        //         datasets: [{
-        //             label: 'Jumlah',
-        //             data: [12, 19, 3, 5, 2, 3],
-        //             borderWidth: 1
-        //         }]
-        //     },
-        //     options: {
-        //         responsive: true,
-        //         plugins: {
-        //             legend: {
-        //                 position: 'top',
-        //             },
-        //             title: {
-        //                 display: true,
-        //                 text: 'Kondisi Rusak'
-        //             }
-        //         }
-        //     }
-        // });
-    </script> --}}
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"
         integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"></script>
     <script>
+        const dataChart = {!! json_encode($dataset) !!};
         const data = {
-            labels: ['Laptop', 'Ac', 'Printer', 'Kipas', 'Keyboard', 'Mouse', 'All In One'],
+            labels: dataChart.labels,
             datasets: [{
-                // label: 'Weekly Sales',
-                data: [18, 12, 6, 9, 12, 3, 9],
-                borderWidth: 0
+                data: dataChart.datasetBaik,
+                borderWidth: 1
+            }]
+        };
+        const data1 = {
+            labels: dataChart.labels,
+            datasets: [{
+                data: dataChart.datasetRusak,
+                borderWidth: 1
             }]
         };
         const goodCategory = {
             type: 'pie',
-            data,
+            data: data,
             options: {
                 responsive: true,
                 plugins: {
                     labels: {
                         render: (args) => {
-                            console.log(args);
                             return `${args.value} ${args.label}`;
                         }
                     },
@@ -358,7 +277,7 @@
                     },
                     title: {
                         display: true,
-                        text: 'Kondisi Baik',
+                        // text: 'Kondisi Baik',
                         padding: {
                             bottom: 30
                         },
@@ -368,18 +287,16 @@
                     }
                 },
             },
-            // plugins: [ChartDataLabels]
         };
 
         const badCategory = {
             type: 'pie',
-            data,
+            data: data1,
             options: {
                 responsive: true,
                 plugins: {
                     labels: {
                         render: (args) => {
-                            console.log(args);
                             return `${args.value} ${args.label}`;
                         }
                     },
@@ -388,7 +305,7 @@
                     },
                     title: {
                         display: true,
-                        text: 'Kondisi Rusak',
+                        // text: 'Kondisi Rusak',
                         padding: {
                             bottom: 30
                         },
@@ -398,7 +315,6 @@
                     }
                 },
             },
-            // plugins: [ChartDataLabels]
         };
 
 
