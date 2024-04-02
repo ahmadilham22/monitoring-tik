@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('kode_sn');
             $table->string('kondisi');
             $table->string('tahun_perolehan');
+            $table->string('image')->nullable();
+            $table->string('harga')->nullable();
             $table->string('keterangan')->nullable();
             $table->softDeletes();
             $table->timestamps();
