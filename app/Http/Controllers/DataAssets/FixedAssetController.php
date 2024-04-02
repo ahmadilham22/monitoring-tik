@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\DataAssets;
 
+use App\Imports\AssetImport;
+use App\Imports\MultipleSheetImport;
 use ZipArchive;
 use Illuminate\Http\Request;
 use App\Models\DataMaster\Unit;
@@ -20,6 +22,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\DataMaster\SpecialLocation;
+use Maatwebsite\Excel\Facades\Excel;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class FixedAssetController extends Controller
@@ -119,6 +122,7 @@ class FixedAssetController extends Controller
 
     public function storeAjax(Request $request)
     {
+        // Validation
         $data = Validator::make($request->all(), [
             'sub_category_id' => 'required',
             'procurement_id' => 'required',
@@ -129,6 +133,8 @@ class FixedAssetController extends Controller
             'kondisi' => 'required',
             'unit_id' => 'required',
             'tahun_perolehan' => 'required',
+            'image' => 'nullable',
+            'harga' => 'nullable',
             'keterangan' => 'nullable',
         ], [
             'sub_category_id.required' => 'Kategori harus diisi.',
@@ -149,10 +155,25 @@ class FixedAssetController extends Controller
 
         $validatedData = $data->validated();
 
+
         // Buat entitas FixedAsset dengan data yang telah divalidasi
         $fixedAsset = FixedAsset::create($validatedData);
-        $url = url("/data-assets/report/show/{$fixedAsset->id}");
 
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalName() . '.' . $file->getClientOriginalExtension();
+
+            // Simpan file ke direktori storage/app/public/userImage
+            $path = $file->storeAs('public/assetImage', $filename);
+
+            // Simpan nama file yang relevan di kolom 'photo'
+            $fixedAsset->image = $filename;
+            $fixedAsset->save();
+        }
+
+        // Configure QR-Code
+        $url = url("/data-assets/report/show/{$fixedAsset->id}");
         $fileName = $request->input('kode_sn') . '.png';
         $qrCode = QrCode::format('png')
             ->size(500)
@@ -194,6 +215,8 @@ class FixedAssetController extends Controller
             'kondisi' => 'required',
             'unit_id' => 'required',
             'tahun_perolehan' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'harga' => 'nullable',
             'keterangan' => 'nullable',
         ], [
             'sub_category_id.required' => 'Kategori harus diisi.',
@@ -210,14 +233,29 @@ class FixedAssetController extends Controller
 
         $aset = FixedAsset::findOrFail($id);
 
+        if ($request->hasFile('image')) {
+            if ($aset->image) {
+                Storage::delete('public/assetImage/' . $aset->image);
+            }
+
+            $file = $request->file('image');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('public/assetImage', $filename);
+
+            $aset->image = $filename;
+        }
+
+        // Lakukan pembaruan data lainnya
         $aset->update($validatedData);
 
         return redirect()->route('asset-fixed.index')->with('success', 'Berhasil mengubah data');
     }
 
-    public function show($id)
+    public function show($kode_sn)
     {
-        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement', 'unit'])->findOrFail($id);
+        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement', 'unit'])
+            ->where('kode_sn', $kode_sn)
+            ->firstOrFail();
         $folderPath = storage_path('app/public/qrcodes/');
         $qrCodePath = $folderPath . $data->kode_sn . '.png';
         return view('pages.data-asset.fixed-assets.show', compact('data', 'qrCodePath'));
@@ -225,15 +263,49 @@ class FixedAssetController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $fixedAsset = FixedAsset::where('id', $request->id);
+        $fixedAsset = FixedAsset::findOrFail($id);
+
+        $kodeSn = $fixedAsset->kode_sn;
+        $qrCodePath = "public/qrcodes/{$kodeSn}.png";
+        if (Storage::exists($qrCodePath)) {
+            Storage::delete($qrCodePath);
+        }
+
+        // Menghapus gambar dari penyimpanan lokal jika ada
+        if (!empty($fixedAsset->image)) {
+            Storage::delete('public/assetImage/' . $fixedAsset->image);
+        }
+
+        // Menghapus entri dari database
         $fixedAsset->delete();
         return Response()->json(['data' => $fixedAsset, 'message' => 'Data Berhasil di Hapus']);
     }
 
     public function DeleteSelectedAsset(Request $request)
     {
-        $asset = $request->fixedasset_id;
-        FixedAsset::whereIn('id', $asset)->delete();
+        $assetIds = $request->fixedasset_id;
+
+        // Loop melalui setiap ID aset yang akan dihapus
+        foreach ($assetIds as $assetId) {
+            // Temukan aset berdasarkan ID
+            $fixedAsset = FixedAsset::findOrFail($assetId);
+
+            // Menghapus gambar dari penyimpanan lokal jika ada
+            if (!empty($fixedAsset->image)) {
+                Storage::delete('public/assetImage/' . $fixedAsset->image);
+            }
+
+            // Menghapus QR code dari penyimpanan lokal jika ada
+            $kodeSn = $fixedAsset->kode_sn;
+            $qrCodePath = "public/qrcodes/{$kodeSn}.png";
+            if (Storage::exists($qrCodePath)) {
+                Storage::delete($qrCodePath);
+            }
+
+            // Menghapus entri dari database
+            $fixedAsset->delete();
+        }
+
         return response()->json(['success' => true, 'message' => 'Berhasil menghapus data']);
     }
 
@@ -287,6 +359,28 @@ class FixedAssetController extends Controller
             return response()->download($zipFilePath, $zipFileName)->deleteFileAfterSend(true);
         } else {
             return response()->json(['error' => 'ZIP file not found'], 404);
+        }
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file');
+        $namaFile = $file->getClientOriginalName();
+        $path = public_path('/storage/AssetExcel/' . $namaFile);
+        $file->move('storage/AssetExcel', $namaFile);
+
+        try {
+            Excel::import(new MultipleSheetImport(), $path);
+
+            return redirect()->back()->with(
+                'success',
+                'Data berhasil diimpor.'
+            );
+        } catch (\Exception $e) {
+            return redirect()->back()->with(
+                'error',
+                'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage()
+            );
         }
     }
 }
