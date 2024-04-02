@@ -74,18 +74,16 @@ class ReportController extends Controller
     public function edit()
     {
     }
-    public function show($id)
+    public function show($kode_sn)
     {
-        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement', 'unit'])->findOrFail($id);
-
+        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement', 'unit'])
+            ->where('kode_sn', $kode_sn)
+            ->firstOrFail();
         $folderPath = storage_path('app/public/qrcodes/');
         $qrCodePath = $folderPath . $data->kode_sn . '.png';
-        if (file_exists($qrCodePath)) {
-            return view('pages.report.show', compact('data', 'qrCodePath'));
-        }
-        // } else {
-        //     return view('pages.data-asset.fixed-assets.show_not_found', compact('data'));
-        // }
+        $folderPath = storage_path('app/public/qrcodes/');
+        $qrCodePath = $folderPath . $data->kode_sn . '.png';
+        return view('pages.report.show', compact('data', 'qrCodePath'));
     }
 
     public function export(Request $request)
