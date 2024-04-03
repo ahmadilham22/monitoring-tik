@@ -251,7 +251,7 @@
                                                 Perolehan</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <input name="tahun_perolehan" type="date"
+                                            <input name="tahun_perolehan" type="text"
                                                 class="form-control @error('tahun_perolehan') is-invalid @enderror"
                                                 id="exampleInputEmail1" aria-describedby="emailHelp"
                                                 placeholder="Masukan Penanggung Jawab.."

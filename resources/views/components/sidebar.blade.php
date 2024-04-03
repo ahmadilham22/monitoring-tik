@@ -83,7 +83,7 @@
                     <i class="menu-icon tf-icons bx bx-layout"></i>
                     <div data-i18n="Layouts">
                         @if ((Auth::check() && Auth::user()->role == 'super_admin') || (Auth::check() && Auth::user()->role == 'admin'))
-                            Data Asset
+                            Data Aset
                         @elseif (Auth::check() && Auth::user()->role == 'user')
                             Monitoring
                         @endif

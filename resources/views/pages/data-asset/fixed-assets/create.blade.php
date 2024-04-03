@@ -192,7 +192,7 @@
                                                 Perolehan</label>
                                         </div>
                                         <div class="col-md-7 col-8">
-                                            <input name="tahun_perolehan" type="date" class="form-control"
+                                            <input name="tahun_perolehan" type="text" class="form-control"
                                                 id="tahun_perolehan" placeholder="Masukan Tahun Perolehan.." />
                                         </div>
                                     </div>

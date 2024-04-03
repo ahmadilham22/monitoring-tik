@@ -1,7 +1,7 @@
 <script>
     function add() {
         $('#procurementForm').trigger("reset");
-        $('#modalHeader').html("Add Pengadaan");
+        $('#modalHeader').html("Tambah Pengadaan");
         $('#procurement-modal').modal('show');
         $('#id').val('');
     }
