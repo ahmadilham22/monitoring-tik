@@ -166,4 +166,5 @@ Route::get('report/show/{kode_sn}', [ReportController::class, 'show'])->name('re
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login.index');
     Route::post('/login', [AuthController::class, 'login'])->name('signin');
+    Route::get('/login-sso', [AuthController::class, 'ssoLogin'])->name('signin-sso');
 });

@@ -102,6 +102,9 @@
                                     <div class="col-sm-6 col-12 mb-3 mx-auto">
                                         <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                                     </div>
+                                    <div class="col-sm-6 col-12 mb-3 mx-auto">
+                                        <a href="{{ route('signin-sso') }}" class="btn btn-warning d-grid w-100" type="button">Sign in with SSO</a>
+                                    </div>
                                 </div>
                             </form>
                         </div>
