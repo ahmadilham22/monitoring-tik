@@ -10,11 +10,12 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
-class AssetImport implements ToModel, WithStartRow
+class AssetImport implements ToModel, WithStartRow, WithValidation
 {
     public function model(array $row)
     {
@@ -44,6 +45,13 @@ class AssetImport implements ToModel, WithStartRow
     public function startRow(): int
     {
         return 2;
+    }
+
+    public function rules(): array
+    {
+        return [
+            '*.8' => ['unique']
+        ];
     }
 
     protected function generateQrCode($row)
