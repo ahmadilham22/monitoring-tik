@@ -89,12 +89,11 @@
                                                 <select id="periodeFilter" class="form-select form-select-sm filter"
                                                     aria-label="Large select example">
                                                     <option value="">Tampilkan Semua</option>
-                                                    <option value="">2020</option>
-                                                    <option value="">2019</option>
-                                                    {{-- @foreach ($users as $user)
-                                                        <option value="{{ $user->id }}"
-                                                            id="id_user_{{ $user->id }}">{{ $user->nama }}</option>
-                                                    @endforeach --}}
+                                                    @foreach ($periods as $period)
+                                                        <option value="{{ $period }}"
+                                                            id="period_{{ $period }}">{{ $period }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -136,6 +135,8 @@
         let kondisi = $('#kondisiFilter').val();
         let kategori = $('#kategoriFilter').val();
         let pj = $('#pjFilter').val();
+        let periode = $('#periodeFilter').val();
+        console.log(periode);
         let sn = [];
         $(document).ready(function() {
             var category_id = (new URL(location.href)).searchParams.get('id_category');
@@ -169,6 +170,8 @@
                         d.kondisi = kondisi;
                         d.kategori = kategori;
                         d.pj = pj;
+                        d.periode = periode;
+                        console.log(d);
                     }
                 },
                 columns: [{
@@ -220,8 +223,10 @@
                 kondisi = $('#kondisiFilter').val();
                 kategori = $('#kategoriFilter').val();
                 pj = $('#pjFilter').val();
+                periode = $('#periodeFilter').val();
+                console.log(periode);
                 let sheet1 = $("#sheet1").attr("href", "{{ route('report.export') }}?kondisi=" + kondisi +
-                    "&kategori=" + kategori + "&pj=" + pj);
+                    "&kategori=" + kategori + "&pj=" + pj + "&periode=" + periode);
 
                 table.ajax.reload(null, false);
             })
@@ -237,7 +242,7 @@
                     // console.log(sn);
                     let sheet1 = $("#sheet1").attr("href", "{{ route('report.export') }}?kondisi=" +
                         kondisi +
-                        "&kategori=" + kategori + "&pj=" + pj + "&sn=" + sn);
+                        "&kategori=" + kategori + "&pj=" + pj + "&periode" + periode + "&sn=" + sn);
                 } else {
                     console.log("Checkbox is not checked!");
                 }
@@ -247,14 +252,15 @@
                 kondisi = $('#kondisiFilter').val();
                 kategori = $('#kategoriFilter').val();
                 pj = $('#pjFilter').val();
+                periode = $('#periodeFilter').val();
                 if ($(this).is(":checked")) {
                     sn = $('input[name="checkboxreport[]"]:checked').map(function() {
                         return $(this).val();
                     }).get();
-                    // console.log(sn);
+                    console.log(sn);
                     let sheet1 = $("#sheet1").attr("href", "{{ route('report.export') }}?kondisi=" +
                         kondisi +
-                        "&kategori=" + kategori + "&pj=" + pj + "&sn=" + sn);
+                        "&kategori=" + kategori + "&pj=" + pj + "&periode" + periode + "&sn=" + sn);
                 } else {
                     console.log("Checkbox is not checked!");
                 }
@@ -280,10 +286,12 @@
                 $('#kondisiFilter').val('');
                 $('#kategoriFilter').val('');
                 $('#pjFilter').val('');
+                $('#periodeFilter').val('');
 
                 kondisi = '';
                 kategori = '';
                 pj = '';
+                periode = '';
 
                 table.search('').draw();
                 table.ajax.reload();

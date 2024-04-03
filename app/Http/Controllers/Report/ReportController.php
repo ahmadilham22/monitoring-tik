@@ -32,6 +32,10 @@ class ReportController extends Controller
                 $data = $data->where('user.id', $request->pj);
             }
 
+            if ($request->input('periode') !== null) {
+                $data = $data->where('tahun_perolehan', $request->periode);
+            }
+
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
                     return view('pages.report._action.reportAction', compact('data'));
@@ -57,14 +61,13 @@ class ReportController extends Controller
             ->select('sc.categories_id as id', DB::raw('MAX(sc.nama_sub_kategori) as nama_sub_kategori'), DB::raw('MAX(c.nama_kategori) as nama_kategori'))
             ->groupBy('sc.categories_id')
             ->get();
-        // dd($subcategories);
         $users = DB::table('users')->select('id', 'nama')->where('role', 'admin')->whereNotNull('division_id')->get();
-
+        $periode = FixedAsset::selectRaw('tahun_perolehan')->distinct()->pluck('tahun_perolehan')->toArray();
 
         $conditions = array_combine($kondisi, $kondisi);
-        // return $users;
+        $periods = array_combine($periode, $periode);
 
-        return view('pages.report.index', compact('conditions', 'users', 'subcategories'));
+        return view('pages.report.index', compact('conditions', 'users', 'subcategories', 'periods'));
     }
 
     public function create()
@@ -92,6 +95,7 @@ class ReportController extends Controller
         $kategori = $request->query('kategori');
         $kondisi = $request->query('kondisi');
         $pj = $request->query('pj');
+        $periode = $request->query('periode');
         $sn = $request->query('sn');
 
         // Cek sn jika ada maka jadikan array jika tidak jadikan array kosong
@@ -102,7 +106,8 @@ class ReportController extends Controller
         }
 
         // memasukan variabel kedalam suatu array
-        $params = [$kategori, $kondisi, $pj, $snArray];
+        $params = [$kategori, $kondisi, $pj, $snArray, $periode];
+        // dd($params);
         return Excel::download(new ReportExport($params), 'data.xlsx');
     }
 }
