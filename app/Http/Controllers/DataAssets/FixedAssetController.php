@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\DataAssets;
 
+use App\Exports\FixedAsset\MultipleSheetTemplateExport;
+use App\Exports\FixedAsset\TemplateExport;
 use App\Imports\AssetImport;
 use App\Imports\MultipleSheetImport;
 use ZipArchive;
@@ -382,5 +384,10 @@ class FixedAssetController extends Controller
                 'Terjadi kesalahan saat mengimpor data: ' . $e->getMessage()
             );
         }
+    }
+
+    public function exportTemplate()
+    {
+        return new MultipleSheetTemplateExport;
     }
 }

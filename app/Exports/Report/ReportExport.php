@@ -6,10 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class ReportExport implements FromCollection, WithMapping, WithHeadings, WithStyles
+class ReportExport implements FromCollection, WithMapping, WithHeadings, WithStyles, ShouldAutoSize
 {
     // use Exportable;
     protected $params;
@@ -41,7 +42,10 @@ class ReportExport implements FromCollection, WithMapping, WithHeadings, WithSty
         if ($this->params[3] !== null && !empty($this->params[3])) {
             $query->whereIn('fa.kode_sn', $this->params[3]);
         }
-        if ($this->params[0] === null && $this->params[1] === null && $this->params[2] === null && $this->params[3] === null) {
+        if ($this->params[4] !== null && $this->params[4] !== '') {
+            $query->where('fa.tahun_perolehan', $this->params[4]);
+        }
+        if ($this->params[0] === null && $this->params[1] === null && $this->params[2] === null && $this->params[3] === null && $this->params[4] === null) {
             $query->whereNull('fa.deleted_at');
         }
 
