@@ -133,6 +133,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/download-selected-qrcodes-zip', 'downloadSelectedQrCodesZip')->name('download-selected-qrcodes-zip');
             Route::post('/save-filters-to-session', 'saveFiltersToSession')->name('save-filters-to-session');
             Route::post('/import-excel', 'import')->name('import-excel');
+            Route::get('/export', 'exportTemplate')->name('export-template');
         });
 
         // Moved Asset
