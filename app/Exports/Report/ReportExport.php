@@ -40,7 +40,7 @@ class ReportExport implements FromCollection, WithMapping, WithHeadings, WithSty
             $query->where('fa.user_id', $this->params[2]);
         }
         if ($this->params[3] !== null && !empty($this->params[3])) {
-            $query->whereIn('fa.kode_sn', $this->params[3]);
+            $query->whereIn('fa.id', $this->params[3]);
         }
         if ($this->params[4] !== null && $this->params[4] !== '') {
             $query->where('fa.tahun_perolehan', $this->params[4]);
