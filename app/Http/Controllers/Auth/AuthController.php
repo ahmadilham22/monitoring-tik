@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use SSO\SSO;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
-use SSO\SSO;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -29,21 +30,21 @@ class AuthController extends Controller
         }
     }
 
-    public function ssoLogin(){
+    public function ssoLogin()
+    {
         SSO::cookieClear();
-        SSO::ciCookieClear();
-        \Session::flush();
+        Session::flush();
         Auth::logout();
-        if(SSO::authenticate()) //mengecek apakah user telah login atau belum
+        if (SSO::authenticate()) //mengecek apakah user telah login atau belum
         {
-            if(SSO::check()) {
+            if (SSO::check()) {
                 $check =  \App\Models\DataMaster\User::where('email', SSO::getUser()->email)->first(); //mengecek apakah pengguna SSO memiliki username yang sama dengan database aplikasi
-                if(!is_null($check)) {
+                if (!is_null($check)) {
                     Auth::loginUsingId($check->id); //mengotentikasi pengguna aplikasi
                     session()->flash('success', 'Berhasil Login!');
                     return redirect()->route('home');
                 } else {
-                    return redirect()->route('signin')->with('error', 'Data pengguna tidak ditemukan, silahkan hubungi administrator.'); //mengarahkan ke halaman login jika pengguna gagal diotentikasi oleh aplikasi
+                    return redirect()->away('https://login.unila.ac.id/cas/logout?service=URLNYAGANTI')->with('error', 'Data pengguna tidak ditemukan, silahkan hubungi administrator.'); //mengarahkan ke halaman login jika pengguna gagal diotentikasi oleh aplikasi
                 }
             }
         } else {
@@ -53,10 +54,9 @@ class AuthController extends Controller
 
     public function logout()
     {
-        if(Auth::check()) { //mengecek otentikasi pada aplikasi
+        if (Auth::check()) { //mengecek otentikasi pada aplikasi
             SSO::cookieClear(); //If destroy cookie laravel
-            SSO::ciCookieClear(); //If destroy cookie codeigniter4
-            \Session::flush(); //Destroy Session
+            Session::flush(); //Destroy Session
             Auth::logout(); //Destroy Auth
             return redirect()->route('signin')->with('success', 'Berhasil logout'); //Redirect to login page
         } else {
