@@ -18,6 +18,7 @@ class SpecialLocation extends Model
         'location_id',
         'kode_lokasi',
         'lokasi_khusus',
+        'qrcode'
     ];
 
     public function location(): BelongsTo

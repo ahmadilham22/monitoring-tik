@@ -10,9 +10,35 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\DataMaster\SpecialLocation;
 use App\Http\Requests\DataMaster\SpecificLocationRequest;
+use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class SpecialLocationController extends Controller
 {
+
+    private function generateQrCode($kodeLokasi)
+    {
+        // URL yang akan di-encode dalam QR code
+        $url = url("/list-public/?kode_lokasi={$kodeLokasi}");
+
+        // Nama file untuk QR code
+        $fileName = time() . '.' . $kodeLokasi . '.png';
+
+        // Generate QR code
+        $qrCode = QrCode::format('png')
+            ->size(512)
+            ->errorCorrection('L')
+            ->generate($url);
+
+        // Path untuk menyimpan QR code
+        $qrCodePath = 'qrcodes/locations/' . $fileName;
+
+        // Simpan QR code ke storage
+        Storage::disk('public')->put($qrCodePath, $qrCode);
+
+        return $fileName;
+    }
+
     public function index()
     {
         if (request()->ajax()) {
@@ -20,7 +46,13 @@ class SpecialLocationController extends Controller
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
                     return view('pages.data-master.special-location._action.spesificLocationAction', compact('data'));
-                })->addIndexColumn()->make(true);
+                })
+                ->addColumn('qrcode', function ($data) {
+                    return view('pages.data-master.special-location._action.qrcode', compact('data'));
+                })
+                ->rawColumns(['action', 'qrcode'])
+                ->addIndexColumn()
+                ->make(true);
         }
         $data = Location::all();
         return view('pages.data-master.special-location.index', compact('data'));
@@ -68,6 +100,11 @@ class SpecialLocationController extends Controller
                     'lokasi_khusus' => $request->lokasi_khusus,
                 ]
             );
+
+            if ($isNewRecord) {
+                $fileName = $this->generateQrCode($location->kode_lokasi);
+                $location->update(['qrcode' => $fileName]);
+            }
 
             return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $location]);
         } catch (\Illuminate\Database\QueryException $e) {

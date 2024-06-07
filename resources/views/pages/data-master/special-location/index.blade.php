@@ -54,6 +54,7 @@
                                         <th>Kode Lokasi</th>
                                         <th>Sub Lokasi</th>
                                         <th>Terakhir Update</th>
+                                        <th>Kode Qr</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -67,6 +68,7 @@
         </div>
     </div>
     @include('pages.data-master.special-location._partial.modal')
+    @include('pages.data-master.special-location._partial.qrcode')
 @endsection
 
 @section('js')
@@ -99,7 +101,6 @@
                         data: 'location.lokasi_umum',
                         name: 'location.lokasi_umum'
                     },
-
                     {
                         data: 'kode_lokasi',
                         name: 'kode_lokasi'
@@ -117,6 +118,12 @@
                             }
                             return data;
                         }
+                    },
+                    {
+                        data: 'qrcode',
+                        name: 'qrcode',
+                        orderable: false,
+                        searchable: false
                     },
                     {
                         data: 'action',

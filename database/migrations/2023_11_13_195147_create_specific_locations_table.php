@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('location_id')->index()->constrained();
             $table->string('kode_lokasi');
             $table->string('lokasi_khusus');
+            $table->string('qrcode')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
