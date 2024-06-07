@@ -18,17 +18,101 @@ use App\Models\DataMaster\Division;
 use App\Models\DataMaster\Location;
 use App\Http\Controllers\Controller;
 use App\Models\DataAsset\FixedAsset;
+use App\Models\DataMaster\History;
 use App\Models\DataMaster\Procurement;
 use App\Models\DataMaster\SubCategory;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\DataMaster\SpecialLocation;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
+use Ramsey\Uuid\Uuid;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class FixedAssetController extends Controller
 {
+    private function generateQrCode($id)
+    {
+        // URL yang akan di-encode dalam QR code
+        $url = url("/show-public/{$id}");
+
+        // Nama file untuk QR code
+        $fileName = time() . '.' . $id . '.png';
+
+        // Generate QR code
+        $qrCode = QrCode::format('png')
+            ->size(512)
+            ->errorCorrection('L')
+            ->generate($url);
+
+        // Path untuk menyimpan QR code
+        $qrCodePath = 'qrcodes/' . $fileName;
+
+        // Simpan QR code ke storage
+        Storage::disk('public')->put($qrCodePath, $qrCode);
+
+        return $fileName;
+    }
+
+    public function updateSn(Request $request)
+    {
+        if ($request->ajax()) {
+            // Validasi input
+            $validator = Validator::make($request->all(), [
+                'pk' => 'required|exists:fixed_assets,id',
+                'value' => [
+                    'nullable',
+                    Rule::unique('fixed_assets', 'kode_sn')->ignore($request->pk)->whereNull('deleted_at'),
+                ],
+            ], [
+                'pk.required' => 'Primary key is required.',
+                'pk.exists' => 'The primary key must exist in the fixed assets table.',
+                'value.unique' => 'Kode SN sudah ada.',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->all(), 422);
+            }
+
+            // Update data
+            FixedAsset::find($request->pk)->update([
+                'kode_sn' => $request->value
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Berhasil menyimpan data',]);
+        }
+    }
+
+    public function updateBmn(Request $request)
+    {
+        if ($request->ajax()) {
+            // Validasi input
+            $validator = Validator::make($request->all(), [
+                'pk' => 'required|exists:fixed_assets,id',
+                'value' => [
+                    'nullable',
+                    Rule::unique('fixed_assets', 'kode_bmn')->ignore($request->pk)->whereNull('deleted_at'),
+                ],
+            ], [
+                'pk.required' => 'Primary key is required.',
+                'pk.exists' => 'The primary key must exist in the fixed assets table.',
+                'value.unique' => 'Kode BMN sudah ada.',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->all(), 422);
+            }
+
+            // Update data
+            FixedAsset::find($request->pk)->update([
+                'kode_bmn' => $request->value
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Berhasil menyimpan data',]);
+        }
+    }
+
     public function index(Request $request)
     {
         if (request()->ajax()) {
@@ -54,7 +138,13 @@ class FixedAssetController extends Controller
                 ->addColumn('checkbox', function ($data) {
                     return view('pages.data-asset.fixed-assets.action.checkbox', compact('data'));
                 })
-                ->rawColumns(['action', 'checkbox'])
+                ->addColumn('inputSn', function ($data) {
+                    return view('pages.data-asset.fixed-assets.action.inputSn', compact('data'));
+                })
+                ->addColumn('inputBMN', function ($data) {
+                    return view('pages.data-asset.fixed-assets.action.inputBMN', compact('data'));
+                })
+                ->rawColumns(['action', 'checkbox', 'inputSn'])
                 ->addIndexColumn()->make(true);
         }
 
@@ -68,10 +158,7 @@ class FixedAssetController extends Controller
             ->select('sc.categories_id as id', DB::raw('MAX(sc.nama_sub_kategori) as nama_sub_kategori'), DB::raw('MAX(c.nama_kategori) as nama_kategori'))
             ->groupBy('sc.categories_id')
             ->get();
-        $users = DB::table('users')
-            ->select('id', 'nama')
-            ->where('role', 'admin')
-            ->get();
+        $users = DB::table('users')->select('id', 'nama')->where('role', 'admin')->whereNotNull('division_id')->get();
 
         return view('pages.data-asset.fixed-assets.index', compact('conditions', 'users', 'subcategories'));
     }
@@ -90,38 +177,6 @@ class FixedAssetController extends Controller
         return view('pages.data-asset.fixed-assets.create', compact('category', 'subCategories', 'subCategory', 'location', 'specificLocation', 'procurement', 'user', 'unit'));
     }
 
-    public function store(Request $request)
-    {
-        $data = $this->validate($request, [
-            'sub_category_id' => 'required',
-            'procurement_id' => 'required',
-            'specific_location_id' => 'required',
-            'user_id' => 'required',
-            'kode_bmn' => 'min:5',
-            'kode_sn' => 'required',
-            'kondisi' => 'required',
-            'tahun_perolehan' => 'required',
-            'keterangan' => 'required',
-        ]);
-
-        $fixedAsset = FixedAsset::create($data);
-        $url = url("/report/show{$fixedAsset->id}");
-
-
-        $fileName = $data['kode_sn'] . '.png';
-        $qrCode = QrCode::format('png')
-            ->size(500)
-            ->errorCorrection('H')
-            ->generate($url);
-
-        $qrCodePath = 'qrcodes/' . $fileName;
-        Storage::disk('public')->put($qrCodePath, $qrCode);
-        $fixedAsset->update(['qr_code_path' => $qrCodePath]);
-
-
-        return redirect()->route('asset-fixed.index');
-    }
-
     public function storeAjax(Request $request)
     {
         // Validation
@@ -130,8 +185,8 @@ class FixedAssetController extends Controller
             'procurement_id' => 'required',
             'specific_location_id' => 'required',
             'user_id' => 'required',
-            'kode_bmn' => 'nullable|min:5',
-            'kode_sn' => 'required|unique:fixed_assets,kode_sn,NULL,id,deleted_at,NULL',
+            'kode_bmn' => 'nullable',
+            'kode_sn' => 'nullable|unique:fixed_assets,kode_sn,NULL,id,deleted_at,NULL',
             'kondisi' => 'required',
             'unit_id' => 'required',
             'tahun_perolehan' => 'required',
@@ -139,53 +194,67 @@ class FixedAssetController extends Controller
             'harga' => 'nullable',
             'keterangan' => 'nullable',
         ], [
+            // 'kode_bmn.min' => 'Kode BMN minimal harus 5 karakter.',
+            'kode_sn.unique' => 'Kode SN sudah ada .',
             'sub_category_id.required' => 'Kategori harus diisi.',
-            'procurement_id.required' => 'Mitra harus diisi.',
             'specific_location_id.required' => 'Lokasi harus diisi.',
+            'procurement_id.required' => 'Mitra harus diisi.',
             'user_id.required' => 'Penanggung jawab harus diisi.',
             'unit_id.required' => 'Satuan harus diisi.',
-            'kode_bmn.min' => 'Kode BMN minimal harus 5 karakter.',
-            'kode_sn.required' => 'Kode SN harus diisi.',
-            'kode_sn.unique' => 'Kode SN sudah ada .',
             'kondisi.required' => 'Kondisi harus diisi.',
             'tahun_perolehan.required' => 'Tahun Perolehan harus diisi.',
         ]);
 
         if ($data->fails()) {
-            return response()->json(['success' => false, 'message' => $data->errors()->first()]);
+            return response()->json($data->errors()->all(), 422);
         }
 
         $validatedData = $data->validated();
 
+        $uuid = Uuid::uuid4()->toString();
+        $fixedAsset = null;
 
-        // Buat entitas FixedAsset dengan data yang telah divalidasi
-        $fixedAsset = FixedAsset::create($validatedData);
-
-
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '.' . $file->getClientOriginalName() . '.' . $file->getClientOriginalExtension();
-
-            // Simpan file ke direktori storage/app/public/userImage
-            $path = $file->storeAs('public/assetImage', $filename);
-
-            // Simpan nama file yang relevan di kolom 'photo'
-            $fixedAsset->image = $filename;
+        DB::transaction(function () use ($validatedData, $request, $uuid, &$fixedAsset) {
+            // Buat entitas FixedAsset dengan data yang telah divalidasi
+            $fixedAsset = new FixedAsset($validatedData);
+            $fixedAsset->id = $uuid;
             $fixedAsset->save();
-        }
 
-        // Configure QR-Code
-        $url = url("/data-assets/report/show/{$fixedAsset->id}");
-        $fileName = $request->input('kode_sn') . '.png';
-        $qrCode = QrCode::format('png')
-            ->size(500)
-            ->errorCorrection('H')
-            ->generate($url);
+            // $imagePath = null;
+            // $history = History::create([
+            //     'fixed_asset_id' => $fixedAsset->id,
+            //     'kondisi' => $request->input('kondisi'),
+            // ]);
+            $historyData = [
+                'fixed_asset_id' => $fixedAsset->id,
+                'kondisi' => $request->input('kondisi'),
+            ];
+            // if ($request->hasFile('image')) {
+            //     $file = $request->file('image');
+            //     $filename = time() . '.' . $file->getClientOriginalName() . '.' . $file->getClientOriginalExtension();
 
-        $qrCodePath = 'qrcodes/' . $fileName;
-        Storage::disk('public')->put($qrCodePath, $qrCode);
-        $fixedAsset->update(['qr_code_path' => $qrCodePath]);
+            //     // Simpan file ke direktori storage/app/public/userImage
+            //     $path = $file->storeAs('public/assetImage', $filename);
 
+            //     // Simpan nama file yang relevan di kolom 'photo'
+            //     $fixedAsset->image = $filename;
+            // }
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $filename = time() . '.' . $file->getClientOriginalName() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('public/assetImage', $filename);
+                $historyData['image'] = $filename;
+                // $imagePath = $filename;
+            }
+
+            // Simpan data riwayat kondisi ke tabel histories
+            History::create($historyData);
+
+            // Configure QR-Code
+            $fileName = $this->generateQrCode($fixedAsset->id);
+
+            $fixedAsset->update(['qrcode' => $fileName]);
+        });
 
         return response()->json(['success' => true, 'message' => 'Berhasil menyimpan data', 'data' => $fixedAsset]);
     }
@@ -211,64 +280,63 @@ class FixedAssetController extends Controller
             'user_id' => 'required',
             'kode_bmn' => 'nullable|min:5',
             'kode_sn' => [
-                'required',
+                'nullable',
                 Rule::unique('fixed_assets')->ignore($request->id)->whereNull('deleted_at'),
             ],
             'kondisi' => 'required',
             'unit_id' => 'required',
             'tahun_perolehan' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             'harga' => 'nullable',
             'keterangan' => 'nullable',
         ], [
+            'kode_sn.unique' => 'Kode SN sudah ada.',
             'sub_category_id.required' => 'Kategori harus diisi.',
-            'procurement_id.required' => 'Mitra harus diisi.',
             'specific_location_id.required' => 'Lokasi harus diisi.',
+            'procurement_id.required' => 'Mitra harus diisi.',
             'user_id.required' => 'Penanggung jawab harus diisi.',
             'unit_id.required' => 'Satuan harus diisi.',
-            'kode_bmn.min' => 'Kode BMN minimal harus 5 karakter.',
-            'kode_sn.required' => 'Kode SN harus diisi.',
-            'kode_sn.unique' => 'Kode SN sudah ada.',
             'kondisi.required' => 'Kondisi harus diisi.',
             'tahun_perolehan.required' => 'Tahun Perolehan harus diisi.',
         ]);
 
         $aset = FixedAsset::findOrFail($id);
 
-        if ($request->hasFile('image')) {
-            if ($aset->image) {
-                Storage::delete('public/assetImage/' . $aset->image);
-            }
+        $historyData = [
+            'fixed_asset_id' => $aset->id,
+            'kondisi' => $request->input('kondisi'),
+        ];
 
+        if ($request->hasFile('image')) {
             $file = $request->file('image');
-            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $filename = time() . '.' . $file->getClientOriginalName() . '.' . $file->getClientOriginalExtension();
             $path = $file->storeAs('public/assetImage', $filename);
 
-            $aset->image = $filename;
+            $historyData['image'] = $filename;
         }
 
+        if (($request->kondisi != $aset->kondisi) || $request->hasFile('image')) {
+            History::create($historyData);
+        }
         // Lakukan pembaruan data lainnya
         $aset->update($validatedData);
 
         return redirect()->route('asset-fixed.index')->with('success', 'Berhasil mengubah data');
     }
 
-    public function show($kode_sn)
+    public function show($id)
     {
-        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement', 'unit'])
-            ->where('kode_sn', $kode_sn)
-            ->firstOrFail();
-        $folderPath = storage_path('app/public/qrcodes/');
-        $qrCodePath = $folderPath . $data->kode_sn . '.png';
-        return view('pages.data-asset.fixed-assets.show', compact('data', 'qrCodePath'));
+        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement', 'unit', 'histories'])->findOrFail($id);
+        $latestHistory = $data->histories->sortByDesc('created_at')->first();
+        return view('pages.data-asset.fixed-assets.show', compact('data', 'latestHistory'));
     }
 
     public function destroy(Request $request, $id)
     {
         $fixedAsset = FixedAsset::findOrFail($id);
 
-        $kodeSn = $fixedAsset->kode_sn;
-        $qrCodePath = "public/qrcodes/{$kodeSn}.png";
+        $qrCodePath = "public/qrcodes/{$fixedAsset->qrcode}";
+
         if (Storage::exists($qrCodePath)) {
             Storage::delete($qrCodePath);
         }
@@ -316,7 +384,7 @@ class FixedAssetController extends Controller
         $data = FixedAsset::find($id);
 
         if ($data) {
-            $qrCodePath = $data->kode_sn . '.png';
+            $qrCodePath = $data->qrcode;
             $fileName = basename($qrCodePath);
 
             return response()->download(storage_path('app/public/qrcodes/' . $qrCodePath), $fileName);
@@ -325,32 +393,64 @@ class FixedAssetController extends Controller
         return response()->json(['error' => 'QR Code not found'], 404);
     }
 
+    public function DownloadQrCodeLocation($id)
+    {
+        $data = FixedAsset::with('specificlocation')->findOrFail($id);
+
+        if ($data) {
+            $qrCodePath = $data->specificlocation->qrcode;
+            $fileName = basename($qrCodePath);
+
+            return response()->download(storage_path('app/public/qrcodes/locations/' . $qrCodePath), $fileName);
+        }
+
+        return response()->json(['error' => 'QR Code not found'], 404);
+    }
+
     public function downloadSelectedQrCodes(Request $request)
     {
-
         $selectedIds = $request->input('selectedIds');
-        $zip = new ZipArchive;
         $zipFileName = 'selected_qrcodes.zip';
         $zipFilePath = storage_path('app/' . $zipFileName);
 
-        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
+        $zip = new ZipArchive;
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
             foreach ($selectedIds as $id) {
-                // Ganti dengan path yang sesuai dengan folder Anda
-                $qrCodePath = storage_path('app/public/qrcodes/' . $id . '.png');
+                // Ambil data fixed asset berdasarkan ID
+                $fixedAsset = FixedAsset::with('specificlocation')->find($id);
 
-                if (file_exists($qrCodePath)) {
-                    $zip->addFile($qrCodePath, $id . '.png');
+                if ($fixedAsset && $fixedAsset->qrcode) {
+                    // Dapatkan path QR code dari field qrcode di database
+                    $qrCodePath = storage_path('app/public/qrcodes/' . $fixedAsset->qrcode);
+                    $qrCodePathlocations = null;
+
+                    if ($fixedAsset->specificlocation) {
+                        $qrCodePathlocations = storage_path('app/public/qrcodes/locations/' . $fixedAsset->specificlocation->qrcode);
+                    }
+
+                    // Tambahkan file QR code ke ZIP archive jika ada
+                    if (Storage::exists('public/qrcodes/' . $fixedAsset->qrcode)) {
+                        $zip->addFile($qrCodePath, 'qrcodes/' . $fixedAsset->qrcode);
+                    } else {
+                        Log::error("QR code file not found for fixed asset: {$fixedAsset->qrcode}");
+                    }
+
+                    if ($qrCodePathlocations && Storage::exists('public/qrcodes/locations/' . $fixedAsset->specificlocation->qrcode)) {
+                        $zip->addFile($qrCodePathlocations, 'qrcodes/locations/' . $fixedAsset->specificlocation->qrcode);
+                    } else {
+                        Log::error("Location QR code file not found for specific location: {$fixedAsset->specificlocation->qrcode}");
+                    }
                 }
             }
             $zip->close();
+        } else {
+            Log::error('Failed to create zip file');
+            return response()->json(['error' => 'Failed to create zip file'], 500);
         }
 
-        if (file_exists($zipFilePath)) {
-            return response()->json(['success' => true]);
-        } else {
-            return response()->json(['error' => 'No QR codes found or ZIP creation failed'], 404);
-        }
+        return response()->json(['success' => true, 'zipFilePath' => $zipFilePath]);
     }
+
 
     public function downloadSelectedQrCodesZip()
     {
