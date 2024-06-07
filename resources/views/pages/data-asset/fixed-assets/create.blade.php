@@ -179,7 +179,7 @@
                                                 <option value="">Pilih...</option>
                                                 <option value="Baik">Baik</option>
                                                 <option value="Rusak">Rusak</option>
-                                                <option value="Pinjam">Pinjam</option>
+                                                <option value="Perbaikan">Perbaikan</option>
                                             </select>
                                         </div>
                                     </div>
@@ -287,33 +287,34 @@
                     $('.auto-load').hide();
                     $("#btn-save").html('Submit');
                     $("#btn-save").attr("disabled", false);
-                    if (response.success) {
-                        Swal.fire({
-                            toast: true,
-                            position: "top-end",
-                            timer: 2000,
-                            icon: 'success',
-                            title: 'Success',
-                            text: response.message,
-                            showConfirmButton: false
-                        });
-                        $('#kode_bmn').val('');
-                        $('#kode_sn').val('');
-                        $('#keterangan').val('');
-                    } else if (!response.success) {
+                    Swal.fire({
+                        toast: true,
+                        position: "top-end",
+                        timer: 2000,
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message,
+                        showConfirmButton: false
+                    });
+
+                    $('#kode_bmn').val('');
+                    $('#kode_sn').val('');
+                    $('#keterangan').val('');
+                },
+                error: function(error) {
+                    if (error.responseJSON) {
                         Swal.fire({
                             toast: true,
                             position: "top-end",
                             timer: 2000,
                             icon: 'error',
-                            title: 'Failed',
-                            text: response.message,
+                            title: 'Error',
+                            text: error.responseJSON[0],
                             showConfirmButton: false
                         });
+
+                        $('.auto-load').hide();
                     }
-                },
-                error: function(data) {
-                    console.log(data);
                 }
             });
         });

@@ -233,9 +233,9 @@
                                                 <option value="Rusak"
                                                     {{ old('kondisi', $aset->kondisi) === 'Rusak' ? 'selected' : '' }}>
                                                     Rusak</option>
-                                                <option value="Pinjam"
-                                                    {{ old('kondisi', $aset->kondisi) === 'Pinjam' ? 'selected' : '' }}>
-                                                    Pinjam</option>
+                                                <option value="Perbaikan"
+                                                    {{ old('kondisi', $aset->kondisi) === 'Perbaikan' ? 'selected' : '' }}>
+                                                    Perbaikan</option>
                                             </select>
                                             @error('kondisi')
                                                 <div class="invalid-feedback">{{ $message }}</div>

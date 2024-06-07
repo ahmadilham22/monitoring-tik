@@ -3,8 +3,8 @@
 @section('css')
     <style>
         /* img {
-                                                                                    width: 200px;
-                                                                                } */
+                                                                                                                                                                                                                                                                                                                                                                                                                                width: 200px;
+                                                                                                                                                                                                                                                                                                                                                                                                                            } */
     </style>
 @endsection
 
@@ -25,8 +25,8 @@
                         <div class="row mb-3">
                             <div class="col-12 d-flex justify-content-center align-items-center">
                                 <div class="visible-print d-blok text-center">
-                                    <img src="{{ asset('storage/qrcodes/' . $data->kode_sn . '.png') }}" alt="QR Code"
-                                        class="img-fluid" style="width: 150px; height:150px;">
+                                    <img src="{{ asset('storage/qrcodes/' . $data->qrcode) }}" alt="QR Code"
+                                        class="img-fluid" style="height: 150px; object-fit:cover">
                                     <br>
                                     <a href="{{ route('asset-fixed.downloadQrCode', $data->id) }}"
                                         class="btn btn-primary text-white mt-2 btn-xs">Download Qr Code</a>
@@ -147,10 +147,10 @@
                                         <hr>
                                         <div class="d-flex justify-content-between gap-3">
                                             <div class="col-sm-4">
-                                                <strong>Kondisi</strong>
+                                                <strong>Kondisi Saat Ini</strong>
                                             </div>
                                             <div class="col-sm-8">
-                                                {{ $data->kondisi }}
+                                                {{ $latestHistory->kondisi }}
                                             </div>
                                         </div>
                                         <hr>
@@ -185,7 +185,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12 mt-3">
+                            {{-- <div class="col-sm-12 mt-3">
                                 <div class="card bg-light h-100">
                                     <div class="card-body">
                                         <div class="col-12 d-block justify-content-center align-items-center">
@@ -194,13 +194,75 @@
                                                 <br>
                                                 <img src="{{ asset('storage/assetImage/' . $data->image) }}"
                                                     alt="Gambar Aset" class="img-fluid w-75">
-                                                {{-- <a href="{{ route('asset-fixed.downloadQrCode', $data->id) }}"
-                                                    class="btn btn-primary text-white mt-2 btn-xs">Download Qr Code</a> --}}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div> --}}
+                        </div>
+                        <div class="row mt-3">
+                            {{-- <div class="col-sm-6">
+                                <div class="card bg-light h-100">
+                                    <div class="card-body">
+                                        <h4 class="text-center">Gambar Aset</h4>
+                                        <div class="d-flex justify-content-center gap-3">
+                                            <div class="visible-print d-blok text-center mt-3">
+                                                <img src="{{ asset('storage/assetImage/' . $data->image) }}"
+                                                    alt="Gambar Aset" class="img-fluid w-75">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> --}}
+                            <div class="col-sm-12">
+                                <div class="card bg-light h-100">
+                                    <div class="card-body">
+                                        <h4 class="text-center">Kondisi dan Gambar Aset</h4>
+                                        <div class="d-flex justify-content-between gap-3">
+                                            {{-- <div class="col-sm-4">
+                                                    <strong>Kondisi</strong>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    {{ $history->kondisi }} / {{ $history->created_at }}
+                                                    <hr />
+                                                </div> --}}
+                                            <table id="myTable" class="table table-bordered table-sm w-100">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Kondisi</th>
+                                                        <th class="d-flex justify-content-center">Gambar</th>
+                                                        <th>Tanggal</th>
+                                                    </tr>
+                                                </thead>
+                                                @foreach ($data->histories as $history)
+                                                    <tbody class="table-border-bottom-0">
+                                                        <td>{{ $history->kondisi }}</td>
+                                                        <td class="d-flex justify-content-center"> <img
+                                                                src="{{ asset('storage/assetImage/' . $history->image) }}"
+                                                                alt="QR Code" class="img-fluid"
+                                                                style="height: 300px; object-fit:cover"></td>
+                                                        <td>{{ $history->created_at }}</td>
+                                                    </tbody>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                            {{-- <div class="col-sm-12 mt-3">
+                                <div class="card bg-light h-100">
+                                    <div class="card-body">
+                                        <div class="col-12 d-block justify-content-center align-items-center">
+                                            <div class="visible-print d-blok text-center">
+                                                <h4>Gambar Aset</h4>
+                                                <br>
+                                                <img src="{{ asset('storage/assetImage/' . $data->image) }}"
+                                                    alt="Gambar Aset" class="img-fluid w-75">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@section('css')
+    {{-- <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/css/jquery-editable.css" rel="stylesheet" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/jquery-editable/js/jquery-editable-poshytip.min.js">
+    </script> --}}
+@endsection
+
 
 @section('content')
     <div class="container flex-grow-1 mt-3 w-100">
@@ -26,11 +32,11 @@
                                             class="fa-solid fa-arrows-rotate me-2"></i>
                                         Reset
                                         Filter</button>
-                                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                    {{-- <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                         data-bs-target="#ImportData">
                                         <i class="fa-solid fa-file-import me-2"></i>
                                         Import Data
-                                    </button>
+                                    </button> --}}
                                     @if (Auth::user()->role == 'super_admin')
                                         <button id="deleteAsset" class="btn btn-danger" disabled><i
                                                 class="fa-solid fa-trash me-2"></i>
@@ -94,6 +100,7 @@
                                                 id="main_checkbox" name="main_checkbox">
                                         </th>
                                         <th>No</th>
+                                        <th>Kode BMN</th>
                                         <th>Kode SN</th>
                                         <th>Kategori</th>
                                         <th>Sub Kategori</th>
@@ -120,11 +127,14 @@
         let kondisi = $('#kondisiFilter').val();
         let kategori = $('#kategoriFilter').val();
         let pj = $('#pjFilter').val();
+
         $(document).ready(function() {
+
             var category_id = (new URL(location.href)).searchParams.get('id_category');
             var user_id = (new URL(location.href)).searchParams.get('id_user');
             var params = new URLSearchParams(window.location.search);
             var condition = params.get('kondisi');
+
             if (category_id !== null || category_id !== undefined) {
                 kategori = category_id;
                 $('#id_category_' + kategori).attr('selected', true);
@@ -187,8 +197,16 @@
                         name: 'DT_RowIndex',
                     },
                     {
-                        data: 'kode_sn',
-                        name: 'kode_sn',
+                        data: 'inputBMN',
+                        name: 'inputBMN',
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {
+                        data: 'inputSn',
+                        name: 'inputSn',
+                        orderable: false,
+                        searchable: false,
                     },
                     {
                         data: 'subcategory.category.nama_kategori',
@@ -218,6 +236,84 @@
                     },
 
                 ],
+            });
+
+            $.fn.editable.defaults.mode = 'inline';
+
+            table.on('draw.dt', function() {
+                $('.editablesn').each(function() {
+                    var pk = $(this).data('pk');
+
+                    $(this).editable({
+                        url: "{{ route('asset-fixed.update.sn') }}",
+                        type: "text",
+                        name: "kode_sn",
+                        title: "Masukan data",
+                        emptytext: '<input type="text"" placeholder="Masukan Kode SN"/>',
+                        success: function(response) {
+                            Swal.fire({
+                                toast: true,
+                                position: "top-end",
+                                timer: 2000,
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message,
+                                showConfirmButton: false
+                            });
+                        },
+                        error: function(error) {
+                            if (error.responseJSON) {
+                                Swal.fire({
+                                    toast: true,
+                                    position: "top-end",
+                                    timer: 2000,
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: error.responseJSON[0],
+                                    showConfirmButton: false
+                                });
+                            }
+                        }
+                    });
+                });
+            });
+
+            table.on('draw.dt', function() {
+                $('.editablebmn').each(function() {
+                    var pk = $(this).data('pk');
+
+                    $(this).editable({
+                        url: "{{ route('asset-fixed.update.bmn') }}",
+                        type: "text",
+                        name: "kode_sn",
+                        title: "Masukan data",
+                        emptytext: '<input type="text"" placeholder="Masukan Kode BMN"/>',
+                        success: function(response) {
+                            Swal.fire({
+                                toast: true,
+                                position: "top-end",
+                                timer: 2000,
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message,
+                                showConfirmButton: false
+                            });
+                        },
+                        error: function(error) {
+                            if (error.responseJSON) {
+                                Swal.fire({
+                                    toast: true,
+                                    position: "top-end",
+                                    timer: 2000,
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: error.responseJSON[0],
+                                    showConfirmButton: false
+                                });
+                            }
+                        }
+                    });
+                });
             });
 
             // Event handler untuk filter
@@ -369,6 +465,7 @@
 
         })
     </script>
+    <script></script>
     @if (session('success'))
         <script>
             // Menampilkan SweetAlert jika session flash success ada
@@ -389,11 +486,11 @@
             Swal.fire({
                 toast: true,
                 position: "top-end",
-                timer: 2000,
+                timer: 20000,
                 icon: 'success',
                 title: 'Error',
-                text: '{{ session('success') }}',
-                showConfirmButton: false,
+                text: '{{ session('error') }}',
+                showConfirmButton: true,
             });
         </script>
     @endif
