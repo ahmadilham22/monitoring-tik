@@ -22,22 +22,27 @@
                                         Reset
                                         Filter</button>
                                 </p>
-                                <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                {{-- <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown"
                                     aria-expanded="false"><i class="fa-solid fa-file-export me-2"></i>
                                     Export Data
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a id="sheet1" href="{{ route('report.export') }}" class="dropdown-item">Sheet
                                             1</a></li>
-                                    {{-- <li><a id="sheet2" class="dropdown-item" href="#">Sheet 2</a></li> --}}
-                                </ul>
+                                </ul> --}}
+                                {{-- <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false"><i class="fa-solid fa-file-export me-2"></i>
+                                    Export Data
+                                </button> --}}
+                                <a id="sheet1" href="{{ route('report.export') }}" class="btn btn-success"><i
+                                        class="fa-solid fa-file-export me-2"></i>
+                                    Export Data</a>
                                 <button type="button" class="btn btn-info" id="downloadReport" disabled><i
                                         class="fa-solid fa-download me-2"></i>
                                     Download
                                 </button>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-10">
                                 <div class="collapse" id="collapseExample">
@@ -136,13 +141,15 @@
         let kategori = $('#kategoriFilter').val();
         let pj = $('#pjFilter').val();
         let periode = $('#periodeFilter').val();
-        console.log(periode);
+        {{-- console.log(periode); --}}
         let sn = [];
+
         $(document).ready(function() {
             var category_id = (new URL(location.href)).searchParams.get('id_category');
             var user_id = (new URL(location.href)).searchParams.get('id_user');
             var params = new URLSearchParams(window.location.search);
             var condition = params.get('kondisi');
+
             if (category_id !== null || category_id !== undefined) {
                 kategori = category_id;
                 $('#id_category_' + kategori).attr('selected', true);
@@ -171,7 +178,6 @@
                         d.kategori = kategori;
                         d.pj = pj;
                         d.periode = periode;
-                        console.log(d);
                     }
                 },
                 columns: [{
@@ -224,7 +230,7 @@
                 kategori = $('#kategoriFilter').val();
                 pj = $('#pjFilter').val();
                 periode = $('#periodeFilter').val();
-                console.log(periode);
+                {{-- console.log(periode); --}}
                 let sheet1 = $("#sheet1").attr("href", "{{ route('report.export') }}?kondisi=" + kondisi +
                     "&kategori=" + kategori + "&pj=" + pj + "&periode=" + periode);
 
@@ -239,12 +245,12 @@
                     sn = $('input[name="checkboxreport[]"]:checked').map(function() {
                         return $(this).val();
                     }).get();
-                    // console.log(sn);
+                    {{-- console.log(sn); --}}
                     let sheet1 = $("#sheet1").attr("href", "{{ route('report.export') }}?kondisi=" +
                         kondisi +
                         "&kategori=" + kategori + "&pj=" + pj + "&periode" + periode + "&sn=" + sn);
                 } else {
-                    console.log("Checkbox is not checked!");
+                    {{-- console.log("Checkbox is not checked!"); --}}
                 }
             });
 
@@ -257,12 +263,12 @@
                     sn = $('input[name="checkboxreport[]"]:checked').map(function() {
                         return $(this).val();
                     }).get();
-                    console.log(sn);
+                    {{-- console.log(sn); --}}
                     let sheet1 = $("#sheet1").attr("href", "{{ route('report.export') }}?kondisi=" +
                         kondisi +
                         "&kategori=" + kategori + "&pj=" + pj + "&periode" + periode + "&sn=" + sn);
                 } else {
-                    console.log("Checkbox is not checked!");
+                    {{-- console.log("Checkbox is not checked!"); --}}
                 }
             });
 
@@ -357,7 +363,7 @@
                         },
                         error: function(xhr, status, error) {
                             // Tampilkan pesan atau lakukan sesuatu jika terjadi kesalahan
-                            console.error(error);
+                            {{-- console.error(error); --}}
                         }
                     });
                 }

@@ -61,6 +61,7 @@ class ReportController extends Controller
             ->select('sc.categories_id as id', DB::raw('MAX(sc.nama_sub_kategori) as nama_sub_kategori'), DB::raw('MAX(c.nama_kategori) as nama_kategori'))
             ->groupBy('sc.categories_id')
             ->get();
+
         $users = DB::table('users')->select('id', 'nama')->where('role', 'admin')->whereNotNull('division_id')->get();
         $periode = FixedAsset::selectRaw('tahun_perolehan')->distinct()->pluck('tahun_perolehan')->toArray();
 
@@ -70,6 +71,64 @@ class ReportController extends Controller
         return view('pages.report.index', compact('conditions', 'users', 'subcategories', 'periods'));
     }
 
+    public function listPublic(Request $request)
+    {
+        if (request()->ajax()) {
+            $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement'])->orderBy('updated_at', 'desc')->get();
+
+            if ($request->input('kondisi') !== null) {
+                $data = $data->where('kondisi', $request->kondisi);
+            }
+
+            if ($request->input('kategori') !== null) {
+                $data = $data->where('subcategory.categories_id', $request->kategori);
+            }
+
+            if ($request->input('pj') !== null) {
+                $data = $data->where('user.id', $request->pj);
+            }
+
+            if ($request->query('kode_lokasi')) {
+                // $data = $data->whereHas('specificlocation', function ($query) use ($request) {
+                //     $query->where('kode_lokasi', $request->query('kode_lokasi'));
+                // });
+                $data = $data->where('specificlocation.kode_lokasi', $request->query('kode_lokasi'));
+                // dd($data);
+            }
+
+            return DataTables::of($data)
+                // ->addColumn('action', function ($data) {
+                //     return view('pages.data-asset.fixed-assets.action.fixedAssetAction', compact('data'));
+                // })
+                // ->addColumn('checkbox', function ($data) {
+                //     return view('pages.data-asset.fixed-assets.action.checkbox', compact('data'));
+                // })
+                // ->addColumn('inputSn', function ($data) {
+                //     return view('pages.data-asset.fixed-assets.action.inputSn', compact('data'));
+                // })
+                // ->addColumn('inputBMN', function ($data) {
+                //     return view('pages.data-asset.fixed-assets.action.inputBMN', compact('data'));
+                // })
+                // ->rawColumns(['action', 'checkbox', 'inputSn'])
+                ->addIndexColumn()
+                ->make(true);
+        }
+
+        $kondisi = FixedAsset::selectRaw('kondisi')
+            ->distinct()
+            ->pluck('kondisi')
+            ->toArray();
+        $conditions = array_combine($kondisi, $kondisi);
+        $subcategories = DB::table('sub_categories AS sc')
+            ->join('categories AS c', 'sc.categories_id', '=', 'c.id')
+            ->select('sc.categories_id as id', DB::raw('MAX(sc.nama_sub_kategori) as nama_sub_kategori'), DB::raw('MAX(c.nama_kategori) as nama_kategori'))
+            ->groupBy('sc.categories_id')
+            ->get();
+        $users = DB::table('users')->select('id', 'nama')->where('role', 'admin')->whereNotNull('division_id')->get();
+
+        return view('pages.report.list-public', compact('conditions', 'users', 'subcategories'));
+    }
+
     public function create()
     {
         return view('pages.report.create');
@@ -77,16 +136,27 @@ class ReportController extends Controller
     public function edit()
     {
     }
-    public function show($kode_sn)
+
+    public function show($id)
     {
-        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement', 'unit'])
-            ->where('kode_sn', $kode_sn)
-            ->firstOrFail();
-        $folderPath = storage_path('app/public/qrcodes/');
-        $qrCodePath = $folderPath . $data->kode_sn . '.png';
-        $folderPath = storage_path('app/public/qrcodes/');
-        $qrCodePath = $folderPath . $data->kode_sn . '.png';
-        return view('pages.report.show', compact('data', 'qrCodePath'));
+        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement', 'unit', 'histories'])->findOrFail($id);
+
+        $latestHistory = $data->histories->sortByDesc('created_at')->first();
+        // dd($latestHistory);
+        // $folderPath = storage_path('app/public/qrcodes/');
+        // $qrCodePath = $folderPath . $data->kode_sn . '.png';
+        return view('pages.report.show', compact('data', 'latestHistory'));
+    }
+
+    public function showPublic($id)
+    {
+        $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement', 'unit', 'histories'])->findOrFail($id);
+
+        $latestHistory = $data->histories->sortByDesc('created_at')->first();
+        $fixedAsset = FixedAsset::find($id);
+        // dd($fixedAsset);
+        // dd($data->specificlocation->qrcode);
+        return view('pages.report.show-public', compact('data', 'latestHistory'));
     }
 
     public function export(Request $request)
@@ -96,17 +166,17 @@ class ReportController extends Controller
         $kondisi = $request->query('kondisi');
         $pj = $request->query('pj');
         $periode = $request->query('periode');
-        $sn = $request->query('sn');
+        $id = $request->query('sn');
 
         // Cek sn jika ada maka jadikan array jika tidak jadikan array kosong
-        if ($sn) {
-            $snArray = explode(',', $sn);
+        if ($id) {
+            $idArray = explode(',', $id);
         } else {
-            $snArray = [];
+            $idArray = [];
         }
 
         // memasukan variabel kedalam suatu array
-        $params = [$kategori, $kondisi, $pj, $snArray, $periode];
+        $params = [$kategori, $kondisi, $pj, $idArray, $periode];
         // dd($params);
         return Excel::download(new ReportExport($params), 'data.xlsx');
     }

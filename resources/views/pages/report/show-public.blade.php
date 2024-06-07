@@ -1,7 +1,4 @@
-@extends('layouts.app')
-
-@section('css')
-@endsection
+@extends('layouts.app-public')
 
 
 @section('content')
@@ -9,31 +6,15 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4>
-                            <a href="{{ route('asset-fixed.index') }}">
-                                <i class="fa-solid fa-circle-chevron-left"></i>
-                            </a> Data Aset
-                        </h4>
-                    </div>
                     <div class="card-body">
                         <div class="row mb-3">
-                            <div class="col-6 d-flex justify-content-center align-items-center">
+                            <div class="col-12 d-flex justify-content-center align-items-center">
                                 <div class="visible-print d-blok text-center">
                                     <img src="{{ asset('storage/qrcodes/' . $data->qrcode) }}" alt="QR Code"
                                         class="img-fluid" style="height: 150px; object-fit:cover">
                                     <br>
                                     <a href="{{ route('asset-fixed.downloadQrCode', $data->id) }}"
-                                        class="btn btn-primary text-white mt-2 btn-xs">Download Qr Code Aset</a>
-                                </div>
-                            </div>
-                            <div class="col-6 d-flex justify-content-center align-items-center">
-                                <div class="visible-print d-blok text-center">
-                                    <img src="{{ asset('storage/qrcodes/locations/' . $data->specificlocation->qrcode) }}"
-                                        alt="QR Code" class="img-fluid" style="height: 150px; object-fit:cover">
-                                    <br>
-                                    <a href="{{ route('asset-fixed.downloadQrCode-location', $data->id) }}"
-                                        class="btn btn-primary text-white mt-2 btn-xs">Download Qr Code Lokasi</a>
+                                        class="btn btn-primary text-white mt-2 btn-xs">Download Qr Code</a>
                                 </div>
                             </div>
                         </div>
@@ -245,8 +226,7 @@
                                                                 src="{{ asset('storage/assetImage/' . $history->image) }}"
                                                                 alt="QR Code" class="img-fluid"
                                                                 style="height: 300px; object-fit:cover"></td>
-                                                        <td>{{ $history->created_at->translatedFormat('d F Y H:i:s') }}
-                                                        </td>
+                                                        <td>{{ $history->created_at }}</td>
                                                     </tbody>
                                                 @endforeach
                                             </table>
