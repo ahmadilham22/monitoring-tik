@@ -5,6 +5,7 @@ namespace App\Models\DataAsset;
 use App\Models\DataMaster\User;
 use App\Models\DataMaster\Category;
 use App\Models\DataMaster\Division;
+use App\Models\DataMaster\History;
 use App\Models\DataMaster\Location;
 use Illuminate\Support\Facades\Log;
 use App\Models\DataMaster\Procurement;
@@ -17,12 +18,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 class FixedAsset extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $keyType = 'string';
     protected $table = 'fixed_assets';
+    public $incrementing = false;
+
     protected $fillable = [
         'sub_category_id',
         'specific_location_id',
@@ -34,11 +39,23 @@ class FixedAsset extends Model
         'jumlah_barang',
         'penanggung_jawab',
         'kondisi',
-        'image',
         'harga',
         'tahun_perolehan',
         'keterangan',
+        'qrcode',
     ];
+
+
+    // protected static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::creating(function ($model) {
+    //         if (empty($model->{$model->getKeyName()})) {
+    //             $model->{$model->getKeyName()} = (string) Str::uuid();
+    //         }
+    //     });
+    // }
 
     public function subcategory()
     {
@@ -62,5 +79,19 @@ class FixedAsset extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function histories()
+    {
+        return $this->hasMany(History::class, 'fixed_asset_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($fixedAsset) {
+            $fixedAsset->histories()->delete();
+        });
     }
 }
