@@ -20,6 +20,7 @@ use App\Http\Controllers\DataMaster\SubCategory\SubCategoryController;
 use App\Http\Controllers\DataMaster\UnitController;
 use App\Http\Controllers\Monitoring\DashboardController;
 use App\Http\Controllers\Monitoring\MonitoringController;
+use App\Models\DataAsset\FixedAsset;
 use App\Models\DataMaster\SpecialLocation;
 
 /*
@@ -121,11 +122,11 @@ Route::middleware(['auth'])->group(function () {
         Route::controller(FixedAssetController::class)->prefix('fixed')->group(function () {
             Route::get('/', 'index')->name('asset-fixed.index');
             Route::get('/create', 'create')->name('asset-fixed.create');
-            Route::post('/store', 'store')->name('asset-fixed.store');
+            // Route::post('/store', 'store')->name('asset-fixed.store');
             Route::post('/storeAjax', 'storeAjax')->name('asset-fixed.store.ajax');
             Route::get('/edit/{id}', 'edit')->name('asset-fixed.edit');
             Route::put('/update/{id}', 'update')->name('asset-fixed.update');
-            Route::get('/show/{kode_sn}', 'show')->name('asset-fixed.show');
+            Route::get('/show/{id}', 'show')->name('asset-fixed.show');
             Route::delete('/delete/{id}', 'destroy')->name('asset-fixed.destroy');
             Route::post('/delete-selected-asset', 'DeleteSelectedAsset')->name('asset-fixed.destroy.selected');
             Route::get('/download/qrcode/{id}', 'DownloadQrCode')->name('asset-fixed.downloadQrCode');
@@ -134,6 +135,9 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/save-filters-to-session', 'saveFiltersToSession')->name('save-filters-to-session');
             Route::post('/import-excel', 'import')->name('import-excel');
             Route::get('/export', 'exportTemplate')->name('export-template');
+            Route::post('/update-sn', 'updateSn')->name('asset-fixed.update.sn');
+            Route::post('/update-bmn', 'updateBmn')->name('asset-fixed.update.bmn');
+            Route::get('/download/qrcode/location/{id}', 'DownloadQrCodeLocation')->name('asset-fixed.downloadQrCode-location');
         });
 
         // Moved Asset
@@ -156,10 +160,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [ReportController::class, 'index'])->name('report.index');
         Route::get('/create', [ReportController::class, 'create'])->name('report.create');
         Route::get('/export', [ReportController::class, 'export'])->name('report.export');
+        Route::get('/show/{id}', [ReportController::class, 'show'])->name('report.show');
     });
 });
 
-Route::get('report/show/{kode_sn}', [ReportController::class, 'show'])->name('report.show');
+// Public Access
+Route::get('show-public/{id}', [ReportController::class, 'showPublic'])->name('report.show-public');
+Route::get('list-public', [ReportController::class, 'listPublic'])->name('report.list-public');
 
 
 // Auth
