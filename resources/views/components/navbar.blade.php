@@ -1,7 +1,3 @@
-@if (
-    (Auth::check() && Auth::user()->role == 'super_admin') ||
-        (Auth::check() && Auth::user()->role == 'admin') ||
-        (Auth::check() && Auth::user()->role == 'user'))
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
     id="layout-navbar" style="z-index: 1">
     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -42,7 +38,7 @@
                                 class="w-px-40 h-auto rounded-circle" />
                         @endif
                     </div>
-                     @if (Auth::check() && Auth::user())
+                    @if (Auth::check() && Auth::user())
                         <div class="mt-2">
                             <span class="fw-semibold d-block">{{ Auth::user()->nama }}</span>
                         </div>
@@ -54,11 +50,16 @@
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar avatar-online">
-                                        <img src="../assets/img/avatars/1.png" alt
-                                            class="w-px-40 h-auto rounded-circle" />
+                                        @if (Auth::check() && Auth::user()->photo)
+                                            <img src="{{ asset('storage/userImage/' . Auth::user()->photo) }}" alt
+                                                class="w-px-40 h-auto rounded-circle" />
+                                        @else
+                                            <img src="{{ asset('assets/img/avatars/1.png') }}" alt="Foto Profil Default"
+                                                class="w-px-40 h-auto rounded-circle" />
+                                        @endif
                                     </div>
                                 </div>
-                                 @if (Auth::check() && !is_null(Auth::user()))
+                                @if (Auth::check() && !is_null(Auth::user()))
                                     <div class="flex-grow-1">
                                         <span class="fw-semibold d-block">{{ Auth::user()->nama }}</span>
                                         <small class="text-muted">Staff</small>
@@ -71,7 +72,7 @@
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                         @if (Auth::check() && !is_null(Auth::user()))
+                        @if (Auth::check() && !is_null(Auth::user()))
                             <a class="dropdown-item" href="{{ route('user.detail', Auth::user()->id) }}">
                                 <i class="bx bx-user me-2"></i>
                                 <span class="align-middle">My Profile</span>
@@ -109,4 +110,3 @@
         </ul>
     </div>
 </nav>
-@endif
