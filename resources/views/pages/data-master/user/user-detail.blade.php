@@ -9,6 +9,12 @@
                     <h5 class="card-header">Profile Details</h5>
                     <!-- Account -->
                     <div class="card-body">
+                        <div class="col-12 d-flex justify-content-center align-items-center">
+                            <div class="visible-print d-blok text-center">
+                                <img src="{{ asset('storage/userImage/' . $data->photo) }}" alt="QR Code" class="img-fluid"
+                                    style="height: 150px; object-fit:cover">
+                            </div>
+                        </div>
                     </div>
                     <hr class="my-0" />
                     <div class="card-body">
