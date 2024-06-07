@@ -15,6 +15,7 @@ class MultipleSheetTemplateExport implements WithMultipleSheets, Responsable
     public function sheets(): array
     {
         return [
+            'Template Export' => new TemplateExport(),
             'Sub Kategori' => new SubcategorySheet(),
             'Sub Lokasi' => new SublocationSheet(),
             'Satuan' => new UnitSheet(),
