@@ -71,7 +71,7 @@
                         <div class="col-sm-12 col-12">
                             <!-- Logo -->
                             <div class="text-center mt-4 mb-5">
-                                <h2>Inventory TIK <br> Universitas Lampung</h2>
+                                <h2>Sistem Manajemen Aset <br> UPT TIK Universitas Lampung</h2>
                             </div>
                             <form id="formAuthentication" class="align-items-center px-sm-5" action="{{ route('signin') }}"
                                 method="POST">
@@ -103,7 +103,8 @@
                                         <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                                     </div>
                                     <div class="col-sm-6 col-12 mb-3 mx-auto">
-                                        <a href="{{ route('signin-sso') }}" class="btn btn-warning d-grid w-100" type="button">Sign in with SSO</a>
+                                        <a href="{{ route('signin-sso') }}" class="btn btn-warning d-grid w-100"
+                                            type="button">Sign in with SSO</a>
                                     </div>
                                 </div>
                             </form>

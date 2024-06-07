@@ -123,7 +123,7 @@
                             @include('pages.dashboard.data-users')
                         </div>
                         <div class="text-center">
-                            <button class="btn btn-success load-more-data-users">View More</button>
+                            <button class="btn btn-primary load-more-data-users">View More</button>
                             <button class="btn btn-danger load-less-data-users" style="display:none;">View Less</button>
                         </div>
                     </div>
