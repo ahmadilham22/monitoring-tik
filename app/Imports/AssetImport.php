@@ -15,12 +15,11 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
-class AssetImport implements ToModel, WithStartRow, WithValidation
+class AssetImport implements ToModel, WithStartRow
 {
     public function model(array $row)
     {
         Log::debug('Importing data:', $row);
-
 
         $asset = FixedAsset::create([
             'sub_category_id' => $row[1],
@@ -32,12 +31,11 @@ class AssetImport implements ToModel, WithStartRow, WithValidation
             'kode_bmn' => $row[7],
             'kode_sn' => $row[8],
             'kondisi' => $row[9],
-            'image' => $row[10],
-            'harga' => $row[11],
-            'keterangan' => $row[12],
+            // 'image' => 'tess.png',
+            'harga' => $row[10],
+            'keterangan' => $row[11],
         ]);
 
-        // dd($asset);
         $this->generateQrCode($row);
         return $asset;
     }
@@ -47,12 +45,12 @@ class AssetImport implements ToModel, WithStartRow, WithValidation
         return 2;
     }
 
-    public function rules(): array
-    {
-        return [
-            '*.8' => ['unique']
-        ];
-    }
+    // public function rules(): array
+    // {
+    //     return [
+    //         '*.8' => ['unique']
+    //     ];
+    // }
 
     protected function generateQrCode($row)
     {
