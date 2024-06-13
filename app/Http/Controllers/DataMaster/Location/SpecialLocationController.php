@@ -86,30 +86,30 @@ class SpecialLocationController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
+            return response()->json($validator->errors()->all(), 422);
         }
 
-        try {
-            $location = SpecialLocation::updateOrCreate(
-                [
-                    'id' => $locationId
-                ],
-                [
-                    'kode_lokasi' => $request->kode_lokasi,
-                    'location_id' => $request->location_id,
-                    'lokasi_khusus' => $request->lokasi_khusus,
-                ]
-            );
+        // try {
+        $location = SpecialLocation::updateOrCreate(
+            [
+                'id' => $locationId
+            ],
+            [
+                'kode_lokasi' => $request->kode_lokasi,
+                'location_id' => $request->location_id,
+                'lokasi_khusus' => $request->lokasi_khusus,
+            ]
+        );
 
-            if ($isNewRecord) {
-                $fileName = $this->generateQrCode($location->kode_lokasi);
-                $location->update(['qrcode' => $fileName]);
-            }
-
-            return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $location]);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
+        if ($isNewRecord) {
+            $fileName = $this->generateQrCode($location->kode_lokasi);
+            $location->update(['qrcode' => $fileName]);
         }
+
+        return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $location]);
+        // } catch (\Illuminate\Database\QueryException $e) {
+        //     return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
+        // }
     }
 
 

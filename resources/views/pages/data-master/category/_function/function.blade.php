@@ -57,7 +57,7 @@
                     $('#edit_nama_kategori').val(response.data.nama_kategori);
                 },
                 error: function(error) {
-                    console.error(error);
+                    {{-- console.error(error); --}}
                 }
             })
         });
@@ -78,21 +78,6 @@
                 data: data,
                 dataType: 'json',
                 success: function(response) {
-                    if (response.error) {
-                        $("#EditCategoryModal").modal('hide');
-                        var oTable = $('#myTable').dataTable();
-                        oTable.fnDraw(false);
-                        $('#edit_categoryForm').trigger("reset");
-                        Swal.fire({
-                            toast: true,
-                            position: "top-end",
-                            timer: 2000,
-                            icon: 'error',
-                            title: 'Failed',
-                            text: response.message,
-                            showConfirmButton: false
-                        });
-                    }
                     $('#edit_category_id').val(response.data.id);
                     $('#edit_kode_kategori').val(response.data.kode_kategori);
                     $('#edit_nama_kategori').val(response.data.nama_kategori);
@@ -113,7 +98,21 @@
                     }
                 },
                 error: function(error) {
-                    console.log(error);
+                    if (error.responseJSON) {
+                        {{-- $("#AddCategoryModal").modal('hide'); --}}
+                        var oTable = $('#myTable').dataTable();
+                        oTable.fnDraw(false);
+                        {{-- $('#add_categoryForm').trigger("reset"); --}}
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'error',
+                            title: 'Error',
+                            text: error.responseJSON[0],
+                            showConfirmButton: false
+                        });
+                    }
                 }
             })
         });
@@ -146,7 +145,8 @@
                             text: response.message,
                             showConfirmButton: false
                         });
-                    } else if (response.error) {
+                    }
+                    {{-- else if (response.error) {
                         $("#AddCategoryModal").modal('hide');
                         var oTable = $('#myTable').dataTable();
                         oTable.fnDraw(false);
@@ -160,10 +160,24 @@
                             text: response.message,
                             showConfirmButton: false
                         });
-                    }
+                    } --}}
                 },
-                error: function(xhr, status, error) {
-                    console.error(error);
+                error: function(error) {
+                    if (error.responseJSON) {
+                        {{-- $("#AddCategoryModal").modal('hide'); --}}
+                        var oTable = $('#myTable').dataTable();
+                        oTable.fnDraw(false);
+                        {{-- $('#add_categoryForm').trigger("reset"); --}}
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'error',
+                            title: 'Error',
+                            text: error.responseJSON[0],
+                            showConfirmButton: false
+                        });
+                    }
                 }
             })
         });

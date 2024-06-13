@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="http://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         .select2-container {
             width: 100% !important;
@@ -30,6 +30,10 @@
             /* Warna latar belakang yang mirip dengan Bootstrap */
             color: #495057;
             /* Warna teks yang mirip dengan Bootstrap */
+        }
+
+        .swal2-container {
+            z-index: 2000 !important;
         }
     </style>
 @endsection
@@ -74,7 +78,7 @@
 @endsection
 
 @section('js')
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
             $.ajaxSetup({

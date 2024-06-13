@@ -48,22 +48,22 @@ class DivisionController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
+            return response()->json($validator->errors()->all(), 422);
         }
 
-        try {
-            $division = Division::updateOrCreate(
-                ['id' => $divisiId],
-                [
-                    'kode_divisi' => $request->kode_divisi,
-                    'nama_divisi' => $request->nama_divisi,
-                ]
-            );
+        // try {
+        $division = Division::updateOrCreate(
+            ['id' => $divisiId],
+            [
+                'kode_divisi' => $request->kode_divisi,
+                'nama_divisi' => $request->nama_divisi,
+            ]
+        );
 
-            return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $division]);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
-        }
+        return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $division]);
+        // } catch (\Illuminate\Database\QueryException $e) {
+        //     return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
+        // }
     }
 
 

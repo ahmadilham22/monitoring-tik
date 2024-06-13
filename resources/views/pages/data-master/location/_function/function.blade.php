@@ -89,21 +89,22 @@
                         text: response.message,
                         showConfirmButton: false
                     });
-                } else if (response.error) {
+                }
+            },
+            error: function(error) {
+                if (error.responseJSON) {
+                    var oTable = $('#myTable').dataTable();
+                    oTable.fnDraw(false);
                     Swal.fire({
                         toast: true,
                         position: "top-end",
                         timer: 2000,
                         icon: 'error',
-                        title: 'Failed',
-                        text: response.message,
+                        title: 'Error',
+                        text: error.responseJSON[0],
                         showConfirmButton: false
                     });
                 }
-            },
-            error: function(xhr, status, error) {
-                var errorMessage = xhr.status + ': ' + xhr.statusText;
-                console.error('Error - ' + errorMessage);
             }
         });
     });

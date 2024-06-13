@@ -84,22 +84,26 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+            return response()->json($validator->errors()->all(), 422);
         }
 
-        try {
-            $user = User::create([
-                'nama' => $request->nama,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role' => $request->role,
-                'division_id' => $request->division_id,
-            ]);
+        // if ($validator->fails()) {
+        //     return response()->json(['success' => false, 'message' => $validator->errors()->first()]);
+        // }
 
-            return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $user]);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
-        }
+        // try {
+        $user = User::create([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'division_id' => $request->division_id,
+        ]);
+
+        return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $user]);
+        // } catch (\Illuminate\Database\QueryException $e) {
+        //     return response()->json(['success' => false, 'message' => 'Data telah ada', 'error' => $e->getMessage()]);
+        // }
     }
 
     public function detail($id)

@@ -42,19 +42,23 @@ class CategoryController extends Controller
             'nama_kategori.required' => 'Nama kategori wajib diisi.',
         ]);
 
+        // if ($validator->fails()) {
+        //     return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
+        // }
+
         if ($validator->fails()) {
-            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
+            return response()->json($validator->errors()->all(), 422);
         }
 
-        try {
-            $category = Category::create([
-                'kode_kategori' => $request->kode_kategori,
-                'nama_kategori' => $request->nama_kategori,
-            ]);
-            return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui', 'data' => $category]);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['error' => true, 'message' => 'Gagal memperbarui data', 'errors' => $e->getMessage()]);
-        }
+        // try {
+        $category = Category::create([
+            'kode_kategori' => $request->kode_kategori,
+            'nama_kategori' => $request->nama_kategori,
+        ]);
+        return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui', 'data' => $category]);
+        // } catch (\Illuminate\Database\QueryException $e) {
+        //     return response()->json(['error' => true, 'message' => 'Gagal memperbarui data', 'errors' => $e->getMessage()]);
+        // }
     }
 
 
@@ -84,21 +88,21 @@ class CategoryController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
+            return response()->json($validator->errors()->all(), 422);
         }
 
-        try {
-            $category = Category::findOrFail($categoryId);
+        // try {
+        $category = Category::findOrFail($categoryId);
 
-            $category->kode_kategori = $request->input('kode_kategori');
-            $category->nama_kategori = $request->input('nama_kategori');
+        $category->kode_kategori = $request->input('kode_kategori');
+        $category->nama_kategori = $request->input('nama_kategori');
 
-            $category->update();
+        $category->update();
 
-            return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui', 'data' => $category]);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['error' => true, 'message' => 'Gagal memperbarui data', 'errors' => $e->getMessage()]);
-        }
+        return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui', 'data' => $category]);
+        // } catch (\Illuminate\Database\QueryException $e) {
+        //     return response()->json(['error' => true, 'message' => 'Gagal memperbarui data', 'errors' => $e->getMessage()]);
+        // }
     }
 
     public function destroy($id)

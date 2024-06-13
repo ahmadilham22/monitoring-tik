@@ -48,23 +48,23 @@ class ProcurementController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
+            return response()->json($validator->errors()->all(), 422);
         }
 
-        try {
-            $procurement = Procurement::updateOrCreate(
-                ['id' => $pengadaanId],
-                [
-                    'mitra' => $request->mitra,
-                    'jenis_pengadaan' => $request->jenis_pengadaan,
-                    'tahun_pengadaan' => $request->tahun_pengadaan,
-                ]
-            );
+        // try {
+        $procurement = Procurement::updateOrCreate(
+            ['id' => $pengadaanId],
+            [
+                'mitra' => $request->mitra,
+                'jenis_pengadaan' => $request->jenis_pengadaan,
+                'tahun_pengadaan' => $request->tahun_pengadaan,
+            ]
+        );
 
-            return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $procurement]);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
-        }
+        return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $procurement]);
+        // } catch (\Illuminate\Database\QueryException $e) {
+        //     return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
+        // }
     }
 
 

@@ -51,24 +51,24 @@ class LocationController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
+            return response()->json($validator->errors()->all(), 422);
         }
 
-        try {
-            $location = Location::updateOrCreate(
-                [
-                    'id' => $locationId
-                ],
-                [
-                    'kode_lokasi' => $request->kode_lokasi,
-                    'lokasi_umum' => $request->lokasi_umum,
-                ]
-            );
+        // try {
+        $location = Location::updateOrCreate(
+            [
+                'id' => $locationId
+            ],
+            [
+                'kode_lokasi' => $request->kode_lokasi,
+                'lokasi_umum' => $request->lokasi_umum,
+            ]
+        );
 
-            return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $location]);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
-        }
+        return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $location]);
+        // } catch (\Illuminate\Database\QueryException $e) {
+        //     return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
+        // }
     }
 
     public function edit(Request $request)

@@ -51,7 +51,7 @@
                 type: 'GET',
                 url: "user/edit/" + userId,
                 success: function(response) {
-                    console.log(response);
+                    {{-- console.log(response); --}}
                     $('#edit_user_id').val(response.data.id);
                     $('#edit_nama').val(response.data.nama);
                     $('#edit_email').val(response.data.email);
@@ -59,7 +59,7 @@
                     $('#edit_division_id').val(response.data.division_id);
                 },
                 error: function(error) {
-                    console.error(error);
+                    {{-- console.error(error); --}}
                 }
             })
         });
@@ -100,24 +100,22 @@
                             text: response.message,
                             showConfirmButton: false
                         });
-                    } else {
-                        $("#EditUserModal").modal('hide');
+                    }
+                },
+                error: function(error) {
+                    if (error.responseJSON) {
                         var oTable = $('#myTable').dataTable();
                         oTable.fnDraw(false);
-                        $('#edit_userForm').trigger("reset");
                         Swal.fire({
                             toast: true,
                             position: "top-end",
                             timer: 2000,
                             icon: 'error',
-                            title: 'Failed',
-                            text: response.message,
+                            title: 'Error',
+                            text: error.responseJSON[0],
                             showConfirmButton: false
                         });
                     }
-                },
-                error: function(error) {
-                    console.error(error);
                 }
             })
         });
@@ -140,7 +138,6 @@
                 data: data,
                 dataType: 'json',
                 success: function(response) {
-                    console.log(response);
                     if (response.success) {
                         $("#AddUserModal").modal('hide');
                         var oTable = $('#myTable').dataTable();
@@ -155,24 +152,22 @@
                             text: response.message,
                             showConfirmButton: false
                         });
-                    } else if (!response.success) {
-                        $("#AddUserModal").modal('hide');
+                    }
+                },
+                error: function(error) {
+                    if (error.responseJSON) {
                         var oTable = $('#myTable').dataTable();
                         oTable.fnDraw(false);
-                        $('#userForm').trigger("reset");
                         Swal.fire({
                             toast: true,
                             position: "top-end",
                             timer: 2000,
                             icon: 'error',
-                            title: 'Failed',
-                            text: response.message,
+                            title: 'Error',
+                            text: error.responseJSON[0],
                             showConfirmButton: false
                         });
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
                 }
             })
         });

@@ -98,21 +98,6 @@
                 data: data,
                 dataType: 'json',
                 success: function(response) {
-                    if (response.error) {
-                        $("#EditSubCategoryModal").modal('hide');
-                        var oTable = $('#myTable').dataTable();
-                        oTable.fnDraw(false);
-                        $('#edit_subcategoryForm').trigger("reset");
-                        Swal.fire({
-                            toast: true,
-                            position: "top-end",
-                            timer: 2000,
-                            icon: 'error',
-                            title: 'Failed',
-                            text: response.message,
-                            showConfirmButton: false
-                        });
-                    }
                     $('#edit_subcategory_id').val(response.data.id);
                     $('#edit_categories_id').val(response.data.categories_id);
                     $('#edit_kode_sub_kategori').val(response.data.kode_sub_kategori);
@@ -134,7 +119,19 @@
                     }
                 },
                 error: function(error) {
-                    console.log(error);
+                    if (error.responseJSON) {
+                        var oTable = $('#myTable').dataTable();
+                        oTable.fnDraw(false);
+                        Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            timer: 2000,
+                            icon: 'error',
+                            title: 'Error',
+                            text: error.responseJSON[0],
+                            showConfirmButton: false
+                        });
+                    }
                 }
             })
         });
@@ -169,25 +166,22 @@
                             text: response.message,
                             showConfirmButton: false
                         });
-                    } else if (response.error) {
-                        $("#AddSubCategoryModal").modal('hide');
-                        var table = $('#myTable').DataTable();
-                        table.ajax.reload(null, false);
-                        $('#add_subcategoryForm').trigger("reset");
-                        $('#categories_id').val('')
+                    }
+                },
+                error: function(error) {
+                    if (error.responseJSON) {
+                        var oTable = $('#myTable').dataTable();
+                        oTable.fnDraw(false);
                         Swal.fire({
                             toast: true,
                             position: "top-end",
                             timer: 2000,
                             icon: 'error',
-                            title: 'Failed',
-                            text: response.message,
+                            title: 'Error',
+                            text: error.responseJSON[0],
                             showConfirmButton: false
                         });
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
                 }
             })
         });

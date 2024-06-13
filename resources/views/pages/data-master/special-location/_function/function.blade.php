@@ -85,7 +85,6 @@
             contentType: false,
             processData: false,
             success: (response) => {
-                console.log(response);
                 $("#specificLocation-modal").modal('hide');
                 var table = $('#myTable').DataTable();
                 table.ajax.reload(null, false);
@@ -101,20 +100,22 @@
                         text: response.message,
                         showConfirmButton: false
                     });
-                } else if (response.error) {
+                }
+            },
+            error: function(data) {
+                if (error.responseJSON) {
+                    var oTable = $('#myTable').dataTable();
+                    oTable.fnDraw(false);
                     Swal.fire({
                         toast: true,
                         position: "top-end",
                         timer: 2000,
                         icon: 'error',
-                        title: 'Failed',
-                        text: response.message,
+                        title: 'Error',
+                        text: error.responseJSON[0],
                         showConfirmButton: false
                     });
                 }
-            },
-            error: function(data) {
-                console.log(data);
             }
         });
     });

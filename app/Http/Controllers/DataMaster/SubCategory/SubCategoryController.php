@@ -44,19 +44,19 @@ class SubCategoryController extends Controller
 
 
         if ($validator->fails()) {
-            return response()->json(['error' => true, 'message' => $validator->errors()->first()]);
+            return response()->json($validator->errors()->all(), 422);
         }
 
-        try {
-            $category = SubCategory::create([
-                'categories_id' => $request->categories_id,
-                'kode_sub_kategori' => $request->kode_sub_kategori,
-                'nama_sub_kategori' => $request->nama_sub_kategori,
-            ]);
-            return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui', 'data' => $category]);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['error' => true, 'message' => 'Gagal memperbarui data', 'errors' => $e->getMessage()]);
-        }
+        // try {
+        $category = SubCategory::create([
+            'categories_id' => $request->categories_id,
+            'kode_sub_kategori' => $request->kode_sub_kategori,
+            'nama_sub_kategori' => $request->nama_sub_kategori,
+        ]);
+        return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui', 'data' => $category]);
+        // } catch (\Illuminate\Database\QueryException $e) {
+        //     return response()->json(['error' => true, 'message' => 'Gagal memperbarui data', 'errors' => $e->getMessage()]);
+        // }
     }
     public function edit($id)
     {

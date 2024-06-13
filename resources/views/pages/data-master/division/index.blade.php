@@ -1,5 +1,13 @@
 @extends('layouts.app')
 
+@section('css')
+    <style>
+        .swal2-container {
+            z-index: 2000 !important;
+        }
+    </style>
+@endsection
+
 
 @section('content')
     <div class="container flex-grow-1 container-p-y">
