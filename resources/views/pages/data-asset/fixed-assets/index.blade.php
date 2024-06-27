@@ -249,7 +249,7 @@
                         type: "text",
                         name: "kode_sn",
                         title: "Masukan data",
-                        emptytext: '<input type="text"" placeholder="Masukan Kode SN"/>',
+                        emptytext: '<input type="text"" placeholder="Masukan Kode" style="width:110px"/>',
                         success: function(response) {
                             Swal.fire({
                                 toast: true,
@@ -287,7 +287,7 @@
                         type: "text",
                         name: "kode_sn",
                         title: "Masukan data",
-                        emptytext: '<input type="text"" placeholder="Masukan Kode BMN"/>',
+                        emptytext: '<input type="text"" placeholder="Masukan Kode" style="width: 110px"/>',
                         success: function(response) {
                             Swal.fire({
                                 toast: true,

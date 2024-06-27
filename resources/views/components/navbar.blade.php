@@ -34,7 +34,7 @@
                             <img src="{{ asset('storage/userImage/' . Auth::user()->photo) }}"
                                 alt="Foto Profil Pengguna" class="rounded-circle" width="40" height="30" />
                         @else
-                            <img src="{{ asset('assets/img/avatars/1.png') }}" alt="Foto Profil Default"
+                            <img src="{{ asset('assets/img/avatars/avatar.jpeg') }}" alt="Foto Profil Default"
                                 class="w-px-40 h-auto rounded-circle" />
                         @endif
                     </div>
@@ -54,8 +54,8 @@
                                             <img src="{{ asset('storage/userImage/' . Auth::user()->photo) }}" alt
                                                 class="w-px-40 h-auto rounded-circle" />
                                         @else
-                                            <img src="{{ asset('assets/img/avatars/1.png') }}" alt="Foto Profil Default"
-                                                class="w-px-40 h-auto rounded-circle" />
+                                            <img src="{{ asset('assets/img/avatars/avatar.jpeg') }}"
+                                                alt="Foto Profil Default" class="w-px-40 h-auto rounded-circle" />
                                         @endif
                                     </div>
                                 </div>
