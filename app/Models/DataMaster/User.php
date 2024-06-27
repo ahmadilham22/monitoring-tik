@@ -15,8 +15,12 @@ class User extends Authenticatable
 {
     use HasFactory, SoftDeletes;
 
+    protected $keyType = 'string';
     protected $table = 'users';
+    public $incrementing = false;
+
     protected $fillable = [
+        'id',
         'nama',
         'email',
         'password',

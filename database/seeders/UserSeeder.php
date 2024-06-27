@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Ramsey\Uuid\Uuid;
 
 class UserSeeder extends Seeder
 {
@@ -182,6 +183,7 @@ class UserSeeder extends Seeder
 
         foreach ($data as  $value) {
             User::insert([
+                'id' => Uuid::uuid4()->toString(),
                 'nama' => $value['nama'],
                 'email' => $value['email'],
                 'password' => $value['password'],

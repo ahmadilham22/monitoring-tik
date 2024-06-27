@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('specific_location_id')->index()->constrained();
             $table->foreignId('procurement_id')->index()->constrained();
             $table->foreignId('unit_id')->index()->constrained();
-            $table->foreignId('user_id')->index()->constrained();
+            $table->uuid('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('kode_bmn')->nullable();
             $table->string('kode_sn')->nullable();
             $table->string('kondisi');

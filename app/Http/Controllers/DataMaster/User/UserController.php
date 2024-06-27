@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Ramsey\Uuid\Uuid;
 
 class UserController extends Controller
 {
@@ -93,6 +94,7 @@ class UserController extends Controller
 
         // try {
         $user = User::create([
+            'id' => Uuid::uuid4()->toString(),
             'nama' => $request->nama,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -112,6 +114,7 @@ class UserController extends Controller
         $divisions = Division::all();
         return view('pages.data-master.user.user-detail', compact('data', 'divisions'));
     }
+
     public function updateProfile(Request $request, $id)
     {
         $validatedData = $request->validate([
