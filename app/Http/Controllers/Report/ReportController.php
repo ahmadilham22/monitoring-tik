@@ -76,57 +76,17 @@ class ReportController extends Controller
         if (request()->ajax()) {
             $data = FixedAsset::with(['subcategory.category', 'specificlocation.location', 'user', 'procurement'])->orderBy('updated_at', 'desc')->get();
 
-            if ($request->input('kondisi') !== null) {
-                $data = $data->where('kondisi', $request->kondisi);
-            }
-
-            if ($request->input('kategori') !== null) {
-                $data = $data->where('subcategory.categories_id', $request->kategori);
-            }
-
-            if ($request->input('pj') !== null) {
-                $data = $data->where('user.id', $request->pj);
-            }
-
             if ($request->query('kode_lokasi')) {
-                // $data = $data->whereHas('specificlocation', function ($query) use ($request) {
-                //     $query->where('kode_lokasi', $request->query('kode_lokasi'));
-                // });
+
                 $data = $data->where('specificlocation.kode_lokasi', $request->query('kode_lokasi'));
-                // dd($data);
             }
 
             return DataTables::of($data)
-                // ->addColumn('action', function ($data) {
-                //     return view('pages.data-asset.fixed-assets.action.fixedAssetAction', compact('data'));
-                // })
-                // ->addColumn('checkbox', function ($data) {
-                //     return view('pages.data-asset.fixed-assets.action.checkbox', compact('data'));
-                // })
-                // ->addColumn('inputSn', function ($data) {
-                //     return view('pages.data-asset.fixed-assets.action.inputSn', compact('data'));
-                // })
-                // ->addColumn('inputBMN', function ($data) {
-                //     return view('pages.data-asset.fixed-assets.action.inputBMN', compact('data'));
-                // })
-                // ->rawColumns(['action', 'checkbox', 'inputSn'])
                 ->addIndexColumn()
                 ->make(true);
         }
 
-        $kondisi = FixedAsset::selectRaw('kondisi')
-            ->distinct()
-            ->pluck('kondisi')
-            ->toArray();
-        $conditions = array_combine($kondisi, $kondisi);
-        $subcategories = DB::table('sub_categories AS sc')
-            ->join('categories AS c', 'sc.categories_id', '=', 'c.id')
-            ->select('sc.categories_id as id', DB::raw('MAX(sc.nama_sub_kategori) as nama_sub_kategori'), DB::raw('MAX(c.nama_kategori) as nama_kategori'))
-            ->groupBy('sc.categories_id')
-            ->get();
-        $users = DB::table('users')->select('id', 'nama')->where('role', 'admin')->whereNotNull('division_id')->get();
-
-        return view('pages.report.list-public', compact('conditions', 'users', 'subcategories'));
+        return view('pages.report.list-public');
     }
 
     public function create()
