@@ -61,21 +61,24 @@ class SpecialLocationController extends Controller
     public function store(Request $request)
     {
         $locationId = $request->id;
-
-        $isNewRecord = empty($locationId); // Periksa apakah permintaan adalah untuk pembuatan data baru
+        $isNewRecord = empty($locationId);
 
         $rules = [
             'location_id' => 'required',
-            'kode_lokasi' => 'required',
             'lokasi_khusus' => 'required',
         ];
 
-        // Validasi tambahan untuk pembuatan data baru
+        // Validasi untuk kode_lokasi yang memperhitungkan soft delete
         if ($isNewRecord) {
-            $rules['kode_lokasi'] .= '|unique:specific_locations'; // Tambahkan aturan unique hanya untuk pembuatan data baru
+            $rules['kode_lokasi'] = [
+                'required',
+                Rule::unique('specific_locations')->withoutTrashed() // Hanya cek yang tidak di-soft-delete
+            ];
         } else {
-            // Validasi tambahan untuk perubahan data yang sudah ada
-            $rules['kode_lokasi'] .= '|unique:specific_locations,kode_lokasi,' . $locationId; // Jangan periksa data itu sendiri
+            $rules['kode_lokasi'] = [
+                'required',
+                Rule::unique('specific_locations')->withoutTrashed()->ignore($locationId) // Ignore current record
+            ];
         }
 
         $validator = Validator::make($request->all(), $rules, [
@@ -89,27 +92,33 @@ class SpecialLocationController extends Controller
             return response()->json($validator->errors()->all(), 422);
         }
 
-        // try {
-        $location = SpecialLocation::updateOrCreate(
-            [
-                'id' => $locationId
-            ],
-            [
-                'kode_lokasi' => $request->kode_lokasi,
-                'location_id' => $request->location_id,
-                'lokasi_khusus' => $request->lokasi_khusus,
-            ]
-        );
+        try {
+            $location = SpecialLocation::updateOrCreate(
+                ['id' => $locationId],
+                [
+                    'kode_lokasi' => $request->kode_lokasi,
+                    'location_id' => $request->location_id,
+                    'lokasi_khusus' => $request->lokasi_khusus,
+                ]
+            );
 
-        if ($isNewRecord) {
-            $fileName = $this->generateQrCode($location->kode_lokasi);
-            $location->update(['qrcode' => $fileName]);
+            if ($isNewRecord) {
+                $fileName = $this->generateQrCode($location->kode_lokasi);
+                $location->update(['qrcode' => $fileName]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil disimpan',
+                'data' => $location
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Terjadi kesalahan saat menyimpan data',
+                'errors' => $e->getMessage()
+            ], 500);
         }
-
-        return response()->json(['success' => true, 'message' => 'Data berhasil disimpan', 'data' => $location]);
-        // } catch (\Illuminate\Database\QueryException $e) {
-        //     return response()->json(['error' => true, 'message' => 'Data telah ada', 'errors' => $e->getMessage()]);
-        // }
     }
 
 

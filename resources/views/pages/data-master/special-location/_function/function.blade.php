@@ -102,7 +102,7 @@
                     });
                 }
             },
-            error: function(data) {
+            error: function(error) {
                 if (error.responseJSON) {
                     var oTable = $('#myTable').dataTable();
                     oTable.fnDraw(false);
