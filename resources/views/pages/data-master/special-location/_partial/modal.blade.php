@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalHeader">Lokasi Khusus</h5>
+                <h5 class="modal-title" id="modalHeader">Sub Lokasi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="#" id="specificLocationForm" name="specificLocationForm" method="POST"
@@ -22,7 +22,7 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="kode_lokasi" class="form-label">Kode Lokasi</label>
+                            <label for="kode_lokasi" class="form-label">Kode Sub Lokasi</label>
                             <input type="text" name="kode_lokasi" id="kode_lokasi" class="form-control"
                                 placeholder="Masukan Kode...">
                         </div>

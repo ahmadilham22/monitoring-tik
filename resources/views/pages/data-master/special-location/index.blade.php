@@ -55,7 +55,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Lokasi Umum</th>
-                                        <th>Kode Lokasi</th>
+                                        <th>Kode Sub Lokasi</th>
                                         <th>Sub Lokasi</th>
                                         <th>Terakhir Update</th>
                                         <th>Kode Qr</th>

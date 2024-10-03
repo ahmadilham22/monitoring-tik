@@ -11,7 +11,7 @@
     function add() {
         $('#specificLocationForm')[0].reset();
         $('#location_id').val(null).trigger('change');
-        $('#modalHeader').html("Tambah Lokasi");
+        $('#modalHeader').html("Tambah Sub Lokasi");
         $('#specificLocation-modal').modal('show');
         $('#id').val('');
     }
@@ -25,7 +25,7 @@
             },
             dataType: 'json',
             success: function(res) {
-                $('#modalHeader').html("Edit Lokasi");
+                $('#modalHeader').html("Edit Sub Lokasi");
                 $('#specificLocation-modal').modal('show');
                 $('#id').val(res.id);
                 $('#kode_lokasi').val(res.kode_lokasi);
