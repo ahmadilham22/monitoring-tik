@@ -27,7 +27,7 @@
                                 placeholder="Masukan Kode...">
                         </div>
                         <div class="mb-3">
-                            <label for="lokasi" class="form-label">Sub Lokasi</label>
+                            <label for="lokasi" class="form-label">Nama Sub Lokasi</label>
                             <input type="text" name="lokasi_khusus" id="lokasi_khusus" class="form-control"
                                 placeholder="Masukan Kode...">
                         </div>
